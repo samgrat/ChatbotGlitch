@@ -101,6 +101,7 @@ function handleMessage(sender_psid, received_message) {
 
     // Create the payload for a basic text message
     response = {
+      //"text": `Coucou Julien ravi de te rencontrer ;) (in:"${received_message.text}")`
       "text": `You sent the message: "${received_message.text}". Now send me an image!`
     }
   }  
@@ -132,6 +133,8 @@ function callSendAPI(sender_psid, response) {
     "json": request_body
   }, (err, res, body) => {
     if (!err) {
+      console.log(res)
+      console.log(body)
       console.log('message sent!')
     } else {
       console.error("Unable to send message:" + err);
