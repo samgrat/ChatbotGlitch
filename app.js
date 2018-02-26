@@ -110,7 +110,9 @@ function handleMessage(sender_psid, received_message) {
     // Gets the URL of the message attachment
     let attachment_url = received_message.attachments[0].payload.url;
     
-  
+    response = {
+      "text": `attachments link: "${attachment_url}"`
+    }
   } 
   
   // Sends the response message
