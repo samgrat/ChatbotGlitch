@@ -12,6 +12,7 @@
 'use strict';
 
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
+const URL_SERVER_API = 
 
 // Imports dependencies and set up http server
 const 
@@ -151,7 +152,37 @@ function handleMessage(sender_psid, received_message) {
   } 
   
   // Send the response message
+  callPostDB(sender_psid, response);
   callSendAPI(sender_psid, response);    
+}
+
+function callPostDB(sender_psid, response) {
+  
+   // Send the HTTP request to the Messenger Platform
+  request({
+    "url": "https://f74fb664.ngrok.io/contact",
+    "async": true,
+    "crossDomain": true,
+    "method": "POST",
+     "headers": {
+    "Content-Type": "application/x-www-form-urlencoded",
+    "Cache-Control": "no-cache",
+    "Postman-Token": "67aef20a-88ac-7dd7-aec8-29591b619d11"
+  },
+  "data": {
+    "fb_id": sender_psid,
+    "firstName": response
+  }
+  }, (err, res, body) => {
+    if (!err) {
+      console.log(res)
+      console.log(body)
+      console.log('message sent!')
+    } else {
+      console.error("Unable to send message:" + err);
+    }
+  }); 
+  
 }
 
 // Sends response messages via the Send API
