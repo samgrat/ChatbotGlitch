@@ -152,8 +152,21 @@ function handleMessage(sender_psid, received_message) {
   } 
   
   // Send the response message
-  callGetDB(sender_psid);
-  //callSendAPI(sender_psid, response);    
+  if(received_message.text.includes('Send')){
+       response = {
+      "text": `You sent the message: "${received_message.text}"
+    }
+    callSendAPI(sender_psid, response);
+  } else if (received_message.text.includes('Check personal items')){
+    callGetOneDB(sender_psid);
+  } else if (received_message.text.includes('Check all items')){
+    callGetDB(sender_psid);
+  } else if (received_message.text.includes('Add items')){
+    callPostDB(sender_psid, received_message.text.replace('Add items ', ''));
+  } else {
+    response = {
+      "text": 'Send <>, Check personal items
+    }
 }
 
 // Get the contact with corresponding to sender's id
