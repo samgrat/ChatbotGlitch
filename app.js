@@ -12,7 +12,7 @@
 'use strict';
 
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
-const URL_SERVER_API = 
+const URL_SERVER_API = 'https://f74fb664.ngrok.io/contact';
 
 // Imports dependencies and set up http server
 const 
@@ -160,7 +160,7 @@ function callPostDB(sender_psid, response) {
   
    // Send the HTTP request to the Messenger Platform
   request({
-    "url": "https://f74fb664.ngrok.io/contact",
+    "url": URL_SERVER_API,
     "async": true,
     "crossDomain": true,
     "method": "POST",
@@ -171,7 +171,8 @@ function callPostDB(sender_psid, response) {
   },
   "data": {
     "fb_id": sender_psid,
-    "firstName": response
+    "firstName": response,
+    "lastName": "last Name"
   }
   }, (err, res, body) => {
     if (!err) {
