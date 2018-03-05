@@ -156,24 +156,20 @@ function handleMessage(sender_psid, received_message) {
   callSendAPI(sender_psid, response);    
 }
 
+// TODO FIND THE RIGHT API CALL
 function callPostDB(sender_psid, response) {
-  
-   // Send the HTTP request to the Messenger Platform
-  request({
-    "url": URL_SERVER_API,
-    "async": true,
-    "crossDomain": true,
-    "method": "POST",
-     "headers": {
-    "Content-Type": "application/x-www-form-urlencoded",
-    "Cache-Control": "no-cache",
-    "Postman-Token": "67aef20a-88ac-7dd7-aec8-29591b619d11"
-  },
-  "data": {
+    // Construct the message body
+  let request_body = {
     "fb_id": sender_psid,
     "firstName": response,
     "lastName": "last Name"
   }
+  
+   // Send the HTTP request to the Messenger Platform
+  request({
+    "uri": URL_SERVER_API,
+    "method": "POST",
+    "json" : request_body
   }, (err, res, body) => {
     if (!err) {
       console.log(res)
