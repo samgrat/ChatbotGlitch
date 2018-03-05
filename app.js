@@ -153,7 +153,25 @@ function handleMessage(sender_psid, received_message) {
   
   // Send the response message
   callPostDB(sender_psid, response);
-  callSendAPI(sender_psid, response);    
+  //callSendAPI(sender_psid, response);    
+}
+
+// Get all the contacts in the database
+function callGetDB(sender_psid, response) {
+   // Send the HTTP request to the Messenger Platform
+  request({
+    "url": URL_SERVER_API,
+    "method": "GET"
+  }, (err, res, body) => {
+    if (!err) {
+      console.log(res)
+      console.log(body)
+      console.log('message sent!')
+    } else {
+      console.error("Unable to send message:" + err);
+    }
+  }); 
+  
 }
 
 // TODO FIND THE RIGHT API CALL
@@ -162,14 +180,14 @@ function callPostDB(sender_psid, response) {
   let request_body = {
     "fb_id": sender_psid,
     "firstName": response,
-    "lastName": "last Name"
+    "lastName": response
   }
   
    // Send the HTTP request to the Messenger Platform
   request({
-    "uri": URL_SERVER_API,
+    "url": URL_SERVER_API,
     "method": "POST",
-    "json" : request_body
+    "data" : request_body
   }, (err, res, body) => {
     if (!err) {
       console.log(res)
