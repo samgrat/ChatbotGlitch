@@ -152,20 +152,46 @@ function handleMessage(sender_psid, received_message) {
   } 
   
   // Send the response message
-  callPostDB(sender_psid, received_message.text);
+  callGetDB(sender_psid);
   //callSendAPI(sender_psid, response);    
 }
 
+// Get the contact with corresponding to sender's id
+function callGetOneDB(sender_psid) {
+   // Send the HTTP request to the Messenger Platform
+  request({
+    "url": URL_SERVER_API + '/' + sender_psid,
+    "method": "GET"
+  }, (err, res, body) => {
+    if (!err) {
+      let response = {
+      "text": body
+      }
+      console.log(res)
+      console.log(body)
+      callSendAPI(sender_psid, response)
+      console.log('message sent!')
+    } else {
+      console.error("Unable to send message:" + err);
+    }
+  }); 
+  
+}
+
 // Get all the contacts in the database
-function callGetDB(sender_psid, response) {
+function callGetDB(sender_psid) {
    // Send the HTTP request to the Messenger Platform
   request({
     "url": URL_SERVER_API,
     "method": "GET"
   }, (err, res, body) => {
     if (!err) {
+      let response = {
+      "text": body
+      }
       console.log(res)
       console.log(body)
+      callSendAPI(sender_psid, response)
       console.log('message sent!')
     } else {
       console.error("Unable to send message:" + err);
@@ -192,9 +218,9 @@ function callPostDB(sender_psid, message) {
     if (!err) {
       console.log(res)
       console.log(body)
-      console.log('message sent!')
+      console.log('info added to DB')
     } else {
-      console.error("Unable to send message:" + err);
+      console.error("Unable to add info:" + err);
     }
   }); 
   
