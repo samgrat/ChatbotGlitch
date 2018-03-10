@@ -221,44 +221,54 @@ function moveUserState(state, sender_psid, text){
       break;
     case "7": 
       if(text.localeCompare(process.env.QUICK_7[0]) == 0 || text.localeCompare(process.env.QUICK_7[1]) == 0 || text.localeCompare(process.env.QUICK_7[2]) == 0){
-        callPostDB(sender_psid, "7", "state");
+        callPostDB(sender_psid, "9", "state");
       } 
       if(text.localeCompare(process.env.QUICK_7[3]) == 0){
-        callPostDB(sender_psid, "6", "state");
+        callPostDB(sender_psid, "8", "state");
       }
       if(text.localeCompare(process.env.QUICK_7[4]) == 0){
-        callPostDB(sender_psid, "6bis", "state");
+        callPostDB(sender_psid, "8", "state");
       }
       else{
         console.error('The answer didn\'t match a pattern');
       }
       break;
-    case "8": callPostDB(sender_psid, text, "equipment");
+    case "8": callPostDB(sender_psid, "9", "state");
       break;
     case "9": 
-    case "10": callPostDB(sender_psid, text, "utilitarian");
+      if(text.localeCompare(process.env.QUICK_9[0]) == 0){
+        callPostDB(sender_psid, "10", "state");
+      }
+      if(text.localeCompare(process.env.QUICK_9[1]) == 0){
+        callPostDB(sender_psid, "11", "state");
+      }
+      else{
+        console.error('The answer didn\'t match a pattern');
+      }
       break;
-    case "11": callPostDB(sender_psid, text, "birthdate");
+    case "10": callPostDB(sender_psid, "11", "state");
       break;
-    case "12": callPostDB(sender_psid, text, "address");
+    case "11": callPostDB(sender_psid, "12", "state");
       break;
-    case "13": callPostDB(sender_psid, text, "telephone");
+    case "12": callPostDB(sender_psid, "13", "state");
       break;
-    case "14": callPostDB(sender_psid, text, "studentID");
+    case "13": callPostDB(sender_psid, "14", "state");
       break;
-    case "15": callPostDB(sender_psid, text, "cursus");
+    case "14": callPostDB(sender_psid, "15", "state");
       break;
-    case "16": callPostDB(sender_psid, text, "dreamJob");
+    case "15": callPostDB(sender_psid, "16", "state");
       break;
-    case "17": callPostDB(sender_psid, text, "location");
+    case "16": callPostDB(sender_psid, "17", "state");
       break;
-    case "18": callPostDB(sender_psid, text, "scholarship");
+    case "17": callPostDB(sender_psid, "18", "state");
       break;
-    case "19": callPostDB(sender_psid, text, "internship");
+    case "18": callPostDB(sender_psid, "19", "state");
       break;
-    case "20": callPostDB(sender_psid, text, "accompaniment");
+    case "19": callPostDB(sender_psid, "20", "state");
       break;
-    case "21": callPostDB(sender_psid, text, "info");
+    case "20": callPostDB(sender_psid, "21", "state");
+      break;
+    case "21": callPostDB(sender_psid, "22", "state");
       break;
     default: console.log('We don\'t store the data at this state');
       break;
@@ -277,7 +287,6 @@ function handleMessage(sender_psid, received_message) {
     
     // TODO: test received_message.text before insering into db
     insertInfoDB(state, sender_psid, received_message.text);
-    
     moveUserState(state, sender_psid, received_message.text);
                  
   } else if (received_message.attachments) {
@@ -310,28 +319,17 @@ function handleMessage(sender_psid, received_message) {
     }
   } 
   
-  // Send the response message
-  if(received_message.text.includes('Send')){
-    callSendAPI(sender_psid, response);
-  } else if (received_message.text.includes('Check personal items')){
-    callGetOneDB(sender_psid);
-  } else if (received_message.text.includes('Check all items')){
-    callGetDB(sender_psid);
-  } else if (received_message.text.includes('Add item')){
-    callPostDB(sender_psid, received_message.text.replace('Add item ', ''));
-  } else {
     response = {
-      "text": ' Send <something>, \n Check personal items, \n Check all items or \n Add item <item>'
+      "text": ' '
     }
     callSendAPI(sender_psid, response);
-  }
 }
 
 // Get the contact with corresponding to sender's id
 function callGetOneDB(sender_psid) {
    // Send the HTTP request to the Messenger Platform
   request({
-    "url": URL_SERVER_API + '/' + sender_psid,
+    "url": API_URL_SERVER + "/contact/" + sender_psid,
     "method": "GET"
   }, (err, res, body) => {
     if (!err) {
@@ -353,7 +351,7 @@ function callGetOneDB(sender_psid) {
 function callGetDB(sender_psid) {
    // Send the HTTP request to the Messenger Platform
   request({
-    "url": URL_SERVER_API,
+    "url": API_URL_SERVER + "/contact/",
     "method": "GET"
   }, (err, res, body) => {
     if (!err) {
@@ -381,7 +379,7 @@ function callPostDB(sender_psid, data, field) {
   
    // Send the HTTP request to the Messenger Platform
   request({
-    "url": URL_SERVER_API."/contacts/".sender_psid,
+    "url": API_URL_SERVER + "/contact/" + sender_psid,
     "method": "POST",
     "json" : request_body
   }, (err, res, body) => {
