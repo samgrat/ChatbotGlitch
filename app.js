@@ -105,6 +105,18 @@ function handlePostback(sender_psid, received_postback) {
   callSendAPI(sender_psid, response);
 }
 
+function getSenderState(sender_psid){
+  
+}
+
+function sendMessages(sender_psid){
+  var i;
+  for (i = 1; i < arguments.length; i++) {
+    arguments[i]
+  }
+    return max;
+}
+
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
   let response;
@@ -118,8 +130,9 @@ function handleMessage(sender_psid, received_message) {
     let phrase = "No State Found";
     
     switch(state){
-      case "0": phrase = process.env.DIALOGUE_
-                }
+      case "0": 
+        sendMessages(sender_psid, process.env.DIALOGUE_0A, process.env.DIALOGUE_0B, process.env.DIALOGUE_0C);
+        
     response = {
       "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
     }
