@@ -121,8 +121,11 @@ function sendMessages(sender_psid){
   }
 }
 
-function insertInfoDB(sender_psid, received_message){
-  switch(
+function insertInfoDB(state, sender_psid, received_message){
+  // we send the data
+  switch(state){
+    case "1": callPostDB(sender_psid, received_message, "
+              }
   
 }
 
@@ -137,7 +140,7 @@ function handleMessage(sender_psid, received_message) {
     
     let state = getSenderState(sender_psid);
     
-    insertInfoDB(sender_psid, state, received_message);
+    insertInfoDB(state, sender_psid, received_message);
                  
 
            
@@ -234,17 +237,16 @@ function callGetDB(sender_psid) {
 }
 
 // Create a new contact in the database
-function callPostDB(sender_psid, message) {
+function callPostDB(sender_psid, data, field) {
     // Construct the message body
   let request_body = {
-    "fb_id": sender_psid,
-    "firstName": message,
-    "lastName": message
+    "_id": sender_psid,
+    field: data
   }
   
    // Send the HTTP request to the Messenger Platform
   request({
-    "url": URL_SERVER_API,
+    "url": URL_SERVER_API."/contacts/".sender_psid,
     "method": "POST",
     "json" : request_body
   }, (err, res, body) => {
