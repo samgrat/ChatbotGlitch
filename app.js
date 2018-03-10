@@ -167,23 +167,24 @@ function insertInfoDB(state, sender_psid, text){
 }
 
 function getSenderState(sender_psid){
-  let response = {
-    "text": 'State:' + callGetOneDB(sender_psid)
+  let body = callGetOneDB(sender_psid);
+  if (body === undefined){
+    return "O";
+  } else {
+    console.log(body);
   }
-  callSendAPI(sender_psid, response);
-  return "0";
 }
 
 function moveUserState(state, sender_psid, text){
    // we move the the following state according to the answer
   switch(state){
-    case "0": 
+    case "O": 
       if(text.localeCompare(process.env.QUICK_0[0]) == 0){
         callPostDB(sender_psid, "1", "state");
       }
       // TODO construct infos part
       if(text.localeCompare(process.env.QUICK_0[1]) == 0){
-        callPostDB(sender_psid, "0", "state");
+        callPostDB(sender_psid, "O", "state");
       } else{
         console.error('The answer didn\'t match a pattern');
       }
