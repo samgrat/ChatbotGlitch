@@ -122,9 +122,25 @@ function sendMessages(sender_psid){
 }
 
 function insertInfoDB(state, sender_psid, received_message){
-  // we send the data
+  // we send the data the the right field according to state
   switch(state){
-    case "1": callPostDB(sender_psid, received_message, "
+    case "1": callPostDB(sender_psid, received_message, "gender");
+    break;
+    case "2": callPostDB(sender_psid, received_message, "class");
+    break;
+    case "3": callPostDB(sender_psid, received_message, "firstName");
+    break;
+    case "4": callPostDB(sender_psid, received_message, "lastName");
+    break;
+    case "5":
+    case "6":
+    case "6bis": callPostDB(sender_psid, received_message, "handicap");
+    break;
+    case "7": callPostDB(sender_psid, received_message, "equipment");
+    break;
+    case "7": callPostDB(sender_psid, received_message, "equipment");
+    break;
+    
               }
   
 }
@@ -140,7 +156,7 @@ function handleMessage(sender_psid, received_message) {
     
     let state = getSenderState(sender_psid);
     
-    insertInfoDB(state, sender_psid, received_message);
+    insertInfoDB(state, sender_psid, received_message.text);
                  
 
            
