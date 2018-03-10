@@ -200,13 +200,39 @@ function moveUserState(state, sender_psid, text){
     case "3":
     case "3bis": callPostDB(sender_psid, "4", "state");
       break;
-    case "4": callPostDB(sender_psid, text, "lastName");
+    case "4": callPostDB(sender_psid, "5", "state");
       break;
     case "5":
+      if(text.localeCompare(process.env.QUICK_5[0]) == 0 || text.localeCompare(process.env.QUICK_5[1]) == 0 || text.localeCompare(process.env.QUICK_5[2]) == 0 || text.localeCompare(process.env.QUICK_5[3]) == 0){
+        callPostDB(sender_psid, "7", "state");
+      } 
+      if(text.localeCompare(process.env.QUICK_5[4]) == 0){
+        callPostDB(sender_psid, "6", "state");
+      }
+      if(text.localeCompare(process.env.QUICK_5[5]) == 0){
+        callPostDB(sender_psid, "6bis", "state");
+      }
+      else{
+        console.error('The answer didn\'t match a pattern');
+      }
+      break;
     case "6":
-    case "6bis": callPostDB(sender_psid, text, "handicap");
+    case "6bis": callPostDB(sender_psid, "7", "state");
       break;
     case "7": 
+      if(text.localeCompare(process.env.QUICK_7[0]) == 0 || text.localeCompare(process.env.QUICK_7[1]) == 0 || text.localeCompare(process.env.QUICK_7[2]) == 0){
+        callPostDB(sender_psid, "7", "state");
+      } 
+      if(text.localeCompare(process.env.QUICK_7[3]) == 0){
+        callPostDB(sender_psid, "6", "state");
+      }
+      if(text.localeCompare(process.env.QUICK_7[4]) == 0){
+        callPostDB(sender_psid, "6bis", "state");
+      }
+      else{
+        console.error('The answer didn\'t match a pattern');
+      }
+      break;
     case "8": callPostDB(sender_psid, text, "equipment");
       break;
     case "9": 
