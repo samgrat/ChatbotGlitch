@@ -12,7 +12,7 @@
 'use strict';
 
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
-const URL_SERVER_API = 'https://f74fb664.ngrok.io/contact';
+const URL_SERVER_API = process.env.URL_SERVER_API;
 
 // Imports dependencies and set up http server
 const 
