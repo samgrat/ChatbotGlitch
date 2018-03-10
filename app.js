@@ -121,6 +121,11 @@ function sendMessages(sender_psid){
   }
 }
 
+function insertInfoDB(sender_psid, received_message){
+  switch(
+  
+}
+
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
   let response;
@@ -131,12 +136,10 @@ function handleMessage(sender_psid, received_message) {
     // will be added to the body of our request to the Send API
     
     let state = getSenderState(sender_psid);
-    let phrase = "No State Found";
     
-    switch(state){
-      case "0": 
-        sendMessages(sender_psid, process.env.DIALOGUE_0A, process.env.DIALOGUE_0B, process.env.DIALOGUE_0C);
-        sendQuicks(sender_psid, process.env.DIALOGUE_0A, process.env.DIALOGUE_0B, process.env.DIALOGUE_0C);
+    insertInfoDB(sender_psid, state, received_message);
+                 
+
            
                 }
   } else if (received_message.attachments) {
