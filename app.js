@@ -105,10 +105,6 @@ function handlePostback(sender_psid, received_postback) {
   callSendAPI(sender_psid, response);
 }
 
-function getSenderState(sender_psid){
-  
-}
-
 // Send every message passed in argument
 function sendMessages(sender_psid){
   var i;
@@ -168,6 +164,10 @@ function insertInfoDB(state, sender_psid, text){
       break;
               }
   
+}
+
+function getSenderState(sender_psid){
+  return callGetOneDB(sender_psid).state;
 }
 
 function moveUserState(state, sender_psid, text){
@@ -277,13 +277,12 @@ function moveUserState(state, sender_psid, text){
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
   let response;
+  let state = getSenderState(sender_psid);
   
   // Checks if the message contains text
   if (received_message.text) {    
     // Create the payload for a basic text message, which
     // will be added to the body of our request to the Send API
-    
-    let state = getSenderState(sender_psid);
     
     // TODO: test received_message.text before insering into db
     insertInfoDB(state, sender_psid, received_message.text);
@@ -320,7 +319,7 @@ function handleMessage(sender_psid, received_message) {
   } 
   
     response = {
-      "text": ' '
+      "text": 'State:' + state
     }
     callSendAPI(sender_psid, response);
 }
@@ -333,13 +332,10 @@ function callGetOneDB(sender_psid) {
     "method": "GET"
   }, (err, res, body) => {
     if (!err) {
-      let response = {
-      "text": body
-      }
       console.log(res)
       console.log(body)
-      callSendAPI(sender_psid, response)
-      console.log('message sent!')
+      return body;
+      
     } else {
       console.error("Unable to send message:" + err);
     }
