@@ -174,48 +174,66 @@ function moveUserState(state, sender_psid, text){
    // we move the the following state according to the answer
   switch(state){
     case "0": 
-      if(text .callPostDB(sender_psid, "1", "state");
+      if(text.localeCompare(process.env.QUICK_0[0]) == 0){
+        callPostDB(sender_psid, "1", "state");
+      }
+      // TODO construct infos part
+      if(text.localeCompare(process.env.QUICK_0[1]) == 0){
+        callPostDB(sender_psid, "0", "state");
+      } else{
+        console.error('The answer didn\'t match a pattern');
+      }
       break;
-    case "1": callPostDB(sender_psid, "2", "state");
+    case "1": callPostDB(sender_psid, "2", "state");  
       break;
-      case "2": callPostDB(sender_psid, text, "class");
-    break;
-      case "3": callPostDB(sender_psid, text, "firstName");
-    break;
-      case "4": callPostDB(sender_psid, text, "lastName");
-    break;
-      case "5":
-      case "6":
-      case "6bis": callPostDB(sender_psid, text, "handicap");
-    break;
-      case "7": 
-      case "8": callPostDB(sender_psid, text, "equipment");
-    break;
-      case "9": 
-      case "10": callPostDB(sender_psid, text, "utilitarian");
-    break;
-      case "11": callPostDB(sender_psid, text, "birthdate");
-    break;
-      case "12": callPostDB(sender_psid, text, "address");
-    break;
-      case "13": callPostDB(sender_psid, text, "telephone");
-    break;
-      case "14": callPostDB(sender_psid, text, "studentID");
-    break;
-      case "15": callPostDB(sender_psid, text, "cursus");
-    break;
-      case "16": callPostDB(sender_psid, text, "dreamJob");
-    break;
-      case "17": callPostDB(sender_psid, text, "location");
-    break;
-      case "18": callPostDB(sender_psid, text, "scholarship");
-    break;
-      case "19": callPostDB(sender_psid, text, "internship");
-    break;
-      case "20": callPostDB(sender_psid, text, "accompaniment");
-    break;
-      case "21": callPostDB(sender_psid, text, "info");
-    break;
+    case "2":
+      if(text.localeCompare(process.env.QUICK_2[0]) == 0){
+        callPostDB(sender_psid, "3", "state");
+      }
+      // TODO construct volontary part
+      if(text.localeCompare(process.env.QUICK_2[1]) == 0){
+        callPostDB(sender_psid, "3bis", "state");
+      } else{
+        console.error('The answer didn\'t match a pattern');
+      }
+      break;
+    case "3":
+    case "3bis": callPostDB(sender_psid, "4", "state");
+      break;
+    case "4": callPostDB(sender_psid, text, "lastName");
+      break;
+    case "5":
+    case "6":
+    case "6bis": callPostDB(sender_psid, text, "handicap");
+      break;
+    case "7": 
+    case "8": callPostDB(sender_psid, text, "equipment");
+      break;
+    case "9": 
+    case "10": callPostDB(sender_psid, text, "utilitarian");
+      break;
+    case "11": callPostDB(sender_psid, text, "birthdate");
+      break;
+    case "12": callPostDB(sender_psid, text, "address");
+      break;
+    case "13": callPostDB(sender_psid, text, "telephone");
+      break;
+    case "14": callPostDB(sender_psid, text, "studentID");
+      break;
+    case "15": callPostDB(sender_psid, text, "cursus");
+      break;
+    case "16": callPostDB(sender_psid, text, "dreamJob");
+      break;
+    case "17": callPostDB(sender_psid, text, "location");
+      break;
+    case "18": callPostDB(sender_psid, text, "scholarship");
+      break;
+    case "19": callPostDB(sender_psid, text, "internship");
+      break;
+    case "20": callPostDB(sender_psid, text, "accompaniment");
+      break;
+    case "21": callPostDB(sender_psid, text, "info");
+      break;
     default: console.log('We don\'t store the data at this state');
       break;
               }
