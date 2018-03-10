@@ -113,6 +113,13 @@ function handleMessage(sender_psid, received_message) {
   if (received_message.text) {    
     // Create the payload for a basic text message, which
     // will be added to the body of our request to the Send API
+    
+    let state = getSenderState(sender_psid);
+    let phrase = "No State Found";
+    
+    switch(state){
+      case "0": phrase = 
+                }
     response = {
       "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
     }
