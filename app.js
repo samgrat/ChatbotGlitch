@@ -109,12 +109,16 @@ function getSenderState(sender_psid){
   
 }
 
+// Send every message passed in argument
 function sendMessages(sender_psid){
   var i;
+  let response;
   for (i = 1; i < arguments.length; i++) {
-    arguments[i]
+    response = {
+      "text": arguments[i]
+    }
+    callSendAPI(sender_psid, response);
   }
-    return max;
 }
 
 // Handles messages events
@@ -132,10 +136,9 @@ function handleMessage(sender_psid, received_message) {
     switch(state){
       case "0": 
         sendMessages(sender_psid, process.env.DIALOGUE_0A, process.env.DIALOGUE_0B, process.env.DIALOGUE_0C);
-        
-    response = {
-      "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
-    }
+        sendQuicks(sender_psid, process.env.DIALOGUE_0A, process.env.DIALOGUE_0B, process.env.DIALOGUE_0C);
+           
+                }
   } else if (received_message.attachments) {
     // Get the URL of the message attachment
     let attachment_url = received_message.attachments[0].payload.url;
