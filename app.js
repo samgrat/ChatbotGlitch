@@ -167,7 +167,11 @@ function insertInfoDB(state, sender_psid, text){
 }
 
 function getSenderState(sender_psid){
-  return callGetOneDB(sender_psid).state;
+  let response = {
+    "text": 'State:' + callGetOneDB(sender_psid)
+  }
+  callSendAPI(sender_psid, response);
+  return "0";
 }
 
 function moveUserState(state, sender_psid, text){
@@ -318,10 +322,10 @@ function handleMessage(sender_psid, received_message) {
     }
   } 
   
-    response = {
-      "text": 'State:' + state
-    }
-    callSendAPI(sender_psid, response);
+  response = {
+    "text": 'State:' + state
+  }
+  callSendAPI(sender_psid, response);
 }
 
 // Get the contact with corresponding to sender's id
