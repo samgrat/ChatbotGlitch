@@ -118,7 +118,7 @@ function handleMessage(sender_psid, received_message) {
     let phrase = "No State Found";
     
     switch(state){
-      case "0": phrase = 
+      case "0": phrase = process.env.DIALOGUE_
                 }
     response = {
       "text": `You sent the message: "${received_message.text}". Now send me an attachment!`
