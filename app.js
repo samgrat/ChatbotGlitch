@@ -124,27 +124,47 @@ function sendMessages(sender_psid){
 function insertInfoDB(state, sender_psid, received_message){
   // we send the data the the right field according to state
   switch(state){
-    case "1": callPostDB(sender_psid, received_message, "gender");
+      case "1": callPostDB(sender_psid, received_message, "gender");
     break;
-    case "2": callPostDB(sender_psid, received_message, "class");
+      case "2": callPostDB(sender_psid, received_message, "class");
     break;
-    case "3": callPostDB(sender_psid, received_message, "firstName");
+      case "3": callPostDB(sender_psid, received_message, "firstName");
     break;
-    case "4": callPostDB(sender_psid, received_message, "lastName");
+      case "4": callPostDB(sender_psid, received_message, "lastName");
     break;
-    case "5":
-    case "6":
-    case "6bis": callPostDB(sender_psid, received_message, "handicap");
+      case "5":
+      case "6":
+      case "6bis": callPostDB(sender_psid, received_message, "handicap");
     break;
-    case "7": 
-    case "8": callPostDB(sender_psid, received_message, "equipment");
+      case "7": 
+      case "8": callPostDB(sender_psid, received_message, "equipment");
     break;
-    case "9": 
-    case "10": callPostDB(sender_psid, received_message, "utilitarian");
+      case "9": 
+      case "10": callPostDB(sender_psid, received_message, "utilitarian");
     break;
-    case "11": callPostDB(sender_psid, received_message, "birthdate");
+      case "11": callPostDB(sender_psid, received_message, "birthdate");
     break;
-    
+      case "12": callPostDB(sender_psid, received_message, "address");
+    break;
+      case "13": callPostDB(sender_psid, received_message, "telephone");
+    break;
+      case "14": callPostDB(sender_psid, received_message, "studentID");
+    break;
+      case "15": callPostDB(sender_psid, received_message, "cursus");
+    break;
+      case "16": callPostDB(sender_psid, received_message, "dreamJob");
+    break;
+      case "17": callPostDB(sender_psid, received_message, "location");
+    break;
+      case "18": callPostDB(sender_psid, received_message, "scholarship");
+    break;
+      case "19": callPostDB(sender_psid, received_message, "internship");
+    break;
+      case "20": callPostDB(sender_psid, received_message, "accompaniment");
+    break;
+      case "21": callPostDB(sender_psid, received_message, "info");
+    break;
+    default:break;
               }
   
 }
@@ -162,10 +182,9 @@ function handleMessage(sender_psid, received_message) {
     
     // TODO: test received_message.text before insering into db
     insertInfoDB(state, sender_psid, received_message.text);
+    
+    
                  
-
-           
-                }
   } else if (received_message.attachments) {
     // Get the URL of the message attachment
     let attachment_url = received_message.attachments[0].payload.url;
