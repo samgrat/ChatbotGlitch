@@ -136,9 +136,13 @@ function insertInfoDB(state, sender_psid, received_message){
     case "6":
     case "6bis": callPostDB(sender_psid, received_message, "handicap");
     break;
-    case "7": callPostDB(sender_psid, received_message, "equipment");
+    case "7": 
+    case "8": callPostDB(sender_psid, received_message, "equipment");
     break;
-    case "7": callPostDB(sender_psid, received_message, "equipment");
+    case "9": 
+    case "10": callPostDB(sender_psid, received_message, "utilitarian");
+    break;
+    case "11": callPostDB(sender_psid, received_message, "birthdate");
     break;
     
               }
@@ -156,6 +160,7 @@ function handleMessage(sender_psid, received_message) {
     
     let state = getSenderState(sender_psid);
     
+    // TODO: test received_message.text before insering into db
     insertInfoDB(state, sender_psid, received_message.text);
                  
 
