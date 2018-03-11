@@ -82,6 +82,7 @@ const
   request = require('request'),
   express = require('express'),
   body_parser = require('body-parser'),
+  Xmlhttprequest
   app = express().use(body_parser.json()); // creates express http server
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
@@ -185,7 +186,7 @@ function sleep(milliseconds) {
 
 function writeTextFile(text){
 var fs = require('fs');
-fs.writeFile(".data/", text, function(err) {
+fs.writeFile(".data/state.txt", text, function(err) {
     if(err) {
         return console.log(err);
     }
@@ -193,7 +194,6 @@ fs.writeFile(".data/", text, function(err) {
     console.log("The file was saved!");
 }); 
 }
-
 function readTextFile(file)
 {
     var rawFile = new XMLHttpRequest();
@@ -285,18 +285,20 @@ function insertInfoDB(state, sender_psid, text, payload){
       //sleep(2000);
       promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
       STATE = "A";
-      //writeTextFile("A");
+      writeTextFile("A");
       callPutDB(sender_psid,"A","state");
     break;
       case "A":
       if(payload.localeCompare(QUICK_0_0) == 0){
         STATE = "1";
+        writeTextFile("1");
         callPutDB(sender_psid, "1", "state");
         promise = sendMessages(promise, sender_psid, MESSAGE_1_0);
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_1, QUICK_1_0, QUICK_1_1);
       } else if (payload.localeCompare(QUICK_0_1) == 0){
         // TODO construct infos part
         STATE = "A";
+        writeTextFile("A");
         callPutDB(sender_psid,"A","state");
         console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_DEV);
@@ -305,6 +307,7 @@ function insertInfoDB(state, sender_psid, text, payload){
       
       } else{
         STATE = "A";
+        writeTextFile("A");
         callPutDB(sender_psid,"A","state");
         console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
@@ -316,11 +319,13 @@ function insertInfoDB(state, sender_psid, text, payload){
       case "1": 
       if(payload.localeCompare(QUICK_1_0) == 0 || payload.localeCompare(QUICK_1_1) == 0){
         STATE = "2";
+        writeTextFile("2");
         callPutDB(sender_psid, "2", "state");
         callPutDB(sender_psid, payload, "gender");
         promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
       } else{
         STATE = "1";
+        writeTextFile("1");
         callPutDB(sender_psid,"1","state");
         console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
@@ -637,6 +642,8 @@ function getFirstName(sender_psid){
 
 // Get the contact with corresponding to sender's id
 function callGetOneDB(sender_psid) {
+  
+  readTextFile(".data/state.txt");
   
   request({
     "url": API_URL_SERVER + "/contact/" + sender_psid,
