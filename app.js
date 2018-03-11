@@ -380,9 +380,8 @@ function callPostDB(sender_psid, data, field) {
     // Construct the message body
   let request_body = {
     "_id": sender_psid,
-    field: data
+    "firtName": data
   }
-  
    // Send the HTTP request to the Messenger Platform
   request({
     "url": API_URL_SERVER + "/contact/" + sender_psid,
