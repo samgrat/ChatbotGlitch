@@ -175,7 +175,7 @@ function getSenderState(sender_psid){
     return "O";
   } else {
     console.log(body);
-    return "O";
+    return "0";
   }
 }
 
@@ -183,6 +183,7 @@ function moveUserState(state, sender_psid, text){
    // we move the the following state according to the answer
   switch(state){
     case "O": callPostDB(sender_psid);
+              callPutDB(sender_psid, "0", "state");
       break;
     case "0": 
       if(text.localeCompare(QUICK_0_0) == 0){
@@ -387,7 +388,7 @@ function callPostDB(sender_psid) {
     "json" : request_body
   }, (err, res, body) => {
     if (!err) {
-      console.log('info added to DB')
+      console.log('New contact created')
     } else {
       console.error("Unable to add info:" + err);
     }
@@ -400,7 +401,7 @@ function callPutDB(sender_psid, data, field) {
     // Construct the message body
   let request_body = {
     "_id": sender_psid,
-    field: data,
+    "state": data,
     "firstName" : "test"
   }
    // Send the HTTP request to the Messenger Platform
