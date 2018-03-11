@@ -121,8 +121,9 @@ function sendMessages(sender_psid){
 }
 
 function insertInfoDB(state, sender_psid, text){
+  let s = callGetOneDB(sender_psid)
   // we send the data the the right endpoint according to state
-  switch(state){
+  switch(s){
       case "O": callPutDB(sender_psid, "O", "state");
     break;
       case "A":
@@ -187,7 +188,6 @@ function insertInfoDB(state, sender_psid, text){
 
 function getSenderState(sender_psid){
   callGetOneDB(sender_psid);
-  console.log(" body in getstate " + BODY);
   if (BODY === undefined){
     return "O";
   } else {
@@ -196,8 +196,9 @@ function getSenderState(sender_psid){
 }
 
 function moveUserState(state, sender_psid, text){
+  let s = callGetOneDB(sender_psid)
    // we move the the following state according to the answer
-  switch(state){
+  switch(s){
     case "O": callPostDB(sender_psid);
       break;
     case "A":
@@ -311,17 +312,15 @@ function handleMessage(sender_psid, received_message) {
   
   // Checks if the message contains text
   if (received_message.text) {  
+    
   callPostDB(sender_psid);
-  state = callGetOneDB(sender_psid);
-  if(state === undefined){
-    state= "I";
-  }
+  
   
     // Create the payload for a basic text message, which
     // will be added to the body of our request to the Send API
     
     // TODO: test received_message.text before insering into db
-    insertInfoDB(state, sender_psid, received_message.text);
+    state = insertInfoDB(state, sender_psid, received_message.text);
     //moveUserState(state, sender_psid, received_message.text);
                  
   } else if (received_message.attachments) {
