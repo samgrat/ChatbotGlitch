@@ -252,8 +252,7 @@ function insertInfoDB(state, sender_psid, text, payload){
   let promise;
   // we send the data the the right endpoint according to state
   switch(STATE){
-      case undefined:
-      case "O": 
+    case "O": 
       ERROR_ANSWER = false;
       promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
       //sleep(2000);
@@ -261,6 +260,7 @@ function insertInfoDB(state, sender_psid, text, payload){
       STATE = "A";
       callPutDB(sender_psid,"A","state");
     break;
+      case undefined:
       case "A":
       ERROR_ANSWER = false;
       if(payload.localeCompare(QUICK_0_0) == 0){
@@ -287,14 +287,15 @@ function insertInfoDB(state, sender_psid, text, payload){
       callPutDB(sender_psid, "2", "state");
     break;
       case "2": 
-      callPutDB(sender_psid, payload, "class");
-      case "2E":
+
       if(payload.localeCompare(QUICK_2_0) == 0){
+        callPutDB(sender_psid, payload, "class");
         promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1);
         promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
         callPutDB(sender_psid, "3", "state");
       }
       else if(payload.localeCompare(QUICK_2_1) == 0){
+        callPutDB(sender_psid, payload, "class");
         promise = sendMessages(promise, sender_psid, MESSAGE_3bis_0 + "\n" + MESSAGE_3_1);
         promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
         STATE = "3";
@@ -303,9 +304,9 @@ function insertInfoDB(state, sender_psid, text, payload){
         console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
         promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
-        STATE = "2E";
+        STATE = "2";
         ERROR_ANSWER = true;
-        callPutDB(sender_psid, "2E", "state");
+        callPutDB(sender_psid, "2", "state");
       }
     break;
       case "3": callPutDB(sender_psid, text, "firstName");
