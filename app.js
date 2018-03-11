@@ -127,10 +127,10 @@ function putState(state) {
 }
 
 function insertInfoDB(state, sender_psid, text){
-  let s = callGetOneDB(sender_psid)
+  callGetOneDB(sender_psid)
   // we send the data the the right endpoint according to state
-  switch(s){
-      case "O": callPutDB(sender_psid, "O", "state");
+  switch(STATE){
+      case "O": callPutDB(sender_psid,"A","state");
     break;
       case "A":
       if(text.localeCompare(QUICK_0_0) == 0){
@@ -189,17 +189,6 @@ function insertInfoDB(state, sender_psid, text){
     default: console.log('We don\'t store the data at this state');
       break;
               }
-  return s;
-  
-}
-
-function getSenderState(sender_psid){
-  callGetOneDB(sender_psid);
-  if (BODY === undefined){
-    return "O";
-  } else {
-    return "A";
-  }
 }
 
 function moveUserState(state, sender_psid, text){
@@ -381,6 +370,7 @@ function callGetOneDB(sender_psid) {
       console.log("body : " + bodystr);
       if(bodystr === null){
         state = "O";
+        callPostDB(sender_psid);
       } else {
         state = bodystr.state;
       }
