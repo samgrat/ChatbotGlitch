@@ -184,25 +184,26 @@ function sendMessages(sender_psid){
   var i;
   let response = {};
 
-  for (i = 1; i < arguments.length; i++) {
+  
+    for (i = 1; i < arguments.length; i++) {
     response = {
       "text": arguments[i],
     }
     console.log(response);
     callSendAPI(sender_psid, response);
-    sleep(1000);
-  }s
+    
+  }
 }
 
 // Send all the quick answer options passed in argument
 function sendQuicks(sender_psid){
   var i;
   let response = {};
-  response.text = "quick";
+  response.text = arguments[1];
   response.quick_replies = [];
   
   let quick = {};
-  for (i = 1; i < arguments.length; i++) {
+  for (i = 2; i < arguments.length; i++) {
     quick = {
       "content_type":"text",
       "title": arguments[i],
@@ -223,8 +224,9 @@ function insertInfoDB(state, sender_psid, text){
   callGetOneDB(sender_psid)
   // we send the data the the right endpoint according to state
   switch(STATE){
-      case "O": sendMessages(sender_psid, MESSAGE_0_0, MESSAGE_0_1, MESSAGE_0_2);
-                sendQuicks(sender_psid, QUICK_0_0, QUICK_0_1);
+      case "O": sendMessages(sender_psid, MESSAGE_0_0, MESSAGE_0_1);
+                sleep(1000);
+                sendQuicks(sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
                 callPutDB(sender_psid,"O","state");
     break;
       case "A":
@@ -439,11 +441,6 @@ function handleMessage(sender_psid, received_message) {
       }
     }
   } 
-  
-  response = {
-    "text": 'State:' + STATE
-  }
-  callSendAPI(sender_psid, response);
 }
 
 // Get the contact with corresponding to sender's id
