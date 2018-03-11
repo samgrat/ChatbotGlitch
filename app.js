@@ -185,7 +185,7 @@ function sleep(milliseconds) {
 
 function writeTextFile(text){
 var fs = require('fs');
-fs.writeFile("/.data", text, function(err) {
+fs.writeFile(".data/", text, function(err) {
     if(err) {
         return console.log(err);
     }
