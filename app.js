@@ -32,7 +32,45 @@ const QUICK_5_1 = process.env.QUICK_5_1;
 const QUICK_5_2 = process.env.QUICK_5_2;
 const QUICK_5_3 = process.env.QUICK_5_3;
 const QUICK_5_4 = process.env.QUICK_5_4;
-
+const QUICK_5_5 = process.env.QUICK_5_5;
+const MESSAGE_6_0 = process.env.MESSAGE_6_0;
+const MESSAGE_6bis_0 = process.env.MESSAGE_6bis_0;
+const MESSAGE_7_0 = process.env.MESSAGE_7_0;
+const QUICK_7_0 = process.env.QUICK_7_0;
+const QUICK_7_1 = process.env.QUICK_7_1;
+const QUICK_7_2 = process.env.QUICK_7_2;
+const QUICK_7_3 = process.env.QUICK_7_3;
+const QUICK_7_4 = process.env.QUICK_7_4;
+const MESSAGE_8_0 = process.env.MESSAGE_8_0;
+const MESSAGE_9_0 = process.env.MESSAGE_9_0;
+const QUICK_9_0 = process.env.QUICK_9_0;
+const QUICK_9_1 = process.env.QUICK_9_1;
+const MESSAGE_10_0 = process.env.MESSAGE_10_0;
+const MESSAGE_11_0 = process.env.MESSAGE_11_0;
+const MESSAGE_11_1 = process.env.MESSAGE_11_1;
+const MESSAGE_11_2 = process.env.MESSAGE_11_2;
+const MESSAGE_13_0 = process.env.MESSAGE_13_0;
+const MESSAGE_14_0 = process.env.MESSAGE_14_0;
+const MESSAGE_14_1 = process.env.MESSAGE_14_1;
+const MESSAGE_15_0 = process.env.MESSAGE_15_0;
+const MESSAGE_16_0 = process.env.MESSAGE_16_0;
+const MESSAGE_17_0 = process.env.MESSAGE_17_0;
+const MESSAGE_17_1 = process.env.MESSAGE_17_1;
+const QUICK_17_0 = process.env.QUICK_17_0;
+const QUICK_17_1 = process.env.QUICK_17_1;
+const QUICK_17_2 = process.env.QUICK_17_2;
+const MESSAGE_18_0 = process.env.MESSAGE_18_0;
+const MESSAGE_18_1 = process.env.MESSAGE_18_1;
+const QUICK_18_0 = process.env.QUICK_18_0;
+const QUICK_18_1 = process.env.QUICK_18_1;
+const MESSAGE_19_0 = process.env.MESSAGE_19_0;
+const MESSAGE_20_0 = process.env.MESSAGE_20_0;
+const QUICK_20_0 = process.env.QUICK_20_0;
+const QUICK_20_1 = process.env.QUICK_20_1;
+const MESSAGE_21_0 = process.env.MESSAGE_21_0;
+const MESSAGE_21_1 = process.env.MESSAGE_21_1;
+const MESSAGE_22_0 = process.env.MESSAGE_22_0;
+const MESSAGE_22_1 = process.env.MESSAGE_22_1;
 let STATE;
 
 // Imports dependencies and set up http server
@@ -153,7 +191,8 @@ function insertInfoDB(state, sender_psid, text){
   callGetOneDB(sender_psid)
   // we send the data the the right endpoint according to state
   switch(STATE){
-      case "O": callPutDB(sender_psid,"A","state");
+      case "O": sendMessages(sender_psid, MESSAGE_0_0, MESSAGE
+      callPutDB(sender_psid,"A","state");
     break;
       case "A":
       if(text.localeCompare(QUICK_0_0) == 0){
