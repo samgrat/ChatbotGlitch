@@ -299,7 +299,7 @@ function insertInfoDB(state, sender_psid, text, payload){
         STATE = "A";
         callPutDB(sender_psid,"A","state");
         console.error('The answer didn\'t match a pattern');
-        promise = sendMessages(promise, sender_psid, MESSAGE_3_0);
+        promise = sendMessages(promise, sender_psid, MESSAGE_DEV);
         promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
         promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);  
       
@@ -314,10 +314,19 @@ function insertInfoDB(state, sender_psid, text, payload){
       }
     break;
       case "1": 
-      STATE = "2";
-      callPutDB(sender_psid, "2", "state");
-      callPutDB(sender_psid, payload, "gender");
-      promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
+      if(payload.localeCompare(QUICK_1_0) == 0 || payload.localeCompare(QUICK_1_1) == 0  ){
+        STATE = "2";
+        callPutDB(sender_psid, "2", "state");
+        callPutDB(sender_psid, payload, "gender");
+        promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
+      } else{
+        STATE = "1";
+        callPutDB(sender_psid,"1","state");
+        console.error('The answer didn\'t match a pattern');
+        promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
+        promise = sendMessages(promise, sender_psid, MESSAGE_1_0);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_1_1, QUICK_1_0, QUICK_1_1);
+      }
     break;
       case "2": 
 
