@@ -123,45 +123,45 @@ function sendMessages(sender_psid){
 function insertInfoDB(state, sender_psid, text){
   // we send the data the the right endpoint according to state
   switch(state){
-      case "1": callPostDB(sender_psid, text, "gender");
+      case "1": callPutDB(sender_psid, text, "gender");
     break;
-      case "2": callPostDB(sender_psid, text, "class");
+      case "2": callPutDB(sender_psid, text, "class");
     break;
-      case "3": callPostDB(sender_psid, text, "firstName");
+      case "3": callPutDB(sender_psid, text, "firstName");
     break;
-      case "4": callPostDB(sender_psid, text, "lastName");
+      case "4": callPutDB(sender_psid, text, "lastName");
     break;
       case "5":
       case "6":
-      case "6bis": callPostDB(sender_psid, text, "handicap");
+      case "6bis": callPutDB(sender_psid, text, "handicap");
     break;
       case "7": 
-      case "8": callPostDB(sender_psid, text, "equipment");
+      case "8": callPutDB(sender_psid, text, "equipment");
     break;
       case "9": 
-      case "10": callPostDB(sender_psid, text, "utilitarian");
+      case "10": callPutDB(sender_psid, text, "utilitarian");
     break;
-      case "11": callPostDB(sender_psid, text, "birthdate");
+      case "11": callPutDB(sender_psid, text, "birthdate");
     break;
-      case "12": callPostDB(sender_psid, text, "address");
+      case "12": callPutDB(sender_psid, text, "address");
     break;
-      case "13": callPostDB(sender_psid, text, "telephone");
+      case "13": callPutDB(sender_psid, text, "telephone");
     break;
-      case "14": callPostDB(sender_psid, text, "studentID");
+      case "14": callPutDB(sender_psid, text, "studentID");
     break;
-      case "15": callPostDB(sender_psid, text, "cursus");
+      case "15": callPutDB(sender_psid, text, "cursus");
     break;
-      case "16": callPostDB(sender_psid, text, "dreamJob");
+      case "16": callPutDB(sender_psid, text, "dreamJob");
     break;
-      case "17": callPostDB(sender_psid, text, "location");
+      case "17": callPutDB(sender_psid, text, "location");
     break;
-      case "18": callPostDB(sender_psid, text, "scholarship");
+      case "18": callPutDB(sender_psid, text, "scholarship");
     break;
-      case "19": callPostDB(sender_psid, text, "internship");
+      case "19": callPutDB(sender_psid, text, "internship");
     break;
-      case "20": callPostDB(sender_psid, text, "accompaniment");
+      case "20": callPutDB(sender_psid, text, "accompaniment");
     break;
-      case "21": callPostDB(sender_psid, text, "info");
+      case "21": callPutDB(sender_psid, text, "info");
     break;
     default: console.log('We don\'t store the data at this state');
       break;
@@ -182,104 +182,104 @@ function getSenderState(sender_psid){
 function moveUserState(state, sender_psid, text){
    // we move the the following state according to the answer
   switch(state){
-    case "O": callPostDB(sender_psid, "0", "state");
+    case "O": callPostDB(sender_psid);
       break;
     case "0": 
       if(text.localeCompare(QUICK_0_0) == 0){
-        callPostDB(sender_psid, "1", "state");
+        callPutDB(sender_psid, "1", "state");
       }
       // TODO construct infos part
       if(text.localeCompare(QUICK_0_1) == 0){
-        callPostDB(sender_psid, "0", "state");
+        callPutDB(sender_psid, "0", "state");
       } else{
         console.error('The answer didn\'t match a pattern');
       }
       break;
-    case "1": callPostDB(sender_psid, "2", "state");  
+    case "1": callPutDB(sender_psid, "2", "state");  
       break;
     case "2":
       if(text.localeCompare(process.env.QUICK_2[0]) == 0){
-        callPostDB(sender_psid, "3", "state");
+        callPutDB(sender_psid, "3", "state");
       }
       // TODO construct volontary part
       if(text.localeCompare(process.env.QUICK_2[1]) == 0){
-        callPostDB(sender_psid, "3bis", "state");
+        callPutDB(sender_psid, "3bis", "state");
       } else{
         console.error('The answer didn\'t match a pattern');
       }
       break;
     case "3":
-    case "3bis": callPostDB(sender_psid, "4", "state");
+    case "3bis": callPutDB(sender_psid, "4", "state");
       break;
-    case "4": callPostDB(sender_psid, "5", "state");
+    case "4": callPutDB(sender_psid, "5", "state");
       break;
     case "5":
       if(text.localeCompare(process.env.QUICK_5[0]) == 0 || text.localeCompare(process.env.QUICK_5[1]) == 0 || text.localeCompare(process.env.QUICK_5[2]) == 0 || text.localeCompare(process.env.QUICK_5[3]) == 0){
-        callPostDB(sender_psid, "7", "state");
+      callPutDB(sender_psid, "7", "state");
       } 
       if(text.localeCompare(process.env.QUICK_5[4]) == 0){
-        callPostDB(sender_psid, "6", "state");
+      callPutDB(sender_psid, "6", "state");
       }
       if(text.localeCompare(process.env.QUICK_5[5]) == 0){
-        callPostDB(sender_psid, "6bis", "state");
+      callPutDB(sender_psid, "6bis", "state");
       }
       else{
         console.error('The answer didn\'t match a pattern');
       }
       break;
     case "6":
-    case "6bis": callPostDB(sender_psid, "7", "state");
+    case "6bis": callPutDB(sender_psid, "7", "state");
       break;
     case "7": 
       if(text.localeCompare(process.env.QUICK_7[0]) == 0 || text.localeCompare(process.env.QUICK_7[1]) == 0 || text.localeCompare(process.env.QUICK_7[2]) == 0){
-        callPostDB(sender_psid, "9", "state");
+        callPutDB(sender_psid, "9", "state");
       } 
       if(text.localeCompare(process.env.QUICK_7[3]) == 0){
-        callPostDB(sender_psid, "8", "state");
+        callPutDB(sender_psid, "8", "state");
       }
       if(text.localeCompare(process.env.QUICK_7[4]) == 0){
-        callPostDB(sender_psid, "8", "state");
+        callPutDB(sender_psid, "8", "state");
       }
       else{
         console.error('The answer didn\'t match a pattern');
       }
       break;
-    case "8": callPostDB(sender_psid, "9", "state");
+    case "8": callPutDB(sender_psid, "9", "state");
       break;
     case "9": 
       if(text.localeCompare(process.env.QUICK_9[0]) == 0){
-        callPostDB(sender_psid, "10", "state");
+        callPutDB(sender_psid, "10", "state");
       }
       if(text.localeCompare(process.env.QUICK_9[1]) == 0){
-        callPostDB(sender_psid, "11", "state");
+        callPutDB(sender_psid, "11", "state");
       }
       else{
         console.error('The answer didn\'t match a pattern');
       }
       break;
-    case "10": callPostDB(sender_psid, "11", "state");
+    case "10": callPutDB(sender_psid, "11", "state");
       break;
-    case "11": callPostDB(sender_psid, "12", "state");
+    case "11": callPutDB(sender_psid, "12", "state");
       break;
-    case "12": callPostDB(sender_psid, "13", "state");
+    case "12": callPutDB(sender_psid, "13", "state");
       break;
-    case "13": callPostDB(sender_psid, "14", "state");
+    case "13": callPutDB(sender_psid, "14", "state");
       break;
-    case "14": callPostDB(sender_psid, "15", "state");
+    case "14": callPutDB(sender_psid, "15", "state");
       break;
-    case "15": callPostDB(sender_psid, "16", "state");
+    case "15": callPutDB(sender_psid, "16", "state");
       break;
-    case "16": callPostDB(sender_psid, "17", "state");
+    case "16": callPutDB(sender_psid, "17", "state");
       break;
-    case "17": callPostDB(sender_psid, "18", "state");
+    case "17": callPutDB(sender_psid, "18", "state");
       break;
-    case "18": callPostDB(sender_psid, "19", "state");
+    case "18": callPutDB(sender_psid, "19", "state");
       break;
-    case "19": callPostDB(sender_psid, "20", "state");
+    case "19": callPutDB(sender_psid, "20", "state");
       break;
-    case "20": callPostDB(sender_psid, "21", "state");
+    case "20": callPutDB(sender_psid, "21", "state");
       break;
-    case "21": callPostDB(sender_psid, "22", "state");
+    case "21": callPutDB(sender_psid, "22", "state");
       break;
     default: console.log('We don\'t store the data at this state');
       break;
@@ -375,16 +375,38 @@ function callGetDB(sender_psid) {
 }
 
 // Create a new contact in the database
-function callPostDB(sender_psid, data, field) {
+function callPostDB(sender_psid) {
     // Construct the message body
   let request_body = {
     "_id": sender_psid,
-    "firtName": data
   }
    // Send the HTTP request to the Messenger Platform
   request({
     "url": API_URL_SERVER + "/contact/" + sender_psid,
     "method": "POST",
+    "json" : request_body
+  }, (err, res, body) => {
+    if (!err) {
+      console.log('info added to DB')
+    } else {
+      console.error("Unable to add info:" + err);
+    }
+  }); 
+  
+}
+
+// Modify contact in the database
+function callPutDB(sender_psid, data, field) {
+    // Construct the message body
+  let request_body = {
+    "_id": sender_psid,
+    field: data,
+    "firstName" : "test"
+  }
+   // Send the HTTP request to the Messenger Platform
+  request({
+    "url": API_URL_SERVER + "/contact/" + sender_psid,
+    "method": "PUT",
     "json" : request_body
   }, (err, res, body) => {
     if (!err) {
