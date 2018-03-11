@@ -179,6 +179,7 @@ function sendMessages(sender_psid){
     response = {
       "text": arguments[i],
     }
+    console.log(response);
     callSendAPI(sender_psid, response);
   }
 }
@@ -195,9 +196,10 @@ function sendQuicks(sender_psid){
     quick = {
       "content_type":"text",
       "title": arguments[i],
-    }
+    };
     response.quick_replies.unshift(quick);
   }
+  console.log(response);
   callSendAPI(sender_psid, response);
 }
 
@@ -212,7 +214,7 @@ function insertInfoDB(state, sender_psid, text){
   switch(STATE){
       case "O": sendMessages(sender_psid, MESSAGE_0_0, MESSAGE_0_1, MESSAGE_0_2);
                 sendQuicks(sender_psid, QUICK_0_0, QUICK_0_1);
-                callPutDB(sender_psid,"A","state");
+                callPutDB(sender_psid,"O","state");
     break;
       case "A":
       if(text.localeCompare(QUICK_0_0) == 0){
