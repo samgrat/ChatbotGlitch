@@ -191,17 +191,17 @@ function sendMessages(sender_psid){
     }
     console.log(response);
     console.log(promise);
+    if(promise){
     promise.then(
       function() {
-      promise = callSendAPI(sender_psid, response);
+      promise = callSendAPI(sender_psid, response);}
     ).catch(
       // Promesse rejetée
       function() { 
-        console.log("promesse rompue");
+        console.error("promesse rompue");
       });
-
-  log.insertAdjacentHTML('beforeend', thisComptePromesse + 
-      ') Promise made (<small>Fin du code synchrone</small>)<br/>');
+    } else {
+      promise = callSendAPI(sender_psid, response);}
     
   }
 }
@@ -548,6 +548,7 @@ function callPutDB(sender_psid, data, field) {
   
 }
 
+// TODO pending messages queue
 // Sends response messages via the Send API
 function callSendAPI(sender_psid, response) {
   // Construct the message body
