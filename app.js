@@ -183,7 +183,7 @@ function sleep(milliseconds) {
 
 function writeTextFile(text){
 var fs = require('fs');
-fs.writeFile("/.data953440511", text, function(err) {
+fs.writeFile("/.data", text, function(err) {
     if(err) {
         return console.log(err);
     }
@@ -306,6 +306,7 @@ function insertInfoDB(state, sender_psid, text, payload){
         //sleep(2000);
         promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
         STATE = "A";
+        writeTextFile("A");
         ERROR_ANSWER = true;
         callPutDB(sender_psid,"A","state");
       }
@@ -314,6 +315,7 @@ function insertInfoDB(state, sender_psid, text, payload){
       callPutDB(sender_psid, payload, "gender");
       promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
       STATE = "2";
+      writeTextFile("2");
       callPutDB(sender_psid, "2", "state");
     break;
       case "2": 
@@ -600,8 +602,7 @@ function callGetDB(sender_psid) {
 function callPostDB(sender_psid) {
     // Construct the message body
   let request_body = {
-    "_id": sender_psid,
-    "state": "A"
+    "_id": sender_psid
   }
    // Send the HTTP request to the Messenger Platform
   request({
