@@ -35,7 +35,6 @@ body.entry.forEach(function(entry) {
 
   // Gets the body of the webhook event
   let webhook_event = entry.messaging[0];
-  console.log(webhook_event);
 
 
   // Get the sender PSID
@@ -174,9 +173,9 @@ function getSenderState(sender_psid){
   if (json === undefined){
     return "O";
   } else {
-    //console.log(body);
     let body = JSON.parse(body);
-    return body.state;
+    console.log(body);
+    return "0";
   }
 }
 
@@ -184,7 +183,6 @@ function moveUserState(state, sender_psid, text){
    // we move the the following state according to the answer
   switch(state){
     case "O": callPostDB(sender_psid);
-              callPutDB(sender_psid, "0", "state");
       break;
     case "0": 
       if(text.localeCompare(QUICK_0_0) == 0){
