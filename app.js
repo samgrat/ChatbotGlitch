@@ -72,7 +72,7 @@ const MESSAGE_21_0 = process.env.MESSAGE_21_0;
 const MESSAGE_21_1 = process.env.MESSAGE_21_1;
 const MESSAGE_22_0 = process.env.MESSAGE_22_0;
 const MESSAGE_22_1 = process.env.MESSAGE_22_1;
-let STATE;
+let STATE = null;
 let ERROR_ANSWER = false;
 
 // Imports dependencies and set up http server
@@ -252,17 +252,15 @@ function insertInfoDB(state, sender_psid, text, payload){
   let promise;
   // we send the data the the right endpoint according to state
   switch(STATE){
+    case null:
     case "O": 
-      ERROR_ANSWER = false;
       promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
       //sleep(2000);
       promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
       STATE = "A";
       callPutDB(sender_psid,"A","state");
     break;
-      case undefined:
       case "A":
-      ERROR_ANSWER = false;
       if(payload.localeCompare(QUICK_0_0) == 0){
         promise = sendMessages(promise, sender_psid, MESSAGE_1_0);
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_1, QUICK_1_0, QUICK_1_1);
@@ -528,7 +526,7 @@ function callGetOneDB(sender_psid) {
       
       console.log("body : " + bodystr);
       if(bodystr === null){
-        STATE = "O";
+        STATE = "A";
         console.log("State : 0");
         callPostDB(sender_psid);
       } else {
@@ -569,6 +567,7 @@ function callPostDB(sender_psid) {
     // Construct the message body
   let request_body = {
     "_id": sender_psid,
+    "state": "A"
   }
    // Send the HTTP request to the Messenger Platform
   request({
