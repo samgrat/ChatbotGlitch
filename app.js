@@ -335,11 +335,15 @@ function insertInfoDB(state, sender_psid, text, payload){
       }
     break;
       case "3": 
+      STATE = "4";
+      callPutDB(sender_psid, "4", "state");
       callPutDB(sender_psid, text, "firstName");
-      F
-      promise = sendMessages(promise, sender_psid, MESSAGE_3_0);
+      promise = sendMessages(promise, sender_psid, MESSAGE_4_0);
     break;
-      case "4": callPutDB(sender_psid, text, "lastName");
+      case "4": 
+      callPutDB(sender_psid, text, "lastName");
+      MESSAGE_5_0.replace("@prenom", FIRSTNAME);
+      promise = sendMessages(promise, sender_psid, MESSAGE_5_0);
     break;
       case "5":
       case "6":
@@ -570,6 +574,36 @@ function findState(sender_psid){
               if(bodystr.class === null){
                 STATE = "2";
             } else { STATE = "3";}
+            }
+          }
+      }
+      
+    } else {
+      console.error("Unable to retreive state" + err);
+    }
+  });
+
+  
+}
+
+function getFirstName(sender_psid){
+  
+  request({
+    "url": API_URL_SERVER + "/contact/" + sender_psid,
+    "method": "GET"
+  }, (err, res, body) => {
+    if (!err) {
+      
+      let bodystr = eval("(function(){return " + body + ";})()");
+      
+      console.log("body : " + bodystr);
+      if(bodystr === null){
+        console.log("Can't access DB");
+      } else {
+        if(bodystr.firstName === null){
+          FIRSTNAME = "";
+        }
+          else { FIRSTNAME = bodystr.firstName;}
             }
           }
       }
