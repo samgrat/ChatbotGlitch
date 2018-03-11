@@ -184,9 +184,9 @@ function sleep(milliseconds) {
 function sendMessages(sender_psid){
   var i;
   let response = {};
-  let promise;
+  let promise = arguments[1];
   
-    for (i = 1; i < arguments.length; i++) {
+    for (i = 2; i < arguments.length; i++) {
     response = {
       "text": arguments[i],
     }
@@ -251,15 +251,15 @@ function insertInfoDB(state, sender_psid, text){
   let promise;
   // we send the data the the right endpoint according to state
   switch(STATE){
-      case "O": promise = sendMessages(sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
+      case "O": promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
                 //sleep(2000);
-                sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
-                callPutDB(sender_psid,"O","state");
+                promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
+                callPutDB(sender_psid,"A","state");
     break;
       case "A":
       if(text.localeCompare(QUICK_0_0) == 0){
-        promise = sendMessages(sender_psid, MESSAGE_1_0);
-        sendQuicks(promise, sender_psid, MESSAGE_1_2, QUICK_0_0, QUICK_0_1);
+        promise = sendMessages(promise, sender_psid, MESSAGE_1_0);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_1_1, QUICK_1_0, QUICK_1_1);
         callPutDB(sender_psid, "1", "state");
       } else{
         // TODO construct infos part
@@ -267,7 +267,9 @@ function insertInfoDB(state, sender_psid, text){
         console.error('The answer didn\'t match a pattern');
       }
     break;
-      case "1": callPutDB(sender_psid, text, "gender");
+      case "1": 
+      callPutDB(sender_psid, text, "gender");
+      promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
       callPutDB(sender_psid, "2", "state");
     break;
       case "2": callPutDB(sender_psid, text, "class");
