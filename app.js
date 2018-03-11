@@ -170,12 +170,13 @@ function insertInfoDB(state, sender_psid, text){
 }
 
 function getSenderState(sender_psid){
-  let body = callGetOneDB(sender_psid);
-  if (body === undefined){
+  let json = callGetOneDB(sender_psid);
+  if (json === undefined){
     return "O";
   } else {
-    console.log(body);
-    return "0";
+    //console.log(body);
+    let body = JSON.parse(body);
+    return body.state;
   }
 }
 
@@ -380,6 +381,7 @@ function callPostDB(sender_psid) {
     // Construct the message body
   let request_body = {
     "_id": sender_psid,
+    "state": "O"
   }
    // Send the HTTP request to the Messenger Platform
   request({
@@ -403,7 +405,6 @@ function callPutDB(sender_psid, data, field) {
   let request_body = {
     "_id": sender_psid,
     [field]: data,
-    "firstName" : "test"
   }
    // Send the HTTP request to the Messenger Platform
   request({
