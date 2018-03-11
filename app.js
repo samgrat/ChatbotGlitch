@@ -175,7 +175,7 @@ function getSenderState(sender_psid){
     return "O";
   } else {
     console.log(body);
-    return "0";
+    return "O";
   }
 }
 
@@ -183,6 +183,7 @@ function moveUserState(state, sender_psid, text){
    // we move the the following state according to the answer
   switch(state){
     case "O": callPostDB(sender_psid, "0", "state");
+      break;
     case "0": 
       if(text.localeCompare(QUICK_0_0) == 0){
         callPostDB(sender_psid, "1", "state");
@@ -364,8 +365,6 @@ function callGetDB(sender_psid) {
       let response = {
       "text": body
       }
-      console.log(res)
-      console.log(body)
       callSendAPI(sender_psid, response)
       console.log('message sent!')
     } else {
@@ -389,8 +388,6 @@ function callPostDB(sender_psid, data, field) {
     "json" : request_body
   }, (err, res, body) => {
     if (!err) {
-      console.log(res)
-      console.log(body)
       console.log('info added to DB')
     } else {
       console.error("Unable to add info:" + err);
@@ -417,8 +414,6 @@ function callSendAPI(sender_psid, response) {
     "json": request_body
   }, (err, res, body) => {
     if (!err) {
-      console.log(res)
-      console.log(body)
       console.log('message sent!')
     } else {
       console.error("Unable to send message:" + err);
