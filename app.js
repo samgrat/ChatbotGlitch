@@ -183,6 +183,7 @@ function insertInfoDB(state, sender_psid, text){
     default: console.log('We don\'t store the data at this state');
       break;
               }
+  return s;
   
 }
 
@@ -313,7 +314,7 @@ function handleMessage(sender_psid, received_message) {
   // Checks if the message contains text
   if (received_message.text) {  
     
-  callPostDB(sender_psid);
+  //callPostDB(sender_psid);
   
   
     // Create the payload for a basic text message, which
@@ -367,9 +368,15 @@ function callGetOneDB(sender_psid) {
     "method": "GET"
   }, (err, res, body) => {
     if (!err) {
+      
       let bodystr = eval("(function(){return " + body + ";})()");
-      console.log("BODY STR " +bodystr.state);
-      return bodystr.state;
+      
+      console.log("body : " + bodystr);
+      if(bodystr === null){
+        return "O";
+      } else {
+        return bodystr.state;
+      }
     } else {
       console.error("Unable to send message:" + err);
     }
