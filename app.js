@@ -288,7 +288,7 @@ function insertInfoDB(state, sender_psid, text, payload){
       //sleep(2000);
       promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
       STATE = "A";
-      writeTextFile("A");
+      //writeTextFile("A");
       callPutDB(sender_psid,"A","state");
     break;
       case "A":
@@ -306,17 +306,18 @@ function insertInfoDB(state, sender_psid, text, payload){
         //sleep(2000);
         promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
         STATE = "A";
-        writeTextFile("A");
+        //writeTextFile("A");
         ERROR_ANSWER = true;
         callPutDB(sender_psid,"A","state");
       }
     break;
       case "1": 
       callPutDB(sender_psid, payload, "gender");
-      promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
       STATE = "2";
-      writeTextFile("2");
       callPutDB(sender_psid, "2", "state");
+      promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
+      
+      ///writeTextFile("2");
     break;
       case "2": 
 
@@ -379,7 +380,7 @@ function insertInfoDB(state, sender_psid, text, payload){
     break;
     default: 
       console.log('We don\'t store the data at this state');
-      STATE = findState(sender_psid);
+      findState(sender_psid);
       //insertInfoDB(state, sender_psid, text, payload);
       break;
               }
@@ -566,9 +567,9 @@ function findState(sender_psid){
       } else {
         if(bodystr.gender != undefined){
           if(bodystr.class != undefined){
-            return "3";
-          } else {return "2";}
-        } else { return "1";}
+            STATE = "3";
+          } else {STATE = "2";}
+        } else { STATE = "1";}
       }
       
     } else {
