@@ -282,7 +282,6 @@ function insertInfoDB(state, sender_psid, text, payload){
   let promise;
   // we send the data the the right endpoint according to state
   switch(STATE){
-    case null:
     case "O": 
       promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
       //sleep(2000);
@@ -381,7 +380,7 @@ function insertInfoDB(state, sender_psid, text, payload){
     default: 
       console.log('We don\'t store the data at this state');
       findState(sender_psid);
-      //insertInfoDB(state, sender_psid, text, payload);
+      insertInfoDB(state, sender_psid, text, payload);
       break;
               }
 }
@@ -565,11 +564,17 @@ function findState(sender_psid){
       if(bodystr === null){
         console.log("Can't access DB");
       } else {
-        if(bodystr.gender != undefined){
+        if(bodystr.state === null){
+          STATE = "A";
+          } else {
+            if(bodystr.gender === null){
+              
+            }
           if(bodystr.class != undefined){
             STATE = "3";
-          } else {STATE = "2";}
+            STATE = "2";}
         } else { STATE = "1";}
+        } else { STATE = "A";}
       }
       
     } else {
