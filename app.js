@@ -174,9 +174,10 @@ function handlePostback(sender_psid, received_postback) {
 function sendMessages(sender_psid){
   var i;
   let response = {};
+
   for (i = 1; i < arguments.length; i++) {
     response = {
-      "text": arguments[i]
+      "text": arguments[i],
     }
     callSendAPI(sender_psid, response);
   }
@@ -185,11 +186,17 @@ function sendMessages(sender_psid){
 // Send all the quick answer options passed in argument
 function sendQuicks(sender_psid){
   var i;
-  let response;
+  let response = {};
+  response.text = "quick";
+  response.quick_replies = [];
+  
+  let quick = {};
   for (i = 1; i < arguments.length; i++) {
-    response = {
-      "text": arguments[i]
+    quick = {
+      "content_type":"text",
+      "title": arguments[i],
     }
+    response.quick_replies.unshift(quick);
   }
   callSendAPI(sender_psid, response);
 }
@@ -204,6 +211,7 @@ function insertInfoDB(state, sender_psid, text){
   // we send the data the the right endpoint according to state
   switch(STATE){
       case "O": sendMessages(sender_psid, MESSAGE_0_0, MESSAGE_0_1, MESSAGE_0_2);
+                sendQuicks(sender_psid, QUICK_0_0, QUICK_0_1);
                 callPutDB(sender_psid,"A","state");
     break;
       case "A":
