@@ -73,7 +73,7 @@ const MESSAGE_21_1 = process.env.MESSAGE_21_1;
 const MESSAGE_22_0 = process.env.MESSAGE_22_0;
 const MESSAGE_22_1 = process.env.MESSAGE_22_1;
 let STATE = "O";
-let ERROR_
+let ERROR_ANSWER = false;
 
 // Imports dependencies and set up http server
 const 
@@ -253,7 +253,7 @@ function insertInfoDB(state, sender_psid, text, payload){
   // we send the data the the right endpoint according to state
   switch(STATE){
       case "O": 
-      
+      ERROR_ANSWER = false;
       promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
       //sleep(2000);
       promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
@@ -261,7 +261,7 @@ function insertInfoDB(state, sender_psid, text, payload){
       callPutDB(sender_psid,"A","state");
     break;
       case "A":
-      
+      ERROR_ANSWER = false;
       if(payload.localeCompare(QUICK_0_0) == 0){
         promise = sendMessages(promise, sender_psid, MESSAGE_1_0);
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_1, QUICK_1_0, QUICK_1_1);
@@ -275,19 +275,23 @@ function insertInfoDB(state, sender_psid, text, payload){
         //sleep(2000);
         promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
         STATE = "A";
+        ERROR_ANSWER = true;
         callPutDB(sender_psid,"A","state");
       }
     break;
       case "1": 
-      
-      callPutDB(sender_psid, text, "gender");
+      if(!ERROR_ANSWER){
+      callPutDB(sender_psid, payload, "gender");}
+      else{ERROR_ANSWER = false;}
+    
       promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
       STATE = "2";
       callPutDB(sender_psid, "2", "state");
     break;
       case "2": 
-      
-      callPutDB(sender_psid, text, "class");
+      if(!ERROR_ANSWER){
+      callPutDB(sender_psid, payload, "class");}
+      else{ERROR_ANSWER = false;}
       if(payload.localeCompare(QUICK_2_0) == 0){
         promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1);
         promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
@@ -304,6 +308,7 @@ function insertInfoDB(state, sender_psid, text, payload){
         promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
         promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
         STATE = "2";
+        ERROR_ANSWER = true;
         callPutDB(sender_psid, "2", "state");
       }
     break;
@@ -473,7 +478,7 @@ function handleMessage(sender_psid, received_message) {
     // will be added to the body of our request to the Send API
     
     // TODO: test received_message.text before insering into db
-    insertInfoDB(state, sender_psid, received_message.text);
+    insertInfoDB(state, sender_psid, received_message.text, received_message.quick_reply.payload);
     //moveUserState(state, sender_psid, received_message.text);
                  
   } else if (received_message.attachments) {
