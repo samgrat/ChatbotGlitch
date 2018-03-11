@@ -343,7 +343,9 @@ function insertInfoDB(state, sender_psid, text, payload){
     break;
       case "21": callPutDB(sender_psid, text, "info");
     break;
-    default: console.log('We don\'t store the data at this state');
+    default: 
+      console.log('We don\'t store the data at this state');
+      callGetOneDB(sender_psid);
       break;
               }
 }
