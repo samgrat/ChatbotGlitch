@@ -170,6 +170,15 @@ function handlePostback(sender_psid, received_postback) {
   callSendAPI(sender_psid, response);
 }
 
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+
 // Send every message passed in argument
 function sendMessages(sender_psid){
   var i;
@@ -181,7 +190,8 @@ function sendMessages(sender_psid){
     }
     console.log(response);
     callSendAPI(sender_psid, response);
-  }
+    sleep(1000);
+  }s
 }
 
 // Send all the quick answer options passed in argument
@@ -196,8 +206,9 @@ function sendQuicks(sender_psid){
     quick = {
       "content_type":"text",
       "title": arguments[i],
+      "payload": arguments[i]
     };
-    response.quick_replies.unshift(quick);
+    response.quick_replies.push(quick);
   }
   console.log(response);
   callSendAPI(sender_psid, response);
