@@ -374,6 +374,8 @@ function insertInfoDB(state, sender_psid, text, payload){
       findState(sender_psid);
       //insertInfoDB(state, sender_psid, text, payload);
               }
+    callGetOneDB(sender_psid);
+
 }
 
 function moveUserState(state, sender_psid, text){
