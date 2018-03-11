@@ -9,6 +9,7 @@ const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const API_URL_SERVER = process.env.API_URL_SERVER;
 const QUICK_0_0 = process.env.QUICK_0_0;
 const QUICK_0_1 = process.env.QUICK_0_1;
+let BODY = "kddd";
 
 // Imports dependencies and set up http server
 const 
@@ -169,9 +170,9 @@ function insertInfoDB(state, sender_psid, text){
 }
 
 function getSenderState(sender_psid){
-  let body = callGetOneDB(sender_psid);
-  console.log(" body in getstate " + body);
-  if (body === undefined){
+  callGetOneDB(sender_psid);
+  console.log(" body in getstate " + BODY);
+  if (BODY === undefined){
     return "O";
   } else {
     return "A";
@@ -334,7 +335,6 @@ function handleMessage(sender_psid, received_message) {
   callSendAPI(sender_psid, response);
 }
 
-let body;
 // Get the contact with corresponding to sender's id
 function callGetOneDB(sender_psid) {
    // Send the HTTP request to the Messenger Platform
@@ -345,7 +345,7 @@ function callGetOneDB(sender_psid) {
     if (!err) {
       let bodystr = JSON.parse(body);
       console.log("BODY STR " +bodystr.state);
-      return bodystr.state;
+      BODY = bodystr.state;
     } else {
       console.error("Unable to send message:" + err);
     }
