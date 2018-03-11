@@ -280,10 +280,7 @@ function insertInfoDB(state, sender_psid, text, payload){
       }
     break;
       case "1": 
-      if(!ERROR_ANSWER){
-      callPutDB(sender_psid, payload, "gender");}
-      else{ERROR_ANSWER = false;}
-    
+      callPutDB(sender_psid, payload, "gender");   
       promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
       STATE = "2";
       callPutDB(sender_psid, "2", "state");
@@ -534,12 +531,13 @@ function callGetOneDB(sender_psid) {
       console.log("body : " + bodystr);
       if(bodystr === null){
         state = "O";
+        console.log("State : 0");
         callPostDB(sender_psid);
       } else {
-        state = bodystr.state;
+        console.log("State : "+ bodystr.state);
+        STATE = bodystr.state;
       }
       
-      putState(state);
     } else {
       console.error("Unable to send message:" + err);
     }
