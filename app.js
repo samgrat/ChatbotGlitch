@@ -120,6 +120,12 @@ function sendMessages(sender_psid){
   }
 }
 
+let STATE;
+function putState(state) {
+  STATE = state;
+  console.log("State : " + STATE);
+}
+
 function insertInfoDB(state, sender_psid, text){
   let s = callGetOneDB(sender_psid)
   // we send the data the the right endpoint according to state
@@ -321,7 +327,7 @@ function handleMessage(sender_psid, received_message) {
     // will be added to the body of our request to the Send API
     
     // TODO: test received_message.text before insering into db
-    state = insertInfoDB(state, sender_psid, received_message.text);
+    insertInfoDB(state, sender_psid, received_message.text);
     //moveUserState(state, sender_psid, received_message.text);
                  
   } else if (received_message.attachments) {
@@ -355,14 +361,15 @@ function handleMessage(sender_psid, received_message) {
   } 
   
   response = {
-    "text": 'State:' + state
+    "text": 'State:' + STATE
   }
   callSendAPI(sender_psid, response);
 }
 
 // Get the contact with corresponding to sender's id
 function callGetOneDB(sender_psid) {
-   // Send the HTTP request to the Messenger Platform
+  let state;
+  
   request({
     "url": API_URL_SERVER + "/contact/" + sender_psid,
     "method": "GET"
@@ -373,14 +380,17 @@ function callGetOneDB(sender_psid) {
       
       console.log("body : " + bodystr);
       if(bodystr === null){
-        return "O";
+        state = "O";
       } else {
-        return bodystr.state;
+        state = bodystr.state;
       }
+      
+      putState(state);
     } else {
       console.error("Unable to send message:" + err);
     }
-  }); 
+  });
+
   
 }
 
