@@ -272,16 +272,12 @@ function sendQuicks(promise, sender_psid){
   return promise;
 }
 
-function putState(state) {
-  STATE = state;
-  console.log("State : " + STATE);
-}
-
 function insertInfoDB(state, sender_psid, text, payload){
   callGetOneDB(sender_psid);
   let promise;
   // we send the data the the right endpoint according to state
   switch(STATE){
+    case null:
     case "O": 
       promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
       //sleep(2000);
@@ -292,22 +288,19 @@ function insertInfoDB(state, sender_psid, text, payload){
     break;
       case "A":
       if(payload.localeCompare(QUICK_0_0) == 0){
+        STATE = "1";
+        callPutDB(sender_psid, "1", "state");
         promise = sendMessages(promise, sender_psid, MESSAGE_1_0);
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_1, QUICK_1_0, QUICK_1_1);
-        STATE = "1";
-        writeTextFile("1");
-        callPutDB(sender_psid, "1", "state");
       } else{
         // TODO construct infos part
+        STATE = "A";
+        callPutDB(sender_psid,"A","state");
         console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
         promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
-        //sleep(2000);
         promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
-        STATE = "A";
-        //writeTextFile("A");
-        ERROR_ANSWER = true;
-        callPutDB(sender_psid,"A","state");
+        
       }
     break;
       case "1": 
@@ -315,8 +308,6 @@ function insertInfoDB(state, sender_psid, text, payload){
       callPutDB(sender_psid, "2", "state");
       callPutDB(sender_psid, payload, "gender");
       promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
-      
-      ///writeTextFile("2");
     break;
       case "2": 
 
@@ -382,7 +373,6 @@ function insertInfoDB(state, sender_psid, text, payload){
       console.log('We don\'t store the data at this state');
       findState(sender_psid);
       //insertInfoDB(state, sender_psid, text, payload);
-      break;
               }
 }
 
