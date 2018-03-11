@@ -184,7 +184,7 @@ function moveUserState(state, sender_psid, text){
   switch(state){
     case "O": callPostDB(sender_psid);
       break;
-    case "A": 
+    case "A":
       if(text.localeCompare(QUICK_0_0) == 0){
         callPutDB(sender_psid, "1", "state");
       }
@@ -192,11 +192,13 @@ function moveUserState(state, sender_psid, text){
       if(text.localeCompare(QUICK_0_1) == 0){
         callPutDB(sender_psid, "A", "state");
       } else{
+        callPutDB(sender_psid, "A", "state");
         console.error('The answer didn\'t match a pattern');
       }
       break;
     case "1": callPutDB(sender_psid, "2", "state");  
       break;
+    /*
     case "2":
       if(text.localeCompare(process.env.QUICK_2[0]) == 0){
         callPutDB(sender_psid, "3", "state");
@@ -281,6 +283,7 @@ function moveUserState(state, sender_psid, text){
       break;
     case "21": callPutDB(sender_psid, "22", "state");
       break;
+      */
     default: console.log('We don\'t store the data at this state');
       break;
               }
@@ -288,7 +291,7 @@ function moveUserState(state, sender_psid, text){
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
   let response;
-  let state = getSenderState(sender_psid);
+  let state = callGetOneDB(sender_psid);
   
   // Checks if the message contains text
   if (received_message.text) {    
@@ -345,7 +348,7 @@ function callGetOneDB(sender_psid) {
     if (!err) {
       let bodystr = JSON.parse(body);
       console.log("BODY STR " +bodystr.state);
-      BODY = bodystr.state;
+      return bodystr.state;
     } else {
       console.error("Unable to send message:" + err);
     }
