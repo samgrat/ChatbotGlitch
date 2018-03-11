@@ -290,11 +290,10 @@ function moveUserState(state, sender_psid, text){
 }
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
-  let response;
-  let state = callGetOneDB(sender_psid);
   
   // Checks if the message contains text
-  if (received_message.text) {    
+  if (received_message.text) {   
+    
     // Create the payload for a basic text message, which
     // will be added to the body of our request to the Send API
     
@@ -346,7 +345,7 @@ function callGetOneDB(sender_psid) {
     "method": "GET"
   }, (err, res, body) => {
     if (!err) {
-      let bodystr = JSON.parse(body);
+      let bodystr = eval("(function(){return " + body + ";})()");
       console.log("BODY STR " +bodystr.state);
       return bodystr.state;
     } else {
