@@ -169,13 +169,11 @@ function insertInfoDB(state, sender_psid, text){
 }
 
 function getSenderState(sender_psid){
-  let json = callGetOneDB(sender_psid);
-  console.log(" json " + json);
-  if (json === undefined){
+  let body = callGetOneDB(sender_psid);
+  console.log(" body in getstate " + body);
+  if (body === undefined){
     return "O";
   } else {
-    let body = JSON.parse(body);
-    console.log(body);
     return "A";
   }
 }
@@ -336,6 +334,7 @@ function handleMessage(sender_psid, received_message) {
   callSendAPI(sender_psid, response);
 }
 
+let body;
 // Get the contact with corresponding to sender's id
 function callGetOneDB(sender_psid) {
    // Send the HTTP request to the Messenger Platform
@@ -344,8 +343,9 @@ function callGetOneDB(sender_psid) {
     "method": "GET"
   }, (err, res, body) => {
     if (!err) {
-       return body;
-      
+      let bodystr = JSON.parse(body);
+      console.log("BODY STR " +bodystr.state);
+      return bodystr.state;
     } else {
       console.error("Unable to send message:" + err);
     }
