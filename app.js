@@ -73,6 +73,7 @@ const MESSAGE_21_1 = process.env.MESSAGE_21_1;
 const MESSAGE_22_0 = process.env.MESSAGE_22_0;
 const MESSAGE_22_1 = process.env.MESSAGE_22_1;
 let STATE = null;
+let FIRSTNAME = "@prenom";
 let ERROR_ANSWER = false;
 
 // Imports dependencies and set up http server
@@ -333,7 +334,10 @@ function insertInfoDB(state, sender_psid, text, payload){
         ERROR_ANSWER = true;
       }
     break;
-      case "3": callPutDB(sender_psid, text, "firstName");
+      case "3": 
+      callPutDB(sender_psid, text, "firstName");
+      F
+      promise = sendMessages(promise, sender_psid, MESSAGE_3_0);
     break;
       case "4": callPutDB(sender_psid, text, "lastName");
     break;
