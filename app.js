@@ -72,7 +72,7 @@ const MESSAGE_21_0 = process.env.MESSAGE_21_0;
 const MESSAGE_21_1 = process.env.MESSAGE_21_1;
 const MESSAGE_22_0 = process.env.MESSAGE_22_0;
 const MESSAGE_22_1 = process.env.MESSAGE_22_1;
-let STATE = "O";
+let STATE;
 let ERROR_ANSWER = false;
 
 // Imports dependencies and set up http server
@@ -252,6 +252,7 @@ function insertInfoDB(state, sender_psid, text, payload){
   let promise;
   // we send the data the the right endpoint according to state
   switch(STATE){
+      case undefined:
       case "O": 
       ERROR_ANSWER = false;
       promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
@@ -281,14 +282,13 @@ function insertInfoDB(state, sender_psid, text, payload){
     break;
       case "1": 
       callPutDB(sender_psid, payload, "gender");   
+      promise =
       promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
       STATE = "2";
       callPutDB(sender_psid, "2", "state");
     break;
       case "2": 
-      if(!ERROR_ANSWER){
-      callPutDB(sender_psid, payload, "class");}
-      else{ERROR_ANSWER = false;}
+      callPutDB(sender_psid, payload, "class");
       case "2E":
       if(payload.localeCompare(QUICK_2_0) == 0){
         promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1);
