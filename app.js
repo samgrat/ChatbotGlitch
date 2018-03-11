@@ -278,7 +278,7 @@ function putState(state) {
 }
 
 function insertInfoDB(state, sender_psid, text, payload){
-  callGetOneDB(sender_psid)
+  callGetOneDB(sender_psid);
   let promise;
   // we send the data the the right endpoint according to state
   switch(STATE){
@@ -379,7 +379,7 @@ function insertInfoDB(state, sender_psid, text, payload){
     break;
     default: 
       console.log('We don\'t store the data at this state');
-      insertInfoDB(state, sender_psid, text, payload);
+      //insertInfoDB(state, sender_psid, text, payload);
       break;
               }
 }
