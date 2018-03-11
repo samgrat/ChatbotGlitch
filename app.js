@@ -123,7 +123,23 @@ function sendMessages(sender_psid){
 function insertInfoDB(state, sender_psid, text){
   // we send the data the the right endpoint according to state
   switch(state){
+      case "O": callPutDB(sender_psid, "O", "state");
+    break;
+      case "A":
+      if(text.localeCompare(QUICK_0_0) == 0){
+        callPutDB(sender_psid, "1", "state");
+      }
+      // TODO construct infos part
+      if(text.localeCompare(QUICK_0_1) == 0){
+        callPutDB(sender_psid, "A", "state");
+      } else{
+        callPutDB(sender_psid, "A", "state");
+        console.error('The answer didn\'t match a pattern');
+      }
+      break;
       case "1": callPutDB(sender_psid, text, "gender");
+      callPutDB(sender_psid, "2", "state");  
+      break;
     break;
       case "2": callPutDB(sender_psid, text, "class");
     break;
@@ -290,16 +306,23 @@ function moveUserState(state, sender_psid, text){
 }
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
+  let response;
+  let state;
   
   // Checks if the message contains text
-  if (received_message.text) {   
-    
+  if (received_message.text) {  
+  callPostDB(sender_psid);
+  state = callGetOneDB(sender_psid);
+  if(state === undefined){
+    state= "I";
+  }
+  
     // Create the payload for a basic text message, which
     // will be added to the body of our request to the Send API
     
     // TODO: test received_message.text before insering into db
     insertInfoDB(state, sender_psid, received_message.text);
-    moveUserState(state, sender_psid, received_message.text);
+    //moveUserState(state, sender_psid, received_message.text);
                  
   } else if (received_message.attachments) {
     // Get the URL of the message attachment
