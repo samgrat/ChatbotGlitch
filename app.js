@@ -361,6 +361,7 @@ function insertInfoDB(state, sender_psid, text, payload){
       case "4": 
       callPutDB(sender_psid, text, "lastName");
       getFirstName(sender_psid);
+      console.log("FirstName: " + FIRSTNAME);
       let MESSAGE_NAMED = MESSAGE_5_0.replace("@prenom", FIRSTNAME);
       promise = sendMessages(promise, sender_psid, MESSAGE_NAMED);
     break;
@@ -622,12 +623,12 @@ function getFirstName(sender_psid){
         if(bodystr.firstName === null){
           FIRSTNAME = "";
         }
-          else { FIRSTNAME = bodystr.firstName;}
+          else {FIRSTNAME = bodystr.firstName;}
             }
                
       
     } else {
-      console.error("Unable to retreive state" + err);
+      console.error("Unable to retreive name" + err);
     }
   });
 
