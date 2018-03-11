@@ -398,10 +398,11 @@ function callPostDB(sender_psid) {
 
 // Modify contact in the database
 function callPutDB(sender_psid, data, field) {
+  
     // Construct the message body
   let request_body = {
     "_id": sender_psid,
-    "state": data,
+    [field]: data,
     "firstName" : "test"
   }
    // Send the HTTP request to the Messenger Platform
