@@ -281,8 +281,7 @@ function insertInfoDB(state, sender_psid, text, payload){
       }
     break;
       case "1": 
-      callPutDB(sender_psid, payload, "gender");   
-      promise =
+      callPutDB(sender_psid, payload, "gender");
       promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
       STATE = "2";
       callPutDB(sender_psid, "2", "state");
@@ -295,7 +294,6 @@ function insertInfoDB(state, sender_psid, text, payload){
         promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
         callPutDB(sender_psid, "3", "state");
       }
-      // TODO construct volontary part
       else if(payload.localeCompare(QUICK_2_1) == 0){
         promise = sendMessages(promise, sender_psid, MESSAGE_3bis_0 + "\n" + MESSAGE_3_1);
         promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
@@ -518,7 +516,6 @@ function handleMessage(sender_psid, received_message) {
 
 // Get the contact with corresponding to sender's id
 function callGetOneDB(sender_psid) {
-  let state;
   
   request({
     "url": API_URL_SERVER + "/contact/" + sender_psid,
@@ -530,7 +527,7 @@ function callGetOneDB(sender_psid) {
       
       console.log("body : " + bodystr);
       if(bodystr === null){
-        state = "O";
+        STATE = "O";
         console.log("State : 0");
         callPostDB(sender_psid);
       } else {
@@ -571,7 +568,6 @@ function callPostDB(sender_psid) {
     // Construct the message body
   let request_body = {
     "_id": sender_psid,
-    "state": "O"
   }
    // Send the HTTP request to the Messenger Platform
   request({
