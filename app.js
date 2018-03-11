@@ -72,7 +72,7 @@ const MESSAGE_21_0 = process.env.MESSAGE_21_0;
 const MESSAGE_21_1 = process.env.MESSAGE_21_1;
 const MESSAGE_22_0 = process.env.MESSAGE_22_0;
 const MESSAGE_22_1 = process.env.MESSAGE_22_1;
-let STATE;
+let STATE = "O";
 
 // Imports dependencies and set up http server
 const 
@@ -256,6 +256,7 @@ function insertInfoDB(state, sender_psid, text){
       promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
                 //sleep(2000);
                 promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
+                STATE = "A";
                 callPutDB(sender_psid,"A","state");
     break;
       case "A":
@@ -263,6 +264,7 @@ function insertInfoDB(state, sender_psid, text){
       if(text.localeCompare(QUICK_0_0) == 0){
         promise = sendMessages(promise, sender_psid, MESSAGE_1_0);
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_1, QUICK_1_0, QUICK_1_1);
+        STATE = "1";
         callPutDB(sender_psid, "1", "state");
       } else{
         // TODO construct infos part
@@ -274,6 +276,7 @@ function insertInfoDB(state, sender_psid, text){
       
       callPutDB(sender_psid, text, "gender");
       promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
+      STATE = "2";
       callPutDB(sender_psid, "2", "state");
     break;
       case "2": 
@@ -288,6 +291,7 @@ function insertInfoDB(state, sender_psid, text){
       else if(text.localeCompare(QUICK_2_1) == 0){
         promise = sendMessages(promise, sender_psid, MESSAGE_3bis_0 + "\n" + MESSAGE_3_1);
         promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
+        STATE = "3";
         callPutDB(sender_psid, "3", "state");
       } else{
         console.error('The answer didn\'t match a pattern');
@@ -452,7 +456,7 @@ function handleMessage(sender_psid, received_message) {
   
   // Checks if the message contains text
   if (received_message.text) {  
-    
+  console.log(received_message);
   //callPostDB(sender_psid);
   
   
