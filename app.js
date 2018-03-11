@@ -170,12 +170,13 @@ function insertInfoDB(state, sender_psid, text){
 
 function getSenderState(sender_psid){
   let json = callGetOneDB(sender_psid);
+  console.log(" json " + json);
   if (json === undefined){
     return "O";
   } else {
     let body = JSON.parse(body);
     console.log(body);
-    return "0";
+    return "A";
   }
 }
 
@@ -184,13 +185,13 @@ function moveUserState(state, sender_psid, text){
   switch(state){
     case "O": callPostDB(sender_psid);
       break;
-    case "0": 
+    case "A": 
       if(text.localeCompare(QUICK_0_0) == 0){
         callPutDB(sender_psid, "1", "state");
       }
       // TODO construct infos part
       if(text.localeCompare(QUICK_0_1) == 0){
-        callPutDB(sender_psid, "0", "state");
+        callPutDB(sender_psid, "A", "state");
       } else{
         console.error('The answer didn\'t match a pattern');
       }
@@ -343,9 +344,7 @@ function callGetOneDB(sender_psid) {
     "method": "GET"
   }, (err, res, body) => {
     if (!err) {
-      console.log(res)
-      console.log(body)
-      return body;
+       return body;
       
     } else {
       console.error("Unable to send message:" + err);
