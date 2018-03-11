@@ -311,9 +311,9 @@ function insertInfoDB(state, sender_psid, text, payload){
       }
     break;
       case "1": 
-      callPutDB(sender_psid, payload, "gender");
       STATE = "2";
       callPutDB(sender_psid, "2", "state");
+      callPutDB(sender_psid, payload, "gender");
       promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
       
       ///writeTextFile("2");
@@ -321,24 +321,25 @@ function insertInfoDB(state, sender_psid, text, payload){
       case "2": 
 
       if(payload.localeCompare(QUICK_2_0) == 0){
+        STATE = "3";
+        callPutDB(sender_psid, "3", "state");
         callPutDB(sender_psid, payload, "class");
         promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1);
         promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
-        callPutDB(sender_psid, "3", "state");
       }
       else if(payload.localeCompare(QUICK_2_1) == 0){
+        STATE = "3";
+        callPutDB(sender_psid, "3", "state");
         callPutDB(sender_psid, payload, "class");
         promise = sendMessages(promise, sender_psid, MESSAGE_3bis_0 + "\n" + MESSAGE_3_1);
         promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
-        STATE = "3";
-        callPutDB(sender_psid, "3", "state");
       } else{
+        STATE = "2";
+        callPutDB(sender_psid, "2", "state");
         console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
         promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
-        STATE = "2";
         ERROR_ANSWER = true;
-        callPutDB(sender_psid, "2", "state");
       }
     break;
       case "3": callPutDB(sender_psid, text, "firstName");
@@ -380,7 +381,7 @@ function insertInfoDB(state, sender_psid, text, payload){
     default: 
       console.log('We don\'t store the data at this state');
       findState(sender_psid);
-      insertInfoDB(state, sender_psid, text, payload);
+      //insertInfoDB(state, sender_psid, text, payload);
       break;
               }
 }
@@ -568,13 +569,13 @@ function findState(sender_psid){
           STATE = "A";
           } else {
             if(bodystr.gender === null){
-              
+              STATE = "1";
+            } else {
+              if(bodystr.class === null){
+                STATE = "2";
+            } else { STATE = "3";}
             }
-          if(bodystr.class != undefined){
-            STATE = "3";
-            STATE = "2";}
-        } else { STATE = "1";}
-        } else { STATE = "A";}
+          }
       }
       
     } else {
