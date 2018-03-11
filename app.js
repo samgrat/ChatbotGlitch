@@ -181,10 +181,9 @@ function sleep(milliseconds) {
 
 // TODO FIX MESSAGE ORDER
 // Send every message passed in argument
-function sendMessages(sender_psid){
+function sendMessages(promise, sender_psid){
   var i;
   let response = {};
-  let promise = arguments[1];
   
     for (i = 2; i < arguments.length; i++) {
     response = {
@@ -279,7 +278,7 @@ function insertInfoDB(state, sender_psid, text){
       
       callPutDB(sender_psid, text, "class");
       if(text.localeCompare(QUICK_2_0) == 0){
-        promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1 + MESSAGE_3_2 + "\n" + MESSAGE_3_3);
+        promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1 + "\n" + MESSAGE_3_2 + "\n" + MESSAGE_3_3);
         callPutDB(sender_psid, "3", "state");
       }
       // TODO construct volontary part
