@@ -73,6 +73,7 @@ const MESSAGE_21_1 = process.env.MESSAGE_21_1;
 const MESSAGE_22_0 = process.env.MESSAGE_22_0;
 const MESSAGE_22_1 = process.env.MESSAGE_22_1;
 let STATE = "O";
+let ERROR_
 
 // Imports dependencies and set up http server
 const 
@@ -246,7 +247,7 @@ function putState(state) {
   console.log("State : " + STATE);
 }
 
-function insertInfoDB(state, sender_psid, text){
+function insertInfoDB(state, sender_psid, text, payload){
   callGetOneDB(sender_psid)
   let promise;
   // we send the data the the right endpoint according to state
@@ -254,14 +255,14 @@ function insertInfoDB(state, sender_psid, text){
       case "O": 
       
       promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
-                //sleep(2000);
-                promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
-                STATE = "A";
-                callPutDB(sender_psid,"A","state");
+      //sleep(2000);
+      promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
+      STATE = "A";
+      callPutDB(sender_psid,"A","state");
     break;
       case "A":
       
-      if(text.localeCompare(QUICK_0_0) == 0){
+      if(payload.localeCompare(QUICK_0_0) == 0){
         promise = sendMessages(promise, sender_psid, MESSAGE_1_0);
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_1, QUICK_1_0, QUICK_1_1);
         STATE = "1";
@@ -270,6 +271,11 @@ function insertInfoDB(state, sender_psid, text){
         // TODO construct infos part
         console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
+        promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
+        //sleep(2000);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
+        STATE = "A";
+        callPutDB(sender_psid,"A","state");
       }
     break;
       case "1": 
@@ -282,13 +288,13 @@ function insertInfoDB(state, sender_psid, text){
       case "2": 
       
       callPutDB(sender_psid, text, "class");
-      if(text.localeCompare(QUICK_2_0) == 0){
+      if(payload.localeCompare(QUICK_2_0) == 0){
         promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1);
         promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
         callPutDB(sender_psid, "3", "state");
       }
       // TODO construct volontary part
-      else if(text.localeCompare(QUICK_2_1) == 0){
+      else if(payload.localeCompare(QUICK_2_1) == 0){
         promise = sendMessages(promise, sender_psid, MESSAGE_3bis_0 + "\n" + MESSAGE_3_1);
         promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
         STATE = "3";
@@ -296,6 +302,9 @@ function insertInfoDB(state, sender_psid, text){
       } else{
         console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
+        STATE = "2";
+        callPutDB(sender_psid, "2", "state");
       }
     break;
       case "3": callPutDB(sender_psid, text, "firstName");
