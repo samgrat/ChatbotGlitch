@@ -560,7 +560,8 @@ function callSendAPI(sender_psid, response) {
   }
 
    // Send the HTTP request to the Messenger Platform
-  return new Promise((resolve, reject) => { request({
+  return new Promise((resolve, reject) => { 
+    request({
     "uri": "https://graph.facebook.com/v2.6/me/messages",
     "qs": { "access_token": PAGE_ACCESS_TOKEN },
     "method": "POST",
@@ -568,9 +569,10 @@ function callSendAPI(sender_psid, response) {
   }, (err, res, body) => {
     if (!err) {
       console.log('message sent!')
+      return resolve(response);
     } else {
       console.error("Unable to send message:" + err);
     }
-  }); 
-                                });
+  });
+  });
 }
