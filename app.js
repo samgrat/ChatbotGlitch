@@ -379,6 +379,7 @@ function insertInfoDB(state, sender_psid, text, payload){
     break;
     default: 
       console.log('We don\'t store the data at this state');
+      STATE = findState(sender_psid);
       //insertInfoDB(state, sender_psid, text, payload);
       break;
               }
@@ -547,6 +548,35 @@ function handleMessage(sender_psid, received_message) {
       }
     }
   } 
+}
+
+function findState(sender_psid){
+  
+  request({
+    "url": API_URL_SERVER + "/contact/" + sender_psid,
+    "method": "GET"
+  }, (err, res, body) => {
+    if (!err) {
+      
+      let bodystr = eval("(function(){return " + body + ";})()");
+      
+      console.log("body : " + bodystr);
+      if(bodystr === null){
+        console.log("Can't access DB");
+      } else {
+        if(bodystr.gender != undefined){
+          if(bodystr.class != undefined){
+            return "3";
+          } else {return "2";}
+        } else { return "1";}
+      }
+      
+    } else {
+      console.error("Unable to retreive state" + err);
+    }
+  });
+
+  
 }
 
 // Get the contact with corresponding to sender's id
