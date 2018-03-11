@@ -7,8 +7,31 @@
 'use strict';
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const API_URL_SERVER = process.env.API_URL_SERVER;
+const MESSAGE_0_0 = process.env.MESSAGE_0_0;
+const MESSAGE_0_1 = process.env.MESSAGE_0_1;
+const MESSAGE_0_2 = process.env.MESSAGE_0_2;
 const QUICK_0_0 = process.env.QUICK_0_0;
 const QUICK_0_1 = process.env.QUICK_0_1;
+const MESSAGE_1_0 = process.env.MESSAGE_1_0;
+const MESSAGE_1_1 = process.env.MESSAGE_1_1;
+const QUICK_1_0 = process.env.QUICK_1_0;
+const QUICK_1_1 = process.env.QUICK_1_1;
+const MESSAGE_2_0 = process.env.MESSAGE_2_0;
+const QUICK_2_0 = process.env.QUICK_2_0;
+const QUICK_2_1 = process.env.QUICK_2_1;
+const MESSAGE_3_0 = process.env.MESSAGE_3_0;
+const MESSAGE_3bis_0 = process.env.MESSAGE_3bis_0;
+const MESSAGE_3_1 = process.env.MESSAGE_3_1;
+const MESSAGE_3_2 = process.env.MESSAGE_3_2;
+const MESSAGE_3_3 = process.env.MESSAGE_3_3;
+const MESSAGE_4_0 = process.env.MESSAGE_4_0;
+const MESSAGE_5_0 = process.env.MESSAGE_5_0;
+const MESSAGE_5_1 = process.env.MESSAGE_5_1;
+const QUICK_5_0 = process.env.QUICK_5_0;
+const QUICK_5_1 = process.env.QUICK_5_1;
+const QUICK_5_2 = process.env.QUICK_5_2;
+const QUICK_5_3 = process.env.QUICK_5_3;
+const QUICK_5_4 = process.env.QUICK_5_4;
 
 let STATE;
 
