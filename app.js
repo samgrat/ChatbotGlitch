@@ -9,7 +9,8 @@ const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const API_URL_SERVER = process.env.API_URL_SERVER;
 const QUICK_0_0 = process.env.QUICK_0_0;
 const QUICK_0_1 = process.env.QUICK_0_1;
-let BODY = "kddd";
+
+let STATE;
 
 // Imports dependencies and set up http server
 const 
@@ -120,7 +121,6 @@ function sendMessages(sender_psid){
   }
 }
 
-let STATE;
 function putState(state) {
   STATE = state;
   console.log("State : " + STATE);
@@ -135,18 +135,14 @@ function insertInfoDB(state, sender_psid, text){
       case "A":
       if(text.localeCompare(QUICK_0_0) == 0){
         callPutDB(sender_psid, "1", "state");
-      }
-      // TODO construct infos part
-      if(text.localeCompare(QUICK_0_1) == 0){
-        callPutDB(sender_psid, "A", "state");
       } else{
+        // TODO construct infos part
         callPutDB(sender_psid, "A", "state");
         console.error('The answer didn\'t match a pattern');
       }
-      break;
+    break;
       case "1": callPutDB(sender_psid, text, "gender");
-      callPutDB(sender_psid, "2", "state");  
-      break;
+      callPutDB(sender_psid, "2", "state");
     break;
       case "2": callPutDB(sender_psid, text, "class");
     break;
