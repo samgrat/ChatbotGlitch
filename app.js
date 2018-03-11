@@ -82,7 +82,7 @@ const
   request = require('request'),
   express = require('express'),
   body_parser = require('body-parser'),
-  Xmlhttprequest
+  XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,
   app = express().use(body_parser.json()); // creates express http server
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
@@ -205,7 +205,7 @@ function readTextFile(file)
             if(rawFile.status === 200 || rawFile.status == 0)
             {
                 var allText = rawFile.responseText;
-                alert(allText);
+                console.log("State in file :" + allText);
             }
         }
     }
