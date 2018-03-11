@@ -175,20 +175,21 @@ function getSenderState(sender_psid){
     return "O";
   } else {
     console.log(body);
-    return "1";
+    return "0";
   }
 }
 
 function moveUserState(state, sender_psid, text){
    // we move the the following state according to the answer
   switch(state){
-    case "O": 
+    case "O": callPostDB(sender_psid, "0", "state");
+    case "0": 
       if(text.localeCompare(QUICK_0_0) == 0){
         callPostDB(sender_psid, "1", "state");
       }
       // TODO construct infos part
       if(text.localeCompare(QUICK_0_1) == 0){
-        callPostDB(sender_psid, "O", "state");
+        callPostDB(sender_psid, "0", "state");
       } else{
         console.error('The answer didn\'t match a pattern');
       }
