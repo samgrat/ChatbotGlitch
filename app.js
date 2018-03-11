@@ -7,6 +7,8 @@
 'use strict';
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const API_URL_SERVER = process.env.API_URL_SERVER;
+const QUICK_0_0 = process.env.QUICK_0_0;
+
 // Imports dependencies and set up http server
 const 
   request = require('request'),
@@ -172,6 +174,7 @@ function getSenderState(sender_psid){
     return "O";
   } else {
     console.log(body);
+    return "1";
   }
 }
 
@@ -179,11 +182,11 @@ function moveUserState(state, sender_psid, text){
    // we move the the following state according to the answer
   switch(state){
     case "O": 
-      if(text.localeCompare(process.env.QUICK_0[0]) == 0){
+      if(text.localeCompare(QUICK_0_0) == 0){
         callPostDB(sender_psid, "1", "state");
       }
       // TODO construct infos part
-      if(text.localeCompare(process.env.QUICK_0[1]) == 0){
+      if(text.localeCompare(QUICK_0[1]) == 0){
         callPostDB(sender_psid, "O", "state");
       } else{
         console.error('The answer didn\'t match a pattern');
