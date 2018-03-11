@@ -7,6 +7,7 @@
 'use strict';
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const API_URL_SERVER = process.env.API_URL_SERVER;
+const MESSAGE_ERROR = process.env.MESSAGE_ERROR;
 const MESSAGE_0_0 = process.env.MESSAGE_0_0;
 const MESSAGE_0_1 = process.env.MESSAGE_0_1;
 const MESSAGE_0_2 = process.env.MESSAGE_0_2;
@@ -266,6 +267,7 @@ function insertInfoDB(state, sender_psid, text){
       } else{
         // TODO construct infos part
         console.error('The answer didn\'t match a pattern');
+        promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
       }
     break;
       case "1": 
@@ -278,15 +280,18 @@ function insertInfoDB(state, sender_psid, text){
       
       callPutDB(sender_psid, text, "class");
       if(text.localeCompare(QUICK_2_0) == 0){
-        promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1 + "\n" + MESSAGE_3_2 + "\n" + MESSAGE_3_3);
+        promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1);
+        promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
         callPutDB(sender_psid, "3", "state");
       }
       // TODO construct volontary part
-      if(text.localeCompare(QUICK_2_1) == 0){
-        promise = sendMessages(promise, sender_psid, MESSAGE_3bis_0 + "\n" + MESSAGE_3_1 + MESSAGE_3_2 + "\n" + MESSAGE_3_3)
+      else if(text.localeCompare(QUICK_2_1) == 0){
+        promise = sendMessages(promise, sender_psid, MESSAGE_3bis_0 + "\n" + MESSAGE_3_1);
+        promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
         callPutDB(sender_psid, "3", "state");
       } else{
         console.error('The answer didn\'t match a pattern');
+        promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
       }
     break;
       case "3": callPutDB(sender_psid, text, "firstName");
