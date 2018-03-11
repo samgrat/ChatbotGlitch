@@ -192,6 +192,7 @@ function sendMessages(promise, sender_psid){
       "text": arguments[i],
     }
     console.log(response);
+    /*
     console.log(promise);
     if(promise){
     promise.then(
@@ -204,7 +205,8 @@ function sendMessages(promise, sender_psid){
       });
     } else {
       promise = callSendAPI(sender_psid, response);}
-    
+    */
+    promise = callSendAPI(sender_psid, response);
   }
   return promise;
 }
@@ -238,7 +240,7 @@ function sendQuicks(promise, sender_psid){
       });
     } else {
       promise = callSendAPI(sender_psid, response);}
-    
+  promise = callSendAPI(sender_psid, response);
   return promise;
 }
 
@@ -345,7 +347,7 @@ function insertInfoDB(state, sender_psid, text, payload){
     break;
     default: 
       console.log('We don\'t store the data at this state');
-      callGetOneDB(sender_psid);
+      insertInfoDB(state, sender_psid, text, payload);
       break;
               }
 }
