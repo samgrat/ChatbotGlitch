@@ -292,6 +292,7 @@ function insertInfoDB(state, sender_psid, text, payload){
       if(!ERROR_ANSWER){
       callPutDB(sender_psid, payload, "class");}
       else{ERROR_ANSWER = false;}
+      case "2E":
       if(payload.localeCompare(QUICK_2_0) == 0){
         promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1);
         promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
@@ -307,9 +308,9 @@ function insertInfoDB(state, sender_psid, text, payload){
         console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
         promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
-        STATE = "2";
+        STATE = "2E";
         ERROR_ANSWER = true;
-        callPutDB(sender_psid, "2", "state");
+        callPutDB(sender_psid, "2E", "state");
       }
     break;
       case "3": callPutDB(sender_psid, text, "firstName");
@@ -467,6 +468,7 @@ function moveUserState(state, sender_psid, text){
 function handleMessage(sender_psid, received_message) {
   let response;
   let state;
+  let payload;
   
   // Checks if the message contains text
   if (received_message.text) {  
@@ -478,7 +480,12 @@ function handleMessage(sender_psid, received_message) {
     // will be added to the body of our request to the Send API
     
     // TODO: test received_message.text before insering into db
-    insertInfoDB(state, sender_psid, received_message.text, received_message.quick_reply.payload);
+    if(received_message.quick_reply){
+      payload = received_message.quick_reply.payload;
+    }else{
+      payload = received_message.text;}
+    
+    insertInfoDB(state, sender_psid, received_message.text, payload);
     //moveUserState(state, sender_psid, received_message.text);
                  
   } else if (received_message.attachments) {
