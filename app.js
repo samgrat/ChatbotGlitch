@@ -179,6 +179,7 @@ function sleep(milliseconds) {
   }
 }
 
+// TODO FIX MESSAGE ORDER
 // Send every message passed in argument
 function sendMessages(sender_psid){
   var i;
@@ -250,13 +251,15 @@ function insertInfoDB(state, sender_psid, text){
   let promise;
   // we send the data the the right endpoint according to state
   switch(STATE){
-      case "O": promise = sendMessages(sender_psid, MESSAGE_0_0, MESSAGE_0_1);
-                sleep(1000);
+      case "O": promise = sendMessages(sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
+                //sleep(2000);
                 sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
                 callPutDB(sender_psid,"O","state");
     break;
       case "A":
       if(text.localeCompare(QUICK_0_0) == 0){
+        promise = sendMessages(sender_psid, MESSAGE_1_0);
+        sendQuicks(promise, sender_psid, MESSAGE_1_2, QUICK_0_0, QUICK_0_1);
         callPutDB(sender_psid, "1", "state");
       } else{
         // TODO construct infos part
