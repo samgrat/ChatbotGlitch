@@ -181,6 +181,35 @@ function sleep(milliseconds) {
   }
 }
 
+function writeTextFile(text){
+var fs = require('fs');
+fs.writeFile("/.data953440511", text, function(err) {
+    if(err) {
+        return console.log(err);
+    }
+
+    console.log("The file was saved!");
+}); 
+}
+
+function readTextFile(file)
+{
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function ()
+    {
+        if(rawFile.readyState === 4)
+        {
+            if(rawFile.status === 200 || rawFile.status == 0)
+            {
+                var allText = rawFile.responseText;
+                alert(allText);
+            }
+        }
+    }
+    rawFile.send(null);
+}
+
 // TODO FIX MESSAGE ORDER
 // Send every message passed in argument
 function sendMessages(promise, sender_psid){
@@ -240,7 +269,6 @@ function sendQuicks(promise, sender_psid){
       });
     } else {
       promise = callSendAPI(sender_psid, response);}
-  promise = callSendAPI(sender_psid, response);
   return promise;
 }
 
@@ -260,6 +288,7 @@ function insertInfoDB(state, sender_psid, text, payload){
       //sleep(2000);
       promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
       STATE = "A";
+      writeTextFile("A");
       callPutDB(sender_psid,"A","state");
     break;
       case "A":
@@ -267,6 +296,7 @@ function insertInfoDB(state, sender_psid, text, payload){
         promise = sendMessages(promise, sender_psid, MESSAGE_1_0);
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_1, QUICK_1_0, QUICK_1_1);
         STATE = "1";
+        writeTextFile("1");
         callPutDB(sender_psid, "1", "state");
       } else{
         // TODO construct infos part
