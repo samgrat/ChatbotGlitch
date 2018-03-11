@@ -8,6 +8,7 @@
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const API_URL_SERVER = process.env.API_URL_SERVER;
 const MESSAGE_ERROR = process.env.MESSAGE_ERROR;
+const MESSAGE_DEV = process.env.MESSAGE_DEV;
 const MESSAGE_0_0 = process.env.MESSAGE_0_0;
 const MESSAGE_0_1 = process.env.MESSAGE_0_1;
 const MESSAGE_0_2 = process.env.MESSAGE_0_2;
@@ -293,8 +294,16 @@ function insertInfoDB(state, sender_psid, text, payload){
         callPutDB(sender_psid, "1", "state");
         promise = sendMessages(promise, sender_psid, MESSAGE_1_0);
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_1, QUICK_1_0, QUICK_1_1);
-      } else{
+      } else if (payload.localeCompare(QUICK_0_1) == 0){
         // TODO construct infos part
+        STATE = "A";
+        callPutDB(sender_psid,"A","state");
+        console.error('The answer didn\'t match a pattern');
+        promise = sendMessages(promise, sender_psid, MESSAGE_3_0);
+        promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);  
+      
+      } else{
         STATE = "A";
         callPutDB(sender_psid,"A","state");
         console.error('The answer didn\'t match a pattern');
@@ -342,7 +351,8 @@ function insertInfoDB(state, sender_psid, text, payload){
     break;
       case "4": 
       callPutDB(sender_psid, text, "lastName");
-      MESSAGE_5_0.replace("@prenom", FIRSTNAME);
+      getFirstName(sender_psid);
+      MESSAGE_5_0 = MESSAGE_5_0.replace("@prenom", FIRSTNAME);
       promise = sendMessages(promise, sender_psid, MESSAGE_5_0);
     break;
       case "5":
@@ -605,8 +615,7 @@ function getFirstName(sender_psid){
         }
           else { FIRSTNAME = bodystr.firstName;}
             }
-          }
-      }
+               
       
     } else {
       console.error("Unable to retreive state" + err);
