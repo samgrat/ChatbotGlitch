@@ -27,7 +27,7 @@ const MESSAGE_3_1 = process.env.MESSAGE_3_1;
 const MESSAGE_3_2 = process.env.MESSAGE_3_2;
 const MESSAGE_3_3 = process.env.MESSAGE_3_3;
 const MESSAGE_4_0 = process.env.MESSAGE_4_0;
-const MESSAGE_5_0 = process.env.MESSAGE_5_0;
+let MESSAGE_5_0 = process.env.MESSAGE_5_0;
 const MESSAGE_5_1 = process.env.MESSAGE_5_1;
 const QUICK_5_0 = process.env.QUICK_5_0;
 const QUICK_5_1 = process.env.QUICK_5_1;
@@ -314,7 +314,7 @@ function insertInfoDB(state, sender_psid, text, payload){
       }
     break;
       case "1": 
-      if(payload.localeCompare(QUICK_1_0) == 0 || payload.localeCompare(QUICK_1_1) == 0  ){
+      if(payload.localeCompare(QUICK_1_0) == 0 || payload.localeCompare(QUICK_1_1) == 0){
         STATE = "2";
         callPutDB(sender_psid, "2", "state");
         callPutDB(sender_psid, payload, "gender");
@@ -361,8 +361,8 @@ function insertInfoDB(state, sender_psid, text, payload){
       case "4": 
       callPutDB(sender_psid, text, "lastName");
       getFirstName(sender_psid);
-      MESSAGE_5_0 = MESSAGE_5_0.replace("@prenom", FIRSTNAME);
-      promise = sendMessages(promise, sender_psid, MESSAGE_5_0);
+      let MESSAGE_NAMED = MESSAGE_5_0.replace("@prenom", FIRSTNAME);
+      promise = sendMessages(promise, sender_psid, MESSAGE_NAMED);
     break;
       case "5":
       case "6":
