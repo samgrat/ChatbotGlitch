@@ -204,17 +204,18 @@ function sendMessages(sender_psid){
       promise = callSendAPI(sender_psid, response);}
     
   }
+  return promise;
 }
 
 // Send all the quick answer options passed in argument
-function sendQuicks(sender_psid){
+function sendQuicks(promise, sender_psid){
   var i;
   let response = {};
-  response.text = arguments[1];
+  response.text = arguments[2];
   response.quick_replies = [];
   
   let quick = {};
-  for (i = 2; i < arguments.length; i++) {
+  for (i = 3; i < arguments.length; i++) {
     quick = {
       "content_type":"text",
       "title": arguments[i],
@@ -222,8 +223,21 @@ function sendQuicks(sender_psid){
     };
     response.quick_replies.push(quick);
   }
-  console.log(response);
-  callSendAPI(sender_psid, response);
+  
+  // we check for the promise
+  if(promise){
+    promise.then(
+      function() {
+      promise = callSendAPI(sender_psid, response);}
+    ).catch(
+      // Promesse rejetée
+      function() { 
+        console.error("promesse rompue");
+      });
+    } else {
+      promise = callSendAPI(sender_psid, response);}
+    
+  return promise;
 }
 
 function putState(state) {
@@ -233,11 +247,12 @@ function putState(state) {
 
 function insertInfoDB(state, sender_psid, text){
   callGetOneDB(sender_psid)
+  let promise;
   // we send the data the the right endpoint according to state
   switch(STATE){
-      case "O": sendMessages(sender_psid, MESSAGE_0_0, MESSAGE_0_1);
+      case "O": promise = sendMessages(sender_psid, MESSAGE_0_0, MESSAGE_0_1);
                 sleep(1000);
-                sendQuicks(sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
+                sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
                 callPutDB(sender_psid,"O","state");
     break;
       case "A":
