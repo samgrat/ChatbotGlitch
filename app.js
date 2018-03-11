@@ -263,7 +263,6 @@ function insertInfoDB(state, sender_psid, text){
         callPutDB(sender_psid, "1", "state");
       } else{
         // TODO construct infos part
-        callPutDB(sender_psid, "A", "state");
         console.error('The answer didn\'t match a pattern');
       }
     break;
@@ -272,7 +271,20 @@ function insertInfoDB(state, sender_psid, text){
       promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
       callPutDB(sender_psid, "2", "state");
     break;
-      case "2": callPutDB(sender_psid, text, "class");
+      case "2": 
+      callPutDB(sender_psid, text, "class");
+      if(text.localeCompare(QUICK_2_0) == 0){
+        promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1);
+        promise = sendMessages(promise, sender_psid, MESSAGE_
+        callPutDB(sender_psid, "3", "state");
+      }
+      // TODO construct volontary part
+      if(text.localeCompare(QUICK_2_1) == 0){
+        promise = sendMessages(promise, sender_psid, MESSAGE_3bis_0 "\n" + MESSAGE_3_1);
+        callPutDB(sender_psid, "3", "state");
+      } else{
+        console.error('The answer didn\'t match a pattern');
+      }
     break;
       case "3": callPutDB(sender_psid, text, "firstName");
     break;
