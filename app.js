@@ -251,12 +251,15 @@ function insertInfoDB(state, sender_psid, text){
   let promise;
   // we send the data the the right endpoint according to state
   switch(STATE){
-      case "O": promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
+      case "O": 
+      
+      promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
                 //sleep(2000);
                 promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
                 callPutDB(sender_psid,"A","state");
     break;
       case "A":
+      
       if(text.localeCompare(QUICK_0_0) == 0){
         promise = sendMessages(promise, sender_psid, MESSAGE_1_0);
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_1, QUICK_1_0, QUICK_1_1);
@@ -267,20 +270,21 @@ function insertInfoDB(state, sender_psid, text){
       }
     break;
       case "1": 
+      
       callPutDB(sender_psid, text, "gender");
       promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
       callPutDB(sender_psid, "2", "state");
     break;
       case "2": 
+      
       callPutDB(sender_psid, text, "class");
       if(text.localeCompare(QUICK_2_0) == 0){
-        promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1);
-        promise = sendMessages(promise, sender_psid, MESSAGE_
+        promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1 + MESSAGE_3_2 + "\n" + MESSAGE_3_3);
         callPutDB(sender_psid, "3", "state");
       }
       // TODO construct volontary part
       if(text.localeCompare(QUICK_2_1) == 0){
-        promise = sendMessages(promise, sender_psid, MESSAGE_3bis_0 "\n" + MESSAGE_3_1);
+        promise = sendMessages(promise, sender_psid, MESSAGE_3bis_0 + "\n" + MESSAGE_3_1 + MESSAGE_3_2 + "\n" + MESSAGE_3_3)
         callPutDB(sender_psid, "3", "state");
       } else{
         console.error('The answer didn\'t match a pattern');
