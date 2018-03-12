@@ -82,7 +82,8 @@ const
   request = require('request'),
   express = require('express'),
   body_parser = require('body-parser'),
-  XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,
+  XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,      
+  mongodb = require('mongodb'),
   mongoose = require('mongoose'),
   app = express().use(body_parser.json()); // creates express http server
 // Sets server port and logs message on success
@@ -95,8 +96,11 @@ var seedData = [];
 
 // mongoose connection
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb+srv://Samgrat:' + process.env.PASS + '@cluster0-se2vl.mongodb.net/CRMdb');
+var uri = 'mongodb+srv://Samgrat:' + process.env.PASS + '@cluster0-se2vl.mongodb.net/CRMdb';
 
+mongoose.MongoClient.connect(uri, function(err, db) {
+  
+};
 //////////////////          ROUTES           //////////////////////     TODO: add routes for data storage and data retrieving via webapp
 // Accepts POST requests at /webhook endpoint
 app.post('/webhook', (req, res) => {  
