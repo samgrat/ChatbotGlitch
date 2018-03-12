@@ -94,13 +94,11 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 // seed data
 var seedData = [];
 
-// mongoose connection
-mongoose.Promise = global.Promise;
-var uri = 'mongodb+srv://Samgrat:' + process.env.PASS + '@cluster0-se2vl.mongodb.net/CRMdb';
+var uri = 'mongodb+srv://Samgrat:' + process.env.PASS + '@cluster0-shard-00-00-se2vl.mongodb.net:27017,cluster0-shard-00-01-se2vl.mongodb.net:27017,cluster0-shard-00-02-se2vl.mongodb.net:27017/CRMdb?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin/';
 
-mongoose.MongoClient.connect(uri, function(err, db) {
-  
-};
+mongodb.MongoClient.connect(uri, function(err, db) {
+  if(err) throw err;
+});
 //////////////////          ROUTES           //////////////////////     TODO: add routes for data storage and data retrieving via webapp
 // Accepts POST requests at /webhook endpoint
 app.post('/webhook', (req, res) => {  
