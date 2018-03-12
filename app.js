@@ -83,10 +83,15 @@ const
   express = require('express'),
   body_parser = require('body-parser'),
   XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,
+  mongoose = require('mongoose'),
   app = express().use(body_parser.json()); // creates express http server
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 ///////////////////////////////////////////////////////////////////
+
+///////////////////       DATABASE SETUP       /////////////////////
+// seed data
+var seedData = [];
 
 //////////////////          ROUTES           //////////////////////     TODO: add routes for data storage and data retrieving via webapp
 // Accepts POST requests at /webhook endpoint
