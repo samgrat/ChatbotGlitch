@@ -260,15 +260,15 @@ function sendQuicks(promise, sender_psid){
   }
   
   console.log(response);
+  
   // we check for the promise
   if(promise){
-    promise.then().catch(
+    promise.then(function(){promise = callSendAPI(sender_psid, response);}).catch(
       // Promesse rejetée
       function() { 
         console.error("promesse rompue");
       });
-    } else {
-      promise = callSendAPI(sender_psid, response);}
+    } else {promise = callSendAPI(sender_psid, response);}
   return promise;
 }
 
