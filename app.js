@@ -94,7 +94,7 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 // seed data
 var seedData = [];
 
-var uri = 'mongodb+srv://Samgrat:' + process.env.PASS + '@cluster0-shard-00-00-se2vl.mongodb.net:27017,cluster0-shard-00-01-se2vl.mongodb.net:27017,cluster0-shard-00-02-se2vl.mongodb.net:27017/CRMdb?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin/';
+var uri = 'mongodb://Samgrat:' + process.env.PASS + '@cluster0-shard-00-00-se2vl.mongodb.net:27017,cluster0-shard-00-01-se2vl.mongodb.net:27017,cluster0-shard-00-02-se2vl.mongodb.net:27017/CRMdb?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin/';
 
 mongodb.MongoClient.connect(uri, function(err, db) {
   if(err) throw err;
