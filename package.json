@@ -1,14 +1,14 @@
 {
-  "name": "messenger-quick-start",
+  "name": "Chatbot",
   "version": "1.0.0",
-  "description": "An example webhook for Facebook Messenger quick start tutorial.",
+  "description": "Chatbot project for the SAH Grenoble",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/fbsamples/messenger-platform-samples.git"
+    "url": "https://github.com/samgrat/ChatbotGlitch"
   },
   "author": "Facebook",
   "license": "ISC",
