@@ -89,7 +89,7 @@ const
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 ///////////////////////////////////////////////////////////////////
-
+/* In Progress
 ///////////////////       DATABASE SETUP       /////////////////////
 // seed data
 var seedData = [];
@@ -99,6 +99,8 @@ var uri = 'mongodb://Samgrat:' + process.env.PASS + '@cluster0-shard-00-00-se2vl
 mongodb.MongoClient.connect(uri, function(err, db) {
   if(err) throw err;
 });
+///////////////////////////////////////////////////////////////////
+*/
 //////////////////          ROUTES           //////////////////////     TODO: add routes for data storage and data retrieving via webapp
 // Accepts POST requests at /webhook endpoint
 app.post('/webhook', (req, res) => {  
