@@ -282,20 +282,26 @@ function insertInfoDB(state, sender_psid, text, payload){
       promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
       //sleep(2000);
       promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
+      console.log("FROM : "+ STATE);
       STATE = "A";
+      console.log("STATE : "+ STATE);
       writeTextFile("A");
       callPutDB(sender_psid,"A","state");
     break;
       case "A":
       if(payload.localeCompare(QUICK_0_0) == 0){
+        console.log("FROM : "+ STATE);
         STATE = "1";
+        console.log("STATE : "+ STATE);
         writeTextFile("1");
         callPutDB(sender_psid, "1", "state");
         promise = sendMessages(promise, sender_psid, MESSAGE_1_0);
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_1, QUICK_1_0, QUICK_1_1);
       } else if (payload.localeCompare(QUICK_0_1) == 0){
         // TODO construct infos part
+        console.log("FROM : "+ STATE);
         STATE = "A";
+        console.log("STATE : "+ STATE);
         writeTextFile("A");
         callPutDB(sender_psid,"A","state");
         promise = sendMessages(promise, sender_psid, MESSAGE_DEV);
@@ -303,7 +309,9 @@ function insertInfoDB(state, sender_psid, text, payload){
         promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);  
       
       } else{
-        STATE = "A";
+        console.log("FROM : "+ STATE);
+        STATE = "A";        
+        console.log("STATE : "+ STATE);
         writeTextFile("A");
         callPutDB(sender_psid,"A","state");
         console.error('The answer didn\'t match a pattern');
@@ -315,13 +323,17 @@ function insertInfoDB(state, sender_psid, text, payload){
     break;
       case "1": 
       if(payload.localeCompare(QUICK_1_0) == 0 || payload.localeCompare(QUICK_1_1) == 0){
+        console.log("FROM : "+ STATE);
         STATE = "2";
+        console.log("STATE : "+ STATE);
         writeTextFile("2");
         callPutDB(sender_psid, "2", "state");
         callPutDB(sender_psid, payload, "gender");
         promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
       } else{
+        console.log("FROM : "+ STATE);
         STATE = "1";
+        console.log("STATE : "+ STATE);
         writeTextFile("1");
         callPutDB(sender_psid,"1","state");
         console.error('The answer didn\'t match a pattern');
@@ -333,20 +345,26 @@ function insertInfoDB(state, sender_psid, text, payload){
       case "2": 
 
       if(payload.localeCompare(QUICK_2_0) == 0){
+        console.log("FROM : "+ STATE);
         STATE = "3";
+        console.log("STATE : "+ STATE);
         callPutDB(sender_psid, "3", "state");
         callPutDB(sender_psid, payload, "class");
         promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1);
         promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
       }
       else if(payload.localeCompare(QUICK_2_1) == 0){
+        console.log("FROM : "+ STATE);
+        console.log("STATE : "+ STATE);
         STATE = "3";
         callPutDB(sender_psid, "3", "state");
         callPutDB(sender_psid, payload, "class");
         promise = sendMessages(promise, sender_psid, MESSAGE_3bis_0 + "\n" + MESSAGE_3_1);
         promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
       } else{
+        console.log("FROM : "+ STATE);
         STATE = "2";
+        console.log("STATE : "+ STATE);
         callPutDB(sender_psid, "2", "state");
         console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
@@ -355,13 +373,19 @@ function insertInfoDB(state, sender_psid, text, payload){
       }
     break;
       case "3": 
+      console.log("FROM : "+ STATE);
       STATE = "4";
+      console.log("STATE : "+ STATE);
       callPutDB(sender_psid, "4", "state");
       callPutDB(sender_psid, text, "firstName");
       getFirstName(sender_psid);
       promise = sendMessages(promise, sender_psid, MESSAGE_4_0);
     break;
       case "4": 
+      console.log("FROM : "+ STATE);
+      STATE = "4";
+      console.log("STATE : "+ STATE);
+      callPutDB(sender_psid, "4", "state");
       callPutDB(sender_psid, text, "lastName");
       getFirstName(sender_psid);
       console.log("FirstName: " + FIRSTNAME);
