@@ -259,12 +259,10 @@ function sendQuicks(promise, sender_psid){
     response.quick_replies.push(quick);
   }
   
+  console.log(response);
   // we check for the promise
   if(promise){
-    promise.then(
-      function() {
-      promise = callSendAPI(sender_psid, response);}
-    ).catch(
+    promise.then().catch(
       // Promesse rejetée
       function() { 
         console.error("promesse rompue");
@@ -360,6 +358,7 @@ function insertInfoDB(state, sender_psid, text, payload){
       STATE = "4";
       callPutDB(sender_psid, "4", "state");
       callPutDB(sender_psid, text, "firstName");
+      getFirstName(sender_psid);
       promise = sendMessages(promise, sender_psid, MESSAGE_4_0);
     break;
       case "4": 
