@@ -726,7 +726,7 @@ function callPutDB(sender_psid, data, field) {
     "json" : request_body
   }, (err, res, body) => {
     if (!err) {
-      console.log('info added to DB')
+      console.log('info added to DB : '+ field + " " + data);
     } else {
       console.error("Unable to add info:" + err);
     }
