@@ -429,7 +429,6 @@ function insertInfoDB(state, sender_psid, text, payload){
       findState(sender_psid);
       //insertInfoDB(state, sender_psid, text, payload);
     }
-    callGetOneDB(sender_psid);
 
 }
 
@@ -565,6 +564,7 @@ function handleMessage(sender_psid, received_message) {
       payload = received_message.text;}
     
     insertInfoDB(state, sender_psid, received_message.text, payload);
+    callGetOneDB(sender_psid);
     //moveUserState(state, sender_psid, received_message.text);
                  
   } else if (received_message.attachments) {
@@ -595,8 +595,7 @@ function handleMessage(sender_psid, received_message) {
         }
       }
     }
-  } 
-  console.log("READY");
+  }
 }
 
 function findState(sender_psid){
