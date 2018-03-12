@@ -93,6 +93,10 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 // seed data
 var seedData = [];
 
+// mongoose connection
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb+srv://Samgrat:' + process.env.PASS + '@cluster0-se2vl.mongodb.net/CRMdb');
+
 //////////////////          ROUTES           //////////////////////     TODO: add routes for data storage and data retrieving via webapp
 // Accepts POST requests at /webhook endpoint
 app.post('/webhook', (req, res) => {  
