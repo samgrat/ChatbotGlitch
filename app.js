@@ -428,7 +428,7 @@ function insertInfoDB(state, sender_psid, text, payload){
       console.log('We don\'t store the data at this state');
       findState(sender_psid);
       //insertInfoDB(state, sender_psid, text, payload);
-              }
+    }
     callGetOneDB(sender_psid);
 
 }
@@ -596,6 +596,7 @@ function handleMessage(sender_psid, received_message) {
       }
     }
   } 
+  console.log("READY");
 }
 
 function findState(sender_psid){
