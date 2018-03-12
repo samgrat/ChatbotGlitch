@@ -300,7 +300,6 @@ function insertInfoDB(state, sender_psid, text, payload){
         STATE = "A";
         writeTextFile("A");
         callPutDB(sender_psid,"A","state");
-        console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_DEV);
         promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
         promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);  
@@ -650,6 +649,7 @@ function callGetOneDB(sender_psid) {
     "method": "GET"
   }, (err, res, body) => {
     if (!err) {
+      console.log("bodyjson : " + body);
       
       let bodystr = eval("(function(){return " + body + ";})()");
       
