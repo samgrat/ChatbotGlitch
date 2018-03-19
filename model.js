@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
-
-const Schema = mongoose.Schema;
+const 
+  mongoose = require('mongoose'),
+  Schema = mongoose.Schema;
 
 // this is the schema of our contact infos
 export const ContactSchema = new Schema({

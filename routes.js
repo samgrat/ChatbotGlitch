@@ -1,11 +1,11 @@
-import { 
-    addNewContact, 
-    getContacts, 
-    getContactByID, 
-    updateContact,
-    deleteContact,
-    getFieldByID,   
- } from "./controller";
+const  
+  controller = require("./controller"),
+  addNewContact = controller.addNewContact,
+  getContacts = controller.getContacts, 
+  getContactByID = controller.getContactByID, 
+  updateContact = controller.updateContact,
+  deleteContact = controller.deleteContact,
+  getFieldByID = controller.getFieldByID;
 
 // Our endpoints configuration
 
@@ -33,6 +33,3 @@ const routes = (app) => {
     // DELETE
     .delete(deleteContact); // semi-colon of end of block CONTACT/:contactId
 }
-
-// we export our function to be able to use it elsewhere
-export default routes;

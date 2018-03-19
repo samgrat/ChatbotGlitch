@@ -1,10 +1,10 @@
-import mongoose from 'mongoose';
-import { ContactSchema } from './model';
-
-const Contact = mongoose.model('Contact', ContactSchema);
+const 
+  mongoose = require('mongoose'),
+  ContactSchema = require('./model').ContactSchema,
+  Contact = mongoose.model('Contact', ContactSchema);
 
 // Add a new Contact function
-export const addNewContact = (req, res) => {
+const addNewContact = (req, res) => {
     let newContact = new Contact(req.body);
 
     newContact.save((err, contact) => {
@@ -16,7 +16,7 @@ export const addNewContact = (req, res) => {
 };
 
 // Function to get all contacts
-export const getContacts = (req, res) => {
+const getContacts = (req, res) => {
     Contact.find({}, (err, contact) => {
         if(err){
             res.send(err);
@@ -26,7 +26,7 @@ export const getContacts = (req, res) => {
 };
 
 // Get a contact by its object id
-export const getContactByObjectID = (req, res) => {
+const getContactByObjectID = (req, res) => {
     Contact.findById(req.params.contactId, (err,contact) => {
         if(err){
             res.send(err);
@@ -36,7 +36,7 @@ export const getContactByObjectID = (req, res) => {
 };
 
 // Get by messengerID
-export const getContactByID = (req, res) => {
+const getContactByID = (req, res) => {
     Contact.findOne({_id: req.params.contactId}, (err,contact) => {
         if(err){
             res.send(err);
@@ -46,7 +46,7 @@ export const getContactByID = (req, res) => {
 };
 
 // TODO
-export const getFieldByID = (req,res) => {
+const getFieldByID = (req,res) => {
     Contact.findOne({_id: req.params.contactId}, (err,contact) => {
         if(err){
             res.send(err);
@@ -57,7 +57,7 @@ export const getFieldByID = (req,res) => {
 
 
 // Update a contact and returns new infos
-export const updateContact = (req, res) => {
+const updateContact = (req, res) => {
     Contact.findOneAndUpdate({_id: req.params.contactId}, req.body, { new: true}, (err,contact) => {
         if(err){
             res.send(err);
@@ -66,7 +66,7 @@ export const updateContact = (req, res) => {
     });
 };
 
-export const deleteContact = (req, res) => {
+const deleteContact = (req, res) => {
     Contact.remove({_id: req.params.contactId }, (err, contact) => {
         if(err){
             res.send(err);
