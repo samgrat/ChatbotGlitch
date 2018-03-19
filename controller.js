@@ -38,6 +38,8 @@ module.exports.getContactByObjectID = (req, res) => {
 // Get by messengerID
 module.exports.getContactByID = (req, res) => {
     Contact.findOne({_id: req.params.contactId}, (err,contact) => {
+        console.log(res.send);
+        console.log(res.json);
         if(err){
             res.send(err);
         }

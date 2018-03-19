@@ -324,8 +324,8 @@ function sendQuicks(promise, sender_psid){
 }
 
 function insertInfoDB(state, sender_psid, text, payload){
-  //callGetOneDB(sender_psid);
-  getState(sender_psid);
+  callGetOneDB(sender_psid);
+  //getState(sender_psid);
   let promise;
   // we send the data the the right endpoint according to state
   switch(STATE){
@@ -753,7 +753,6 @@ function getState(sender_psid){
     }
   }
   let res;
-  var body;
     
   getContactByID(req, res);
   console.log(res);
@@ -761,7 +760,9 @@ function getState(sender_psid){
     let bodystr = eval("(function(){return " + res + ";})()");
     STATE = bodystr.state;
   } else{
-    STATE = "A";
+    STATE = "A";        
+    console.log("State : 0");
+    //callPostDB(sender_psid);
   }
 }
 
