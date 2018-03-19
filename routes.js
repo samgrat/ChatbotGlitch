@@ -10,7 +10,7 @@ const
 // Our endpoints configuration
 
 // routes function is used inside of index.js
-const routes = (app) => {
+const routes = function (app) {
     // CONTACT route block
     app.route('/contact')
     // GET
@@ -32,4 +32,4 @@ const routes = (app) => {
     .put(updateContact)
     // DELETE
     .delete(deleteContact); // semi-colon of end of block CONTACT/:contactId
-};
+}
