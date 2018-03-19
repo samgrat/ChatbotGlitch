@@ -111,12 +111,14 @@ var seedData = [
   }
 ];
 
+// Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname, details set in .env
 var uri = 'mongodb://'+process.env.USER+':'+process.env.PASS+'@cluster0-shard-00-00-se2vl.mongodb.net:27017,cluster0-shard-00-01-se2vl.mongodb.net:27017,cluster0-shard-00-02-se2vl.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin';
 
 mongodb.MongoClient.connect(uri, function(err, db) {
   if(err) throw err;
   // let's create the collection contacts
-  var contacts = db.collection('contacts');
+  const myDB = db.db('database-sah');
+  var contacts = myDB.collection('contacts');
   
   
 });
