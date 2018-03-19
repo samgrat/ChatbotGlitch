@@ -10,7 +10,10 @@ const
 // Our endpoints configuration
 
 // routes function is used inside of index.js
-const routes = function (app) {
+module.exports = (function () {
+    'use strict';
+    var app = require('express').Router();
+  
     // CONTACT route block
     app.route('/contact')
     // GET
@@ -32,4 +35,5 @@ const routes = function (app) {
     .put(updateContact)
     // DELETE
     .delete(deleteContact); // semi-colon of end of block CONTACT/:contactId
-}
+    return app;
+})();
