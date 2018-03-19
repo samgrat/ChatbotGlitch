@@ -108,6 +108,7 @@ mongoose.connect(uri);
 app.use(body_parser.urlencoded({ extended : true }));
 app.use(body_parser.json());
 
+// TODO to fix for a cleaner code
 //routes.routes(app);
 
 // Sets server port and logs message on success
@@ -116,19 +117,7 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 ///////////////////////////////////////////////////////////////////
 
 //////////////////          ROUTES           //////////////////////     TODO: add routes for data storage and data retrieving via webapp
-/*// CONTACT route block
-    app.get('/contact', getContacts); // semi-colon of end of block CONTACT/
-    
-    // CONTACT/:messengerId block
-    // GET
-    app.get('/contact/:contactId', getContactByID);
-    // POST
-    app.post('/contact/:contactId', addNewContact);
-    // PUT
-    app.put('/contact/:contactId', updateContact);
-    // DELETE
-    app.delete('/contact/:contactId', deleteContact); 
-*/
+
 // CONTACT route block
     app.route('/contact')
     // GET
@@ -754,6 +743,11 @@ function callGetOneDB(sender_psid) {
   });
 
   
+}
+
+function getState(sender_psid){
+  var req = {
+  getContactByObjectID(
 }
 
 // Get all the contacts in the database
