@@ -85,6 +85,13 @@ const
   mongoose = require ('mongoose'),
   body_parser = require('body-parser'),
   routes = require('./routes'),
+  controller = require("./controller"),
+  addNewContact = controller.addNewContact,
+  getContacts = controller.getContacts, 
+  getContactByID = controller.getContactByID, 
+  updateContact = controller.updateContact,
+  deleteContact = controller.deleteContact,
+  getFieldByID = controller.getFieldByID,
   XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,
   app = express(); // creates express http server
 ///////////////////////////////////////////////////////////////////
@@ -101,7 +108,7 @@ mongoose.connect(uri);
 app.use(body_parser.urlencoded({ extended : true }));
 app.use(body_parser.json());
 
-routes.routes(app);
+//routes.routes(app);
 
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
@@ -109,6 +116,41 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 ///////////////////////////////////////////////////////////////////
 
 //////////////////          ROUTES           //////////////////////     TODO: add routes for data storage and data retrieving via webapp
+/*// CONTACT route block
+    app.get('/contact', getContacts); // semi-colon of end of block CONTACT/
+    
+    // CONTACT/:messengerId block
+    // GET
+    app.get('/contact/:contactId', getContactByID);
+    // POST
+    app.post('/contact/:contactId', addNewContact);
+    // PUT
+    app.put('/contact/:contactId', updateContact);
+    // DELETE
+    app.delete('/contact/:contactId', deleteContact); 
+*/
+// CONTACT route block
+    app.route('/contact')
+    // GET
+    .get((req, res, next) => {
+        // middleware
+        console.log(`Request from: ${req.originalUrl}`)
+        console.log(`Request type: ${req.method}`)
+        // once we have done that
+        next();
+    }, getContacts); // semi-colon of end of block CONTACT/
+    
+    // CONTACT/:messengerId block
+    app.route('/contact/:contactId')
+    // GET
+    .get(getContactByID)
+    // POST
+    .post(addNewContact)
+    // PUT
+    .put(updateContact)
+    // DELETE
+    .delete(deleteContact); // semi-colon of end of block CONTACT/:contactId
+
 // Accepts POST requests at /webhook endpoint
 app.post('/webhook', (req, res) => {  
 
