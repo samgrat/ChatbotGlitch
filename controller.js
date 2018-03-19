@@ -4,7 +4,7 @@ const
   Contact = mongoose.model('Contact', ContactSchema);
 
 // Add a new Contact function
-const addNewContact = (req, res) => {
+module.exports.addNewContact = (req, res) => {
     let newContact = new Contact(req.body);
 
     newContact.save((err, contact) => {
@@ -16,7 +16,7 @@ const addNewContact = (req, res) => {
 };
 
 // Function to get all contacts
-const getContacts = (req, res) => {
+module.exports.getContacts = (req, res) => {
     Contact.find({}, (err, contact) => {
         if(err){
             res.send(err);
@@ -26,7 +26,7 @@ const getContacts = (req, res) => {
 };
 
 // Get a contact by its object id
-const getContactByObjectID = (req, res) => {
+module.exports.getContactByObjectID = (req, res) => {
     Contact.findById(req.params.contactId, (err,contact) => {
         if(err){
             res.send(err);
@@ -36,7 +36,7 @@ const getContactByObjectID = (req, res) => {
 };
 
 // Get by messengerID
-const getContactByID = (req, res) => {
+module.exports.getContactByID = (req, res) => {
     Contact.findOne({_id: req.params.contactId}, (err,contact) => {
         if(err){
             res.send(err);
@@ -46,7 +46,7 @@ const getContactByID = (req, res) => {
 };
 
 // TODO
-const getFieldByID = (req,res) => {
+module.exports.getFieldByID = (req,res) => {
     Contact.findOne({_id: req.params.contactId}, (err,contact) => {
         if(err){
             res.send(err);
@@ -57,7 +57,7 @@ const getFieldByID = (req,res) => {
 
 
 // Update a contact and returns new infos
-const updateContact = (req, res) => {
+module.exports.updateContact = (req, res) => {
     Contact.findOneAndUpdate({_id: req.params.contactId}, req.body, { new: true}, (err,contact) => {
         if(err){
             res.send(err);
@@ -66,7 +66,7 @@ const updateContact = (req, res) => {
     });
 };
 
-const deleteContact = (req, res) => {
+module.exports.deleteContact = (req, res) => {
     Contact.remove({_id: req.params.contactId }, (err, contact) => {
         if(err){
             res.send(err);

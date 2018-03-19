@@ -101,7 +101,7 @@ mongoose.connect(uri);
 app.use(body_parser.urlencoded({ extended : true }));
 app.use(body_parser.json());
 
-routes(app);
+routes.routes(app);
 
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
