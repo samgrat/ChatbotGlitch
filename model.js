@@ -3,7 +3,7 @@ const
   Schema = mongoose.Schema;
 
 // this is the schema of our contact infos
-export const ContactSchema = new Schema({
+const ContactSchema = new Schema({
     _id: {
         type : String,
         required : "Error cannot access data without messengerID"
@@ -126,3 +126,5 @@ export const ContactSchema = new Schema({
         default: Date.now
     }
 });
+
+mongoose.model('Contact', ContactSchema);

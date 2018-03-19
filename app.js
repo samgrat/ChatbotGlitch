@@ -83,7 +83,7 @@ const
   express = require('express'),
   mongodb = require('mongodb'),
   mongoose = require ('mongoose'),
-  routes = require('./routes'),
+  routes = require('./routes').routes,
   body_parser = require('body-parser'),
   XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,
   app = express(); // creates express http server
