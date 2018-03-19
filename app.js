@@ -92,6 +92,8 @@ const
   updateContact = controller.updateContact,
   deleteContact = controller.deleteContact,
   getFieldByID = controller.getFieldByID,
+  ContactSchema = require('./model').ContactSchema,
+  Contact = mongoose.model('Contact', ContactSchema),
   XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,
   app = express(); // creates express http server
 ///////////////////////////////////////////////////////////////////
@@ -324,8 +326,8 @@ function sendQuicks(promise, sender_psid){
 }
 
 function insertInfoDB(state, sender_psid, text, payload){
-  callGetOneDB(sender_psid);
-  //getState(sender_psid);
+  //callGetOneDB(sender_psid);
+  getState(sender_psid);
   let promise;
   // we send the data the the right endpoint according to state
   switch(STATE){
@@ -747,15 +749,20 @@ function callGetOneDB(sender_psid) {
 }
 
 function getState(sender_psid){
-  let req = {
-    "params" : {
-     "contactId": sender_psid
-    }
-  }
+
   let res;
     
-  getContactByID(req, res);
-  console.log(res);
+  Contact.findOne({_id: sender_psid}, (err,contact) => {
+
+        if(err){
+            res = err;
+        }
+    
+        res = contact;
+        console.log(contact);
+    });
+  
+  
   if(typeof res != 'undefined'){
     let bodystr = eval("(function(){return " + res + ";})()");
     STATE = bodystr.state;
