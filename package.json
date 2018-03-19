@@ -1,31 +1,23 @@
 {
-  "name": "Chatbot",
+  "name": "chatbot-sah",
   "version": "1.0.0",
-  "description": "Chatbot project for the SAH Grenoble",
+  "description": "Chatbot for the SAH Grenoble.",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js nodemon ./index.js --exec babel-node -e js"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/samgrat/ChatbotGlitch"
+    "url": "https://github.com/fbsamples/messenger-platform-samples.git"
   },
-  "author": "Samuel Bamba & Julien Cordat-Auclair",
+  "author": "Facebook",
   "license": "ISC",
-  "homepage": "https://github.com/samgrat/Chatbot#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "express": "^4.16.2",
-    "mongoose": "^5.0.8",
-    "nodemon": "^1.17.1",
-    "request": "^2.83.0",
+    "express": "^4.16.3",
+    "request": "^2.85.0",
     "xmlhttprequest": "^1.8.0",
     "mongodb": "^3.0.4"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-stage-0": "^6.24.1"
   },
   "engines": {
     "node": "6.12.3"

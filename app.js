@@ -81,26 +81,20 @@ let ERROR_ANSWER = false;
 const 
   request = require('request'),
   express = require('express'),
-  body_parser = require('body-parser'),
-  XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,      
   mongodb = require('mongodb'),
-  mongoose = require('mongoose'),
+  body_parser = require('body-parser'),
+  XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,
   app = express().use(body_parser.json()); // creates express http server
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 ///////////////////////////////////////////////////////////////////
-/* In Progress
-///////////////////       DATABASE SETUP       /////////////////////
-// seed data
-var seedData = [];
+/////////////////          DATABASE           /////////////////////    
+  // Create seed data
+  var seedData = [];
+mongodb://Samgrat:<PASSWORD>@cluster0-shard-00-00-se2vl.mongodb.net:27017,cluster0-shard-00-01-se2vl.mongodb.net:27017,cluster0-shard-00-02-se2vl.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin
 
-var uri = 'mongodb://Samgrat:' + process.env.PASS + '@cluster0-shard-00-00-se2vl.mongodb.net:27017,cluster0-shard-00-01-se2vl.mongodb.net:27017,cluster0-shard-00-02-se2vl.mongodb.net:27017/CRMdb?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin/';
-
-mongodb.MongoClient.connect(uri, function(err, db) {
-  if(err) throw err;
-});
 ///////////////////////////////////////////////////////////////////
-*/
+
 //////////////////          ROUTES           //////////////////////     TODO: add routes for data storage and data retrieving via webapp
 // Accepts POST requests at /webhook endpoint
 app.post('/webhook', (req, res) => {  
@@ -272,18 +266,16 @@ function sendQuicks(promise, sender_psid){
     response.quick_replies.push(quick);
   }
   
+  console.log(response);
+  
   // we check for the promise
   if(promise){
-    promise.then(
-      function() {
-      promise = callSendAPI(sender_psid, response);}
-    ).catch(
+    promise.then(function(){promise = callSendAPI(sender_psid, response);}).catch(
       // Promesse rejetée
       function() { 
         console.error("promesse rompue");
       });
-    } else {
-      promise = callSendAPI(sender_psid, response);}
+    } else {promise = callSendAPI(sender_psid, response);}
   return promise;
 }
 
@@ -297,29 +289,36 @@ function insertInfoDB(state, sender_psid, text, payload){
       promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
       //sleep(2000);
       promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
+      console.log("FROM : "+ STATE);
       STATE = "A";
+      console.log("STATE : "+ STATE);
       writeTextFile("A");
       callPutDB(sender_psid,"A","state");
     break;
       case "A":
       if(payload.localeCompare(QUICK_0_0) == 0){
+        console.log("FROM : "+ STATE);
         STATE = "1";
+        console.log("STATE : "+ STATE);
         writeTextFile("1");
         callPutDB(sender_psid, "1", "state");
         promise = sendMessages(promise, sender_psid, MESSAGE_1_0);
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_1, QUICK_1_0, QUICK_1_1);
       } else if (payload.localeCompare(QUICK_0_1) == 0){
         // TODO construct infos part
+        console.log("FROM : "+ STATE);
         STATE = "A";
+        console.log("STATE : "+ STATE);
         writeTextFile("A");
         callPutDB(sender_psid,"A","state");
-        console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_DEV);
         promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
         promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);  
       
       } else{
-        STATE = "A";
+        console.log("FROM : "+ STATE);
+        STATE = "A";        
+        console.log("STATE : "+ STATE);
         writeTextFile("A");
         callPutDB(sender_psid,"A","state");
         console.error('The answer didn\'t match a pattern');
@@ -331,13 +330,17 @@ function insertInfoDB(state, sender_psid, text, payload){
     break;
       case "1": 
       if(payload.localeCompare(QUICK_1_0) == 0 || payload.localeCompare(QUICK_1_1) == 0){
+        console.log("FROM : "+ STATE);
         STATE = "2";
+        console.log("STATE : "+ STATE);
         writeTextFile("2");
         callPutDB(sender_psid, "2", "state");
         callPutDB(sender_psid, payload, "gender");
         promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
       } else{
+        console.log("FROM : "+ STATE);
         STATE = "1";
+        console.log("STATE : "+ STATE);
         writeTextFile("1");
         callPutDB(sender_psid,"1","state");
         console.error('The answer didn\'t match a pattern');
@@ -349,20 +352,26 @@ function insertInfoDB(state, sender_psid, text, payload){
       case "2": 
 
       if(payload.localeCompare(QUICK_2_0) == 0){
+        console.log("FROM : "+ STATE);
         STATE = "3";
+        console.log("STATE : "+ STATE);
         callPutDB(sender_psid, "3", "state");
         callPutDB(sender_psid, payload, "class");
         promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1);
         promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
       }
       else if(payload.localeCompare(QUICK_2_1) == 0){
+        console.log("FROM : "+ STATE);
+        console.log("STATE : "+ STATE);
         STATE = "3";
         callPutDB(sender_psid, "3", "state");
         callPutDB(sender_psid, payload, "class");
         promise = sendMessages(promise, sender_psid, MESSAGE_3bis_0 + "\n" + MESSAGE_3_1);
         promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
       } else{
+        console.log("FROM : "+ STATE);
         STATE = "2";
+        console.log("STATE : "+ STATE);
         callPutDB(sender_psid, "2", "state");
         console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
@@ -371,12 +380,19 @@ function insertInfoDB(state, sender_psid, text, payload){
       }
     break;
       case "3": 
+      console.log("FROM : "+ STATE);
       STATE = "4";
+      console.log("STATE : "+ STATE);
       callPutDB(sender_psid, "4", "state");
       callPutDB(sender_psid, text, "firstName");
+      getFirstName(sender_psid);
       promise = sendMessages(promise, sender_psid, MESSAGE_4_0);
     break;
       case "4": 
+      console.log("FROM : "+ STATE);
+      STATE = "4";
+      console.log("STATE : "+ STATE);
+      callPutDB(sender_psid, "4", "state");
       callPutDB(sender_psid, text, "lastName");
       getFirstName(sender_psid);
       console.log("FirstName: " + FIRSTNAME);
@@ -419,8 +435,7 @@ function insertInfoDB(state, sender_psid, text, payload){
       console.log('We don\'t store the data at this state');
       findState(sender_psid);
       //insertInfoDB(state, sender_psid, text, payload);
-              }
-    callGetOneDB(sender_psid);
+    }
 
 }
 
@@ -556,6 +571,7 @@ function handleMessage(sender_psid, received_message) {
       payload = received_message.text;}
     
     insertInfoDB(state, sender_psid, received_message.text, payload);
+    callGetOneDB(sender_psid);
     //moveUserState(state, sender_psid, received_message.text);
                  
   } else if (received_message.attachments) {
@@ -586,7 +602,7 @@ function handleMessage(sender_psid, received_message) {
         }
       }
     }
-  } 
+  }
 }
 
 function findState(sender_psid){
@@ -663,6 +679,7 @@ function callGetOneDB(sender_psid) {
     "method": "GET"
   }, (err, res, body) => {
     if (!err) {
+      console.log("bodyjson : " + body);
       
       let bodystr = eval("(function(){return " + body + ";})()");
       
@@ -740,7 +757,7 @@ function callPutDB(sender_psid, data, field) {
     "json" : request_body
   }, (err, res, body) => {
     if (!err) {
-      console.log('info added to DB')
+      console.log('info added to DB : '+ field + " " + data);
     } else {
       console.error("Unable to add info:" + err);
     }
