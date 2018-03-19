@@ -86,7 +86,7 @@ const
   routes = require('./routes'),
   body_parser = require('body-parser'),
   XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,
-  app = express().use(body_parser.json()); // creates express http server
+  app = express(); // creates express http server
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 ///////////////////////////////////////////////////////////////////
@@ -94,6 +94,16 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 
 // Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname, details set in .env
 var uri = 'mongodb://'+process.env.USER+':'+process.env.PASS+'@cluster0-shard-00-00-se2vl.mongodb.net:27017,cluster0-shard-00-01-se2vl.mongodb.net:27017,cluster0-shard-00-02-se2vl.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin';
+
+// mongoose connection
+mongoose.Promise = global.Promise;
+mongoose.connect(uri);
+
+// bodyparser setup
+app.use(body_parser.urlencoded({ extended : true }));
+app.use(body_parser.json());
+
+routes(app);
 
 /*
 mongodb.MongoClient.connect(uri, function(err, db) {
@@ -104,7 +114,7 @@ mongodb.MongoClient.connect(uri, function(err, db) {
   
   
 });
-
+*/
 ///////////////////////////////////////////////////////////////////
 
 //////////////////          ROUTES           //////////////////////     TODO: add routes for data storage and data retrieving via webapp
