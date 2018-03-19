@@ -324,7 +324,8 @@ function sendQuicks(promise, sender_psid){
 }
 
 function insertInfoDB(state, sender_psid, text, payload){
-  callGetOneDB(sender_psid);
+  //callGetOneDB(sender_psid);
+  getState(sender_psid);
   let promise;
   // we send the data the the right endpoint according to state
   switch(STATE){
@@ -477,7 +478,7 @@ function insertInfoDB(state, sender_psid, text, payload){
     break;
     default: 
       console.log('We don\'t store the data at this state');
-      findState(sender_psid);
+      //findState(sender_psid);
       //insertInfoDB(state, sender_psid, text, payload);
     }
 
@@ -615,7 +616,7 @@ function handleMessage(sender_psid, received_message) {
       payload = received_message.text;}
     
     insertInfoDB(state, sender_psid, received_message.text, payload);
-    callGetOneDB(sender_psid);
+    //callGetOneDB(sender_psid);
     //moveUserState(state, sender_psid, received_message.text);
                  
   } else if (received_message.attachments) {
@@ -716,7 +717,7 @@ function getFirstName(sender_psid){
 // Get the contact with corresponding to sender's id
 function callGetOneDB(sender_psid) {
   
-  readTextFile(".data/state.txt");
+  //readTextFile(".data/state.txt");
   
   request({
     "url": API_URL_SERVER + "/contact/" + sender_psid,
@@ -746,8 +747,17 @@ function callGetOneDB(sender_psid) {
 }
 
 function getState(sender_psid){
-  var req = {
-  getContactByObjectID(
+  let req = {
+    "params" : {
+     "contactId": sender_psid
+    }
+  }
+  let res;
+  var body;
+    
+  getContactByID(req, res, body);
+  let bodystr = eval("(function(){return " + body + ";})()");
+  STATE = bodystr.state;
 }
 
 // Get all the contacts in the database
