@@ -755,9 +755,14 @@ function getState(sender_psid){
   let res;
   var body;
     
-  getContactByID(req, res, body);
-  let bodystr = eval("(function(){return " + body + ";})()");
-  STATE = bodystr.state;
+  getContactByID(req, res);
+  console.log(res);
+  if(typeof res != 'undefined'){
+    let bodystr = eval("(function(){return " + res + ";})()");
+    STATE = bodystr.state;
+  } else{
+    STATE = "A";
+  }
 }
 
 // Get all the contacts in the database
