@@ -32,4 +32,4 @@ const routes = (app) => {
     .put(updateContact)
     // DELETE
     .delete(deleteContact); // semi-colon of end of block CONTACT/:contactId
-}
+};

@@ -87,8 +87,6 @@ const
   body_parser = require('body-parser'),
   XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,
   app = express(); // creates express http server
-// Sets server port and logs message on success
-app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 ///////////////////////////////////////////////////////////////////
 /////////////////          DATABASE           /////////////////////    
 
@@ -103,18 +101,11 @@ mongoose.connect(uri);
 app.use(body_parser.urlencoded({ extended : true }));
 app.use(body_parser.json());
 
-routes(app);
+new routes(app);
 
-/*
-mongodb.MongoClient.connect(uri, function(err, db) {
-  if(err) throw err;
-  // let's create the collection contacts
-  const myDB = db.db('database-sah');
-  var contacts = myDB.collection('contacts');
-  
-  
-});
-*/
+// Sets server port and logs message on success
+app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
+
 ///////////////////////////////////////////////////////////////////
 
 //////////////////          ROUTES           //////////////////////     TODO: add routes for data storage and data retrieving via webapp
