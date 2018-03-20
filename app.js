@@ -81,14 +81,67 @@ let ERROR_ANSWER = false;
 const 
   request = require('request'),
   express = require('express'),
+  mongodb = require('mongodb'),
+  mongoose = require ('mongoose'),
   body_parser = require('body-parser'),
+  routes = require('./routes'),
+  controller = require("./controller"),
+  addNewContact = controller.addNewContact,
+  getContacts = controller.getContacts, 
+  getContactByID = controller.getContactByID, 
+  updateContact = controller.updateContact,
+  deleteContact = controller.deleteContact,
+  getFieldByID = controller.getFieldByID,
+  ContactSchema = require('./model').ContactSchema,
+  Contact = mongoose.model('Contact', ContactSchema),
   XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,
-  app = express().use(body_parser.json()); // creates express http server
+  app = express(); // creates express http server
+///////////////////////////////////////////////////////////////////
+/////////////////          DATABASE           /////////////////////    
+
+// Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname, details set in .env
+var uri = 'mongodb://'+process.env.USER+':'+process.env.PASS+'@cluster0-shard-00-00-se2vl.mongodb.net:27017,cluster0-shard-00-01-se2vl.mongodb.net:27017,cluster0-shard-00-02-se2vl.mongodb.net:27017/test?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin';
+
+// mongoose connection
+mongoose.Promise = global.Promise;
+mongoose.connect(uri);
+
+// bodyparser setup
+app.use(body_parser.urlencoded({ extended : true }));
+app.use(body_parser.json());
+
+// TODO to fix for a cleaner code
+//routes.routes(app);
+
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
+
 ///////////////////////////////////////////////////////////////////
 
 //////////////////          ROUTES           //////////////////////     TODO: add routes for data storage and data retrieving via webapp
+
+// CONTACT route block
+    app.route('/contact')
+    // GET
+    .get((req, res, next) => {
+        // middleware
+        console.log(`Request from: ${req.originalUrl}`)
+        console.log(`Request type: ${req.method}`)
+        // once we have done that
+        next();
+    }, getContacts); // semi-colon of end of block CONTACT/
+    
+    // CONTACT/:messengerId block
+    app.route('/contact/:contactId')
+    // GET
+    .get(getContactByID)
+    // POST
+    .post(addNewContact)
+    // PUT
+    .put(updateContact)
+    // DELETE
+    .delete(deleteContact); // semi-colon of end of block CONTACT/:contactId
+
 // Accepts POST requests at /webhook endpoint
 app.post('/webhook', (req, res) => {  
 
@@ -272,11 +325,12 @@ function sendQuicks(promise, sender_psid){
   return promise;
 }
 
-function insertInfoDB(state, sender_psid, text, payload){
-  callGetOneDB(sender_psid);
+function callbackStateGraph(state, sender_psid, text, payload){
+  //callGetOneDB(sender_psid);
   let promise;
   // we send the data the the right endpoint according to state
-  switch(STATE){
+  
+  switch(state){
     case null:
     case "O": 
       promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
@@ -425,8 +479,8 @@ function insertInfoDB(state, sender_psid, text, payload){
       case "21": callPutDB(sender_psid, text, "info");
     break;
     default: 
-      console.log('We don\'t store the data at this state');
-      findState(sender_psid);
+      console.log('Error state '+ state);
+      //findState(sender_psid);
       //insertInfoDB(state, sender_psid, text, payload);
     }
 
@@ -551,6 +605,7 @@ function handleMessage(sender_psid, received_message) {
   // Checks if the message contains text
   if (received_message.text) {  
   console.log(received_message);
+  //getState(sender_psid);
   //callPostDB(sender_psid);
   
   
@@ -563,8 +618,10 @@ function handleMessage(sender_psid, received_message) {
     }else{
       payload = received_message.text;}
     
-    insertInfoDB(state, sender_psid, received_message.text, payload);
-    callGetOneDB(sender_psid);
+    let s = getState(sender_psid, received_message.text, payload);
+    //insertInfoDB(state, sender_psid, received_message.text, payload);
+    //getState(sender_psid);
+    //callGetOneDB(sender_psid);
     //moveUserState(state, sender_psid, received_message.text);
                  
   } else if (received_message.attachments) {
@@ -634,6 +691,27 @@ function findState(sender_psid){
 }
 
 function getFirstName(sender_psid){
+  let res;
+  
+  Contact.findOne({_id: sender_psid}, (err,contact) => {
+
+        if(err){
+            res = err;
+        }
+        res = contact;
+    
+        if(contact != null){
+          FIRSTNAME = contact.firstName;
+        }
+          else {
+            
+             FIRSTNAME = "";
+          }
+        
+    });
+}
+
+function getFirstName2(sender_psid){
   
   request({
     "url": API_URL_SERVER + "/contact/" + sender_psid,
@@ -647,6 +725,7 @@ function getFirstName(sender_psid){
       if(bodystr === null){
         console.log("Can't access DB");
       } else {
+        
         if(bodystr.firstName === null){
           FIRSTNAME = "";
         }
@@ -665,7 +744,7 @@ function getFirstName(sender_psid){
 // Get the contact with corresponding to sender's id
 function callGetOneDB(sender_psid) {
   
-  readTextFile(".data/state.txt");
+  //readTextFile(".data/state.txt");
   
   request({
     "url": API_URL_SERVER + "/contact/" + sender_psid,
@@ -694,6 +773,46 @@ function callGetOneDB(sender_psid) {
   
 }
 
+function getState(sender_psid, message, payload){
+
+  let res;
+  let state;
+  
+  // Nested function
+  function getStateInDB(err,contact){
+
+        if(err){
+            res = err;
+        }
+    
+        res = contact;
+        console.log('////////////////');
+        console.log(contact);
+        
+        if(contact != null){
+        if(typeof contact.state != 'undefined'){
+          state = contact.state;
+          console.log("State : "+contact.state);
+        } else{
+          state = "A";        
+          console.log("State : 0");
+          callPutDB(sender_psid, "A");
+        }
+        }else{
+          state = "A";        
+          console.log("State : -1");
+          callPostDB(sender_psid);
+        }
+    
+    console.log("state in nested: "+state);
+    callbackStateGraph(state, sender_psid, message, payload);
+    }
+  
+  Contact.findOne({_id: sender_psid}, getStateInDB);
+  
+  console.log("state outside nested: "+state);
+}
+
 // Get all the contacts in the database
 function callGetDB(sender_psid) {
    // Send the HTTP request to the Messenger Platform
@@ -714,8 +833,24 @@ function callGetDB(sender_psid) {
   
 }
 
-// Create a new contact in the database
 function callPostDB(sender_psid) {
+  let body = {
+    "_id": sender_psid
+  }
+  let res;
+  
+  let newContact = new Contact(body);
+
+    newContact.save((err, contact) => {
+        if(err){
+            res = err;
+        }
+        res = contact;
+    });
+}
+
+// Create a new contact in the database by API use
+function callPostDB2(sender_psid) {
     // Construct the message body
   let request_body = {
     "_id": sender_psid
@@ -737,6 +872,24 @@ function callPostDB(sender_psid) {
 
 // Modify contact in the database
 function callPutDB(sender_psid, data, field) {
+  let res;
+  
+  // Construct the message body
+  let body = {
+    "_id": sender_psid,
+    [field]: data,
+  }
+  
+  Contact.findOneAndUpdate({_id: sender_psid}, body, { new: true}, (err,contact) => {
+        if(err){
+            res = err;
+        }
+        res = contact;
+    });
+}
+  
+// Modify contact in the database by API use
+function callPutDB2(sender_psid, data, field) {
   
     // Construct the message body
   let request_body = {
