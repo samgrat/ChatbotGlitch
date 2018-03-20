@@ -763,7 +763,7 @@ function getState(sender_psid){
         console.log('////////////////');
         console.log(contact);
     
-        if(typeof contact != 'undefined'){
+        if(typeof contact != null){
           STATE = contact.state;
           console.log("State : "+contact.state);
         } else{
@@ -795,8 +795,24 @@ function callGetDB(sender_psid) {
   
 }
 
-// Create a new contact in the database
 function callPostDB(sender_psid) {
+  let body = {
+    "_id": sender_psid
+  }
+  let res;
+  
+  let newContact = new Contact(body);
+
+    newContact.save((err, contact) => {
+        if(err){
+            res = err;
+        }
+        res = contact;
+    });
+}
+
+// Create a new contact in the database by API use
+function callPostDB2(sender_psid) {
     // Construct the message body
   let request_body = {
     "_id": sender_psid
@@ -818,6 +834,24 @@ function callPostDB(sender_psid) {
 
 // Modify contact in the database
 function callPutDB(sender_psid, data, field) {
+  let res;
+  
+  // Construct the message body
+  let body = {
+    "_id": sender_psid,
+    [field]: data,
+  }
+  
+  Contact.findOneAndUpdate({_id: sender_psid}, body, { new: true}, (err,contact) => {
+        if(err){
+            res = err;
+        }
+        res = contact;
+    });
+}
+  
+// Modify contact in the database by API use
+function callPutDB2(sender_psid, data, field) {
   
     // Construct the message body
   let request_body = {
