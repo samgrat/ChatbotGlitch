@@ -329,6 +329,7 @@ function insertInfoDB(state, sender_psid, text, payload){
   //callGetOneDB(sender_psid);
   let promise;
   // we send the data the the right endpoint according to state
+  le
   switch(STATE){
     case null:
     case "O": 
