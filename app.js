@@ -775,7 +775,12 @@ function callGetOneDB(sender_psid) {
 function getState(sender_psid){
 
   let res;
-  let state;
+  var state;
+  
+  function callback(e, s){
+    state = s;
+    console.log("state in nested2: "+state);
+  }
   
   // Nested function
   function getStateInDB(err,contact){
@@ -804,12 +809,11 @@ function getState(sender_psid){
         }
     
     console.log("state in nested: "+state);
-    return state;
+    callback(err, state);
     }
   
-  let query = Contact.findOne({_id: sender_psid}, getStateInDB);
+  Contact.findOne({_id: sender_psid}, getStateInDB);
   
-  state = query.select('state');
   console.log("state outside nested: "+state);
   // we return the nested function to get the return of it
   return state;
