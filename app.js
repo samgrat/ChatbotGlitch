@@ -618,6 +618,7 @@ function handleMessage(sender_psid, received_message) {
       payload = received_message.text;}
     
     insertInfoDB(state, sender_psid, received_message.text, payload);
+    getState(sender_psid);
     //callGetOneDB(sender_psid);
     //moveUserState(state, sender_psid, received_message.text);
                  
