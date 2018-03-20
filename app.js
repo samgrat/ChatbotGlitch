@@ -759,18 +759,20 @@ function getState(sender_psid){
         }
     
         res = contact;
+        console.log('////////////////');
         console.log(contact);
+    
+        if(typeof res != 'undefined'){
+          let bodystr = eval("(function(){return " + res + ";})()");
+          STATE = res.state;
+          console.log("State : "+res.state);
+        } else{
+          STATE = "A";        
+          console.log("State : 0");
+          //callPostDB(sender_psid);
+        }
     });
-  
-  
-  if(typeof res != 'undefined'){
-    let bodystr = eval("(function(){return " + res + ";})()");
-    STATE = bodystr.state;
-  } else{
-    STATE = "A";        
-    console.log("State : 0");
-    //callPostDB(sender_psid);
-  }
+
 }
 
 // Get all the contacts in the database
