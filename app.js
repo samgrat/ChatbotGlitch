@@ -479,7 +479,7 @@ function insertInfoDB(state, sender_psid, text, payload){
       case "21": callPutDB(sender_psid, text, "info");
     break;
     default: 
-      console.log('We don\'t store the data at this state');
+      console.log('state '+ s);
       //findState(sender_psid);
       //insertInfoDB(state, sender_psid, text, payload);
     }
@@ -803,13 +803,16 @@ function getState(sender_psid){
           callPostDB(sender_psid);
         }
     
+    console.log("state in nested: "+state);
     return state;
     }
-    
-  Contact.findOne({_id: sender_psid}, getStateInDB);
   
+  let query = Contact.findOne({_id: sender_psid}, getStateInDB);
+  
+  state = query.select('state');
+  console.log("state outside nested: "+state);
   // we return the nested function to get the return of it
-  return getStateInDB;
+  return state;
 }
 
 // Get all the contacts in the database
