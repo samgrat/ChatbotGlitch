@@ -479,7 +479,7 @@ function callbackStateGraph(state, sender_psid, text, payload){
       case "21": callPutDB(sender_psid, text, "info");
     break;
     default: 
-      console.log('state '+ s);
+      console.log('Error state '+ state);
       //findState(sender_psid);
       //insertInfoDB(state, sender_psid, text, payload);
     }
@@ -618,7 +618,8 @@ function handleMessage(sender_psid, received_message) {
     }else{
       payload = received_message.text;}
     
-    insertInfoDB(state, sender_psid, received_message.text, payload);
+    let s = getState(sender_psid, received_message.text, payload);
+    //insertInfoDB(state, sender_psid, received_message.text, payload);
     //getState(sender_psid);
     //callGetOneDB(sender_psid);
     //moveUserState(state, sender_psid, received_message.text);
@@ -772,14 +773,10 @@ function callGetOneDB(sender_psid) {
   
 }
 
-function getState(sender_psid, state){
+function getState(sender_psid, message, payload){
 
   let res;
-  
-  function callback(e, s){
-    state = s;
-    console.log("state in nested2: "+state);
-  }
+  let state;
   
   // Nested function
   function getStateInDB(err,contact){
@@ -808,14 +805,12 @@ function getState(sender_psid, state){
         }
     
     console.log("state in nested: "+state);
-    callback(err, state);
+    callbackStateGraph(state, sender_psid, message, payload);
     }
   
   Contact.findOne({_id: sender_psid}, getStateInDB);
   
   console.log("state outside nested: "+state);
-  // we return the nested function to get the return of it
-  return state;
 }
 
 // Get all the contacts in the database
