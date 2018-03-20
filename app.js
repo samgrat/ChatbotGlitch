@@ -329,8 +329,8 @@ function insertInfoDB(state, sender_psid, text, payload){
   //callGetOneDB(sender_psid);
   let promise;
   // we send the data the the right endpoint according to state
-  le
-  switch(STATE){
+  let s = getState(sender_psid);
+  switch(s){
     case null:
     case "O": 
       promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
@@ -605,7 +605,7 @@ function handleMessage(sender_psid, received_message) {
   // Checks if the message contains text
   if (received_message.text) {  
   console.log(received_message);
-  getState(sender_psid);
+  //getState(sender_psid);
   //callPostDB(sender_psid);
   
   
@@ -619,7 +619,7 @@ function handleMessage(sender_psid, received_message) {
       payload = received_message.text;}
     
     insertInfoDB(state, sender_psid, received_message.text, payload);
-    getState(sender_psid);
+    //getState(sender_psid);
     //callGetOneDB(sender_psid);
     //moveUserState(state, sender_psid, received_message.text);
                  
@@ -775,8 +775,10 @@ function callGetOneDB(sender_psid) {
 function getState(sender_psid){
 
   let res;
-    
-  Contact.findOne({_id: sender_psid}, (err,contact) => {
+  let state;
+  
+  // Nested function
+  function getStateInDB(err,contact){
 
         if(err){
             res = err;
@@ -788,20 +790,26 @@ function getState(sender_psid){
         
         if(contact != null){
         if(typeof contact.state != 'undefined'){
-          STATE = contact.state;
+          state = contact.state;
           console.log("State : "+contact.state);
         } else{
-          STATE = "A";        
+          state = "A";        
           console.log("State : 0");
           callPutDB(sender_psid, "A");
         }
         }else{
-          STATE = "A";        
+          state = "A";        
           console.log("State : -1");
           callPostDB(sender_psid);
         }
-    });
-
+    
+    return state;
+    }
+    
+  Contact.findOne({_id: sender_psid}, getStateInDB);
+  
+  // we return the nested function to get the return of it
+  return getStateInDB;
 }
 
 // Get all the contacts in the database
