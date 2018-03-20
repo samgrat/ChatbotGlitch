@@ -697,7 +697,15 @@ function getFirstName2(sender_psid){
             res = err;
         }
         res = contact;
-        console.log(
+    
+        if(contact != null){
+          FIRSTNAME = contact.firstName;
+        }
+          else {
+            
+             FIRSTNAME = "";
+          }
+        
     });
 }
 
@@ -715,6 +723,7 @@ function getFirstName2(sender_psid){
       if(bodystr === null){
         console.log("Can't access DB");
       } else {
+        
         if(bodystr.firstName === null){
           FIRSTNAME = "";
         }
@@ -775,11 +784,17 @@ function getState(sender_psid){
         res = contact;
         console.log('////////////////');
         console.log(contact);
-    
+        
         if(contact != null){
+        if(typeof contact.state != 'undefined'){
           STATE = contact.state;
           console.log("State : "+contact.state);
         } else{
+          STATE = "A";        
+          console.log("State : 0");
+          callPutDB(sender_psid, "A");
+        }
+        }else{
           STATE = "A";        
           console.log("State : 0");
           callPostDB(sender_psid);
