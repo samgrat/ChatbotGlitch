@@ -325,12 +325,12 @@ function sendQuicks(promise, sender_psid){
   return promise;
 }
 
-function insertInfoDB(state, sender_psid, text, payload){
+function callbackStateGraph(state, sender_psid, text, payload){
   //callGetOneDB(sender_psid);
   let promise;
   // we send the data the the right endpoint according to state
-  let s = getState(sender_psid);
-  switch(s){
+  
+  switch(state){
     case null:
     case "O": 
       promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
@@ -772,10 +772,9 @@ function callGetOneDB(sender_psid) {
   
 }
 
-function getState(sender_psid){
+function getState(sender_psid, state){
 
   let res;
-  var state;
   
   function callback(e, s){
     state = s;
