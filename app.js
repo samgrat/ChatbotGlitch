@@ -688,7 +688,7 @@ function findState(sender_psid){
   
 }
 
-function getFirstName2(sender_psid){
+function getFirstName(sender_psid){
   let res;
   
   Contact.findOne({_id: sender_psid}, (err,contact) => {
@@ -796,7 +796,7 @@ function getState(sender_psid){
         }
         }else{
           STATE = "A";        
-          console.log("State : 0");
+          console.log("State : -1");
           callPostDB(sender_psid);
         }
     });
