@@ -688,7 +688,20 @@ function findState(sender_psid){
   
 }
 
-function getFirstName(sender_psid){
+function getFirstName2(sender_psid){
+  let res;
+  
+  Contact.findOne({_id: sender_psid}, (err,contact) => {
+
+        if(err){
+            res = err;
+        }
+        res = contact;
+        console.log(
+    });
+}
+
+function getFirstName2(sender_psid){
   
   request({
     "url": API_URL_SERVER + "/contact/" + sender_psid,
@@ -763,13 +776,13 @@ function getState(sender_psid){
         console.log('////////////////');
         console.log(contact);
     
-        if(typeof contact != null){
+        if(contact != null){
           STATE = contact.state;
           console.log("State : "+contact.state);
         } else{
           STATE = "A";        
           console.log("State : 0");
-          //callPostDB(sender_psid);
+          callPostDB(sender_psid);
         }
     });
 
