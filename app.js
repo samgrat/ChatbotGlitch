@@ -57,6 +57,7 @@ const QUICK_5_4 = process.env.QUICK_5_4;
 const QUICK_5_5 = process.env.QUICK_5_5;
 const MESSAGE_6_0 = process.env.MESSAGE_6_0;
 const MESSAGE_6bis_0 = process.env.MESSAGE_6bis_0;
+const MESSAGE_6_1 = process.env.MESSAGE_6_1;
 const MESSAGE_7_0 = process.env.MESSAGE_7_0;
 const QUICK_7_0 = process.env.QUICK_7_0;
 const QUICK_7_1 = process.env.QUICK_7_1;
@@ -558,7 +559,7 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
       callPutDB(sender_psid, text, "firstName");
       promise = sendMessages(promise, sender_psid, MESSAGE_4_0);
     break;
-      case "4": 
+      case "4": // lastname state
       console.log("FROM : "+ state);
       STATE = "5";
       console.log("STATE : 5");
@@ -568,7 +569,7 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
       promise = sendMessages(promise, sender_psid, MESSAGE_NAMED);
       promise = sendQuicks(promise, sender_psid, MESSAGE_5_1, QUICK_5_0, QUICK_5_1, QUICK_5_2, QUICK_5_3, QUICK_5_4, QUICK_5_5);
     break;
-      case "4v": 
+      case "4v": // lastname state
       console.log("FROM : "+ state);
       STATE = "5v";
       console.log("STATE : 5v");
@@ -577,10 +578,43 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
       MESSAGE_NAMED = MESSAGE_5_0.replace("@prenom", firstname);
       promise = sendMessages(promise, sender_psid, MESSAGE_NAMED + "\n" + MESSAGE_5_2);
     break;
-      case "5v":
-      callPutDB(sender_psid, text, "birthdate");
+      case "5v": // birthplace state
+      console.log("FROM : "+ state);
+      STATE = "6v";
+      console.log("STATE : 6v");
+      callPutDB(sender_psid, "6v", "state");
+      callPutDB(sender_psid, text, "birthplace");
+      promise = sendMessages(promise, sender_psid, MESSAGE_6_1);
     break;
-      case "5":
+      case "5": // handicap state
+        if(payload.localeCompare(QUICK_5_0) == 0){ // mobility
+        console.log("FROM : "+ state);
+        STATE = "6";
+        console.log("STATE : 3");
+        callPutDB(sender_psid, "3", "state");
+        callPutDB(sender_psid, payload, "class");
+        promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1);
+        promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
+      }
+      else if(payload.localeCompare(QUICK_5_1) == 0){ // visual
+        console.log("FROM : "+ state);
+        STATE = "3v";
+        console.log("STATE : 3v");
+        callPutDB(sender_psid, "3v", "state");
+        callPutDB(sender_psid, payload, "class");
+        promise = sendMessages(promise, sender_psid, MESSAGE_3_4 + "\n" + MESSAGE_3_5);
+        promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
+        
+      } else{
+        console.log("FROM : "+ state);
+        STATE = "2";
+        console.log("STATE : 2");
+        callPutDB(sender_psid, "2", "state");
+        console.error('The answer didn\'t match a pattern');
+        promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
+
+      }
       case "6":
       case "6bis": callPutDB(sender_psid, text, "handicap");
     break;

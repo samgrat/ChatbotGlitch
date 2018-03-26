@@ -32,7 +32,11 @@ const ContactSchema = new Schema({
     birthdate: {
         type: Date
     },
-
+  
+    birthplace: {
+        type: String
+    },
+  
     address: {
         type: String
     },
