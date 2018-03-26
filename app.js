@@ -809,12 +809,12 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
         callPutDB(sender_psid, text, "cursus");
         promise = sendMessages(promise, sender_psid, MESSAGE_16_0);
     break;
-      case "15v": // cursus state
+      case "15v": // availability state
         console.log("FROM : "+ state);
         STATE = "16v";
         console.log("STATE : 16v");
         callPutDB(sender_psid, "16v", "state");
-        callPutDB(sender_psid, text, "cursus");
+        callPutDB(sender_psid, text, "availability");
         promise = sendMessages(promise, sender_psid, MESSAGE_16_1);
     break;
       case "16": // dream job state
@@ -826,17 +826,48 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
         promise = sendMessages(promise, sender_psid, MESSAGE_17_0);
         promise = sendQuicks(promise, sender_psid, MESSAGE_17_1, QUICK_17_0, QUICK_17_1, QUICK_17_2);
     break;
-      case "16v": // dream job state
+      case "16v": // cursus state
         console.log("FROM : "+ state);
         STATE = "17v";
         console.log("STATE : 17v");
         callPutDB(sender_psid, "17v", "state");
-        callPutDB(sender_psid, text, "dreamJob");
-        promise = sendMessages(promise, sender_psid, MESSAGE_17_0);
+        callPutDB(sender_psid, text, "cursus");
+        promise = sendMessages(promise, sender_psid, MESSAGE_17_0 + "\n" + MESSAGE_17_2);
     break;
-      case "17": callPutDB(sender_psid, text, "location");
+      case "17": // location state
+      if(payload.localeCompare(QUICK_17_0) == 0 || payload.localeCompare(QUICK_17_1) == 0 || payload.localeCompare(QUICK_17_2) == 0){ // Grenoble, Valence or Vienne
+        console.log("FROM : "+ state);
+        STATE = "18";
+        console.log("STATE : 18");
+        callPutDB(sender_psid, "18", "state");
+        callPutDB(sender_psid, text, "location");
+        promise = sendMessages(promise, sender_psid, MESSAGE_18_0);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_18_1, QUICK_18_0, QUICK_18_1);
+      } else{
+        console.log("FROM : "+ state);
+        STATE = "17";
+        console.log("STATE : 17");
+        callPutDB(sender_psid, "17", "state");
+        console.error('The answer didn\'t match a pattern');
+        promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_17_1, QUICK_17_0, QUICK_17_1, QUICK_17_2);
+      }
     break;
-      case "18": callPutDB(sender_psid, text, "scholarship");
+      case "17v": // formation state
+        console.log("FROM : "+ state);
+        STATE = "18v";
+        console.log("STATE : 18v");
+        callPutDB(sender_psid, "18v", "state");
+        callPutDB(sender_psid, text, "formation");
+        promise = sendMessages(promise, sender_psid, MESSAGE_18_2);
+    break;
+      case "18": // scholarship state
+        console.log("FROM : "+ state);
+        STATE = "18v";
+        console.log("STATE : 18v");
+        callPutDB(sender_psid, "18v", "state");
+        callPutDB(sender_psid, text, "scholarship");
+        promise = sendMessages(promise, sender_psid, MESSAGE_18_2);
     break;
       case "19": callPutDB(sender_psid, text, "internship");
     break;

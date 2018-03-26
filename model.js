@@ -93,6 +93,10 @@ const ContactSchema = new Schema({
       type: String
     },
   
+    availability: {
+      type: String
+    },
+  
     info: {
         type: String
     },
