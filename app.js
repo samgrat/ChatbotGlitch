@@ -9,6 +9,7 @@ const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const API_URL_SERVER = process.env.API_URL_SERVER;
 const MESSAGE_ERROR = process.env.MESSAGE_ERROR;
 const MESSAGE_DEV = process.env.MESSAGE_DEV;
+const MESSAGE_BYE = process.env.MESSAGE_BYE;
 const MESSAGE_0_0 = process.env.MESSAGE_0_0;
 const MESSAGE_0_1 = process.env.MESSAGE_0_1;
 const MESSAGE_0_2 = process.env.MESSAGE_0_2;
@@ -451,7 +452,7 @@ function callbackStateGraph(state, sender_psid, text, payload){
         STATE = "I2";
         console.log("STATE : I2");
         callPutDB(sender_psid, "I2", "state");
-        promise = sendMessages(promise, sender_psid, MESSAGE_1_2_4);
+        promise = sendMessages(promise, sender_psid, MESSAGE_1_2_5);
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_2_6, QUICK_1_2_0, QUICK_1_2_1);
         
       } else{
@@ -472,18 +473,19 @@ function callbackStateGraph(state, sender_psid, text, payload){
         console.log("STATE : I");
         callPutDB(sender_psid, "I", "state");
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_2, QUICK_1_2, QUICK_1_3, QUICK_1_4, QUICK_1_5, QUICK_1_6);
+          
       } else if (payload.localeCompare(QUICK_1_2_1) == 0){ // end
         console.log("FROM : "+ state);
         STATE = "O2";
         console.log("STATE : O2");
         callPutDB(sender_psid,"O2","state");
-        promise = sendQuicks(promise, sender_psid, MESSAGE_1_2, QUICK_1_2, QUICK_1_3, QUICK_1_4, QUICK_1_5, QUICK_1_6);  
+        promise = sendMessages(promise, sender_psid, MESSAGE_BYE);
+        
       } else{
         console.log("FROM : "+ state);
         STATE = "I2";        
         console.log("STATE : I2");
-        writeTextFile("A");
-        callPutDB(sender_psid,"A","state");
+        callPutDB(sender_psid,"I2","state");
         console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_2_6, QUICK_1_2_0, QUICK_1_2_1);
