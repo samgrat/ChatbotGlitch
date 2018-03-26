@@ -397,16 +397,68 @@ function callbackStateGraph(state, sender_psid, text, payload){
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_1, QUICK_1_0, QUICK_1_1);
       } else if (payload.localeCompare(QUICK_0_1) == 0){ // infos
         console.log("FROM : "+ state);
-        STATE = "A";
-        console.log("STATE : A");
-        callPutDB(sender_psid,"A","state");
-        promise = sendMessages(promise, sender_psid, MESSAGE_1_2);
-        promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);  
-      
+        STATE = "I";
+        console.log("STATE : I");
+        callPutDB(sender_psid,"I","state");
+        promise = sendQuicks(promise, sender_psid, MESSAGE_1_2, QUICK_1_2, QUICK_1_3, QUICK_1_4, QUICK_1_5, QUICK_1_6);  
       } else{
         console.log("FROM : "+ STATE);
         STATE = "A";        
         console.log("STATE : "+ STATE);
+        writeTextFile("A");
+        callPutDB(sender_psid,"A","state");
+        console.error('The answer didn\'t match a pattern');
+        promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
+        promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
+        
+      }
+    break;
+      case "I": // infos delidery state
+        if(payload.localeCompare(QUICK_1_2) == 0){ // address
+        console.log("FROM : "+ state);
+        STATE = "I2";
+        console.log("STATE : I2");
+        callPutDB(sender_psid, "I2", "state");
+        promise = sendMessages(promise, sender_psid, MESSAGE_1_2_0 + "\n" + MESSAGE_1_2_1);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_1_2_6, QUICK_1_2_0, QUICK_1_2_1);
+          
+      } else if (payload.localeCompare(QUICK_1_3) == 0){ // telephone
+        console.log("FROM : "+ state);
+        STATE = "I2";
+        console.log("STATE : I2");
+        callPutDB(sender_psid, "I2", "state");
+        promise = sendMessages(promise, sender_psid, MESSAGE_1_2_2);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_1_2_6, QUICK_1_2_0, QUICK_1_2_1);
+        
+      } else if (payload.localeCompare(QUICK_1_4) == 0){ // mail
+        console.log("FROM : "+ state);
+        STATE = "I2";
+        console.log("STATE : I2");
+        callPutDB(sender_psid, "I2", "state");
+        promise = sendMessages(promise, sender_psid, MESSAGE_1_2_3);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_1_2_6, QUICK_1_2_0, QUICK_1_2_1);  
+        
+      } else if (payload.localeCompare(QUICK_1_5) == 0){ // schedule
+        console.log("FROM : "+ state);
+        STATE = "I2";
+        console.log("STATE : I2");
+        callPutDB(sender_psid, "I2", "state");
+        promise = sendMessages(promise, sender_psid, MESSAGE_1_2_4);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_1_2_6, QUICK_1_2_0, QUICK_1_2_1);
+        
+      } else if (payload.localeCompare(QUICK_1_6) == 0){ // humain assistance
+        console.log("FROM : "+ state);
+        STATE = "I2";
+        console.log("STATE : I2");
+        callPutDB(sender_psid, "I2", "state");
+        promise = sendMessages(promise, sender_psid, MESSAGE_1_2_4);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_1_2_6, QUICK_1_2_0, QUICK_1_2_1);
+        
+      } else{
+        console.log("FROM : "+ state);
+        STATE = "A";        
+        console.log("STATE : I");
         writeTextFile("A");
         callPutDB(sender_psid,"A","state");
         console.error('The answer didn\'t match a pattern');
