@@ -1062,9 +1062,9 @@ function getState(sender_psid, message, payload){
           console.log("State : 0");
           callPutDB(sender_psid, "A");
         }
-        if(typeof contact.firstname != 'undefined'){
-          firstname = contact.firstname;
-          console.log("Firstname : "+contact.firstname);
+        if(typeof contact.firstName != 'undefined'){
+          firstname = contact.firstName;
+          console.log("Firstname : "+contact.firstName);
         }
         }else{
           state = "A";        
