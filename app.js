@@ -907,133 +907,44 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
     break;
       case "19v": // languages states
         console.log("FROM : "+ state);
-        STATE = "21v";
-        console.log("STATE : 21v");
-        callPutDB(sender_psid, "21v", "state");
+        STATE = "I2";
+        console.log("STATE : I2");
+        callPutDB(sender_psid, "I2", "state");
         callPutDB(sender_psid, text, "languages");
-        promise = sendQuicks(promise, sender_psid, MESSAGE_20_0, QUICK_20_0, QUICK_20_1);
-      case "20": callPutDB(sender_psid, text, "accompaniment");
+        promise = sendQuicks(promise, sender_psid, MESSAGE_22_2 + "\n" + MESSAGE_22_3);
     break;
-      case "21": callPutDB(sender_psid, text, "info");
+      case "20": // accompaniment state
+        if(payload.localeCompare(QUICK_20_0) == 0 || payload.localeCompare(QUICK_20_1) == 0){ // Yes or no
+        console.log("FROM : "+ state);
+        STATE = "21";
+        console.log("STATE : 21");
+        callPutDB(sender_psid, "21", "state");
+        callPutDB(sender_psid, text, "accompaniment");
+        promise = sendMessages(promise, sender_psid, MESSAGE_21_0 + "\n" + MESSAGE_21_1);
+      } else{
+        console.log("FROM : "+ state);
+        STATE = "20";
+        console.log("STATE : 20");
+        callPutDB(sender_psid, "20", "state");
+        console.error('The answer didn\'t match a pattern');
+        promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_20_0, QUICK_20_0, QUICK_20_1);
+      }
+    break;
+      case "21": // infos state
+        console.log("FROM : "+ state);
+        STATE = "I2";
+        console.log("STATE : I2");
+        callPutDB(sender_psid, "I2", "state");
+        callPutDB(sender_psid, text, "info");
+        promise = sendMessages(promise, sender_psid, MESSAGE_22_0 + "\n" + MESSAGE_22_1);
     break;
     default: 
       console.log('Error state '+ state);
-      //findState(sender_psid);
-      //insertInfoDB(state, sender_psid, text, payload);
     }
 
 }
 
-function moveUserState(state, sender_psid, text){
-  let s = callGetOneDB(sender_psid)
-   // we move the the following state according to the answer
-  switch(s){
-    case "O": callPostDB(sender_psid);
-      break;
-    case "A":
-      if(text.localeCompare(QUICK_0_0) == 0){
-        callPutDB(sender_psid, "1", "state");
-      }
-      // TODO construct infos part
-      if(text.localeCompare(QUICK_0_1) == 0){
-        callPutDB(sender_psid, "A", "state");
-      } else{
-        callPutDB(sender_psid, "A", "state");
-        console.error('The answer didn\'t match a pattern');
-      }
-      break;
-    case "1": callPutDB(sender_psid, "2", "state");  
-      break;
-    /*
-    case "2":
-      if(text.localeCompare(process.env.QUICK_2[0]) == 0){
-        callPutDB(sender_psid, "3", "state");
-      }
-      // TODO construct volontary part
-      if(text.localeCompare(process.env.QUICK_2[1]) == 0){
-        callPutDB(sender_psid, "3bis", "state");
-      } else{
-        console.error('The answer didn\'t match a pattern');
-      }
-      break;
-    case "3":
-    case "3bis": callPutDB(sender_psid, "4", "state");
-      break;
-    case "4": callPutDB(sender_psid, "5", "state");
-      break;
-    case "5":
-      if(text.localeCompare(process.env.QUICK_5[0]) == 0 || text.localeCompare(process.env.QUICK_5[1]) == 0 || text.localeCompare(process.env.QUICK_5[2]) == 0 || text.localeCompare(process.env.QUICK_5[3]) == 0){
-      callPutDB(sender_psid, "7", "state");
-      } 
-      if(text.localeCompare(process.env.QUICK_5[4]) == 0){
-      callPutDB(sender_psid, "6", "state");
-      }
-      if(text.localeCompare(process.env.QUICK_5[5]) == 0){
-      callPutDB(sender_psid, "6bis", "state");
-      }
-      else{
-        console.error('The answer didn\'t match a pattern');
-      }
-      break;
-    case "6":
-    case "6bis": callPutDB(sender_psid, "7", "state");
-      break;
-    case "7": 
-      if(text.localeCompare(process.env.QUICK_7[0]) == 0 || text.localeCompare(process.env.QUICK_7[1]) == 0 || text.localeCompare(process.env.QUICK_7[2]) == 0){
-        callPutDB(sender_psid, "9", "state");
-      } 
-      if(text.localeCompare(process.env.QUICK_7[3]) == 0){
-        callPutDB(sender_psid, "8", "state");
-      }
-      if(text.localeCompare(process.env.QUICK_7[4]) == 0){
-        callPutDB(sender_psid, "8", "state");
-      }
-      else{
-        console.error('The answer didn\'t match a pattern');
-      }
-      break;
-    case "8": callPutDB(sender_psid, "9", "state");
-      break;
-    case "9": 
-      if(text.localeCompare(process.env.QUICK_9[0]) == 0){
-        callPutDB(sender_psid, "10", "state");
-      }
-      if(text.localeCompare(process.env.QUICK_9[1]) == 0){
-        callPutDB(sender_psid, "11", "state");
-      }
-      else{
-        console.error('The answer didn\'t match a pattern');
-      }
-      break;
-    case "10": callPutDB(sender_psid, "11", "state");
-      break;
-    case "11": callPutDB(sender_psid, "12", "state");
-      break;
-    case "12": callPutDB(sender_psid, "13", "state");
-      break;
-    case "13": callPutDB(sender_psid, "14", "state");
-      break;
-    case "14": callPutDB(sender_psid, "15", "state");
-      break;
-    case "15": callPutDB(sender_psid, "16", "state");
-      break;
-    case "16": callPutDB(sender_psid, "17", "state");
-      break;
-    case "17": callPutDB(sender_psid, "18", "state");
-      break;
-    case "18": callPutDB(sender_psid, "19", "state");
-      break;
-    case "19": callPutDB(sender_psid, "20", "state");
-      break;
-    case "20": callPutDB(sender_psid, "21", "state");
-      break;
-    case "21": callPutDB(sender_psid, "22", "state");
-      break;
-      */
-    default: console.log('We don\'t store the data at this state');
-      break;
-              }
-}
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
   let response;
@@ -1091,92 +1002,6 @@ function handleMessage(sender_psid, received_message) {
       }
     }
   }
-}
-
-function findState(sender_psid){
-  
-  request({
-    "url": API_URL_SERVER + "/contact/" + sender_psid,
-    "method": "GET"
-  }, (err, res, body) => {
-    if (!err) {
-      
-      let bodystr = eval("(function(){return " + body + ";})()");
-      
-      console.log("body : " + bodystr);
-      if(bodystr === null){
-        console.log("Can't access DB");
-      } else {
-        if(bodystr.state === null){
-          STATE = "A";
-          } else {
-            if(bodystr.gender === null){
-              STATE = "1";
-            } else {
-              if(bodystr.class === null){
-                STATE = "2";
-            } else { STATE = "3";}
-            }
-          }
-      }
-      
-    } else {
-      console.error("Unable to retreive state" + err);
-    }
-  });
-
-  
-}
-
-function getFirstName(sender_psid){
-  let res;
-  
-  Contact.findOne({_id: sender_psid}, (err,contact) => {
-
-        if(err){
-            res = err;
-        }
-        res = contact;
-    
-        if(contact != null){
-          FIRSTNAME = contact.firstName;
-        }
-          else {
-            
-             FIRSTNAME = "";
-          }
-        
-    });
-}
-
-function getFirstName2(sender_psid){
-  
-  request({
-    "url": API_URL_SERVER + "/contact/" + sender_psid,
-    "method": "GET"
-  }, (err, res, body) => {
-    if (!err) {
-      
-      let bodystr = eval("(function(){return " + body + ";})()");
-      
-      console.log("body : " + bodystr);
-      if(bodystr === null){
-        console.log("Can't access DB");
-      } else {
-        
-        if(bodystr.firstName === null){
-          FIRSTNAME = "";
-        }
-          else {FIRSTNAME = bodystr.firstName;}
-            }
-               
-      
-    } else {
-      console.error("Unable to retreive name" + err);
-    }
-  });
-
-  
 }
 
 // Get the contact with corresponding to sender's id

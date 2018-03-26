@@ -108,6 +108,10 @@ const ContactSchema = new Schema({
     formation: {
         type: String
     },
+  
+    languages: {
+        type: String
+    },
     
     // ADMIN RESTRICTED FIELDS //
 
