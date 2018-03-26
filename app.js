@@ -912,6 +912,7 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
         callPutDB(sender_psid, "I2", "state");
         callPutDB(sender_psid, text, "languages");
         promise = sendQuicks(promise, sender_psid, MESSAGE_22_2 + "\n" + MESSAGE_22_3);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_1_2_6, QUICK_1_2_0, QUICK_1_2_1);
     break;
       case "20": // accompaniment state
         if(payload.localeCompare(QUICK_20_0) == 0 || payload.localeCompare(QUICK_20_1) == 0){ // Yes or no
@@ -938,6 +939,7 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
         callPutDB(sender_psid, "I2", "state");
         callPutDB(sender_psid, text, "info");
         promise = sendMessages(promise, sender_psid, MESSAGE_22_0 + "\n" + MESSAGE_22_1);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_1_2_6, QUICK_1_2_0, QUICK_1_2_1);
     break;
     default: 
       console.log('Error state '+ state);
