@@ -402,10 +402,9 @@ function callbackStateGraph(state, sender_psid, text, payload){
         callPutDB(sender_psid,"I","state");
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_2, QUICK_1_2, QUICK_1_3, QUICK_1_4, QUICK_1_5, QUICK_1_6);  
       } else{
-        console.log("FROM : "+ STATE);
+        console.log("FROM : "+ state);
         STATE = "A";        
-        console.log("STATE : "+ STATE);
-        writeTextFile("A");
+        console.log("STATE : A");
         callPutDB(sender_psid,"A","state");
         console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
@@ -457,14 +456,37 @@ function callbackStateGraph(state, sender_psid, text, payload){
         
       } else{
         console.log("FROM : "+ state);
-        STATE = "A";        
+        STATE = "I";        
         console.log("STATE : I");
+        callPutDB(sender_psid,"I","state");
+        console.error('The answer didn\'t match a pattern');
+        promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_1_2, QUICK_1_2, QUICK_1_3, QUICK_1_4, QUICK_1_5, QUICK_1_6);  
+        
+      }
+    break;
+      case "I2": // Cycle state
+        if(payload.localeCompare(QUICK_1_2_0) == 0){ // more infos
+        console.log("FROM : "+ state);
+        STATE = "I";
+        console.log("STATE : I");
+        callPutDB(sender_psid, "I", "state");
+        promise = sendQuicks(promise, sender_psid, MESSAGE_1_2, QUICK_1_2, QUICK_1_3, QUICK_1_4, QUICK_1_5, QUICK_1_6);
+      } else if (payload.localeCompare(QUICK_1_2_1) == 0){ // end
+        console.log("FROM : "+ state);
+        STATE = "O2";
+        console.log("STATE : O2");
+        callPutDB(sender_psid,"O2","state");
+        promise = sendQuicks(promise, sender_psid, MESSAGE_1_2, QUICK_1_2, QUICK_1_3, QUICK_1_4, QUICK_1_5, QUICK_1_6);  
+      } else{
+        console.log("FROM : "+ state);
+        STATE = "I2";        
+        console.log("STATE : I2");
         writeTextFile("A");
         callPutDB(sender_psid,"A","state");
         console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
-        promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
-        promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_1_2_6, QUICK_1_2_0, QUICK_1_2_1);
         
       }
     break;
