@@ -56,7 +56,7 @@ const QUICK_5_3 = process.env.QUICK_5_3;
 const QUICK_5_4 = process.env.QUICK_5_4;
 const QUICK_5_5 = process.env.QUICK_5_5;
 const MESSAGE_6_0 = process.env.MESSAGE_6_0;
-const MESSAGE_6bis_0 = process.env.MESSAGE_6bis_0;
+const MESSAGE_6_2 = process.env.MESSAGE_6_2;
 const MESSAGE_6_1 = process.env.MESSAGE_6_1;
 const MESSAGE_7_0 = process.env.MESSAGE_7_0;
 const QUICK_7_0 = process.env.QUICK_7_0;
@@ -578,16 +578,70 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
       MESSAGE_NAMED = MESSAGE_5_0.replace("@prenom", firstname);
       promise = sendMessages(promise, sender_psid, MESSAGE_NAMED + "\n" + MESSAGE_5_2);
     break;
-      case "5v": // birthplace state
+      case "5v": // birthdate state
       console.log("FROM : "+ state);
       STATE = "6v";
       console.log("STATE : 6v");
       callPutDB(sender_psid, "6v", "state");
-      callPutDB(sender_psid, text, "birthplace");
+      callPutDB(sender_psid, text, "birthdate");
       promise = sendMessages(promise, sender_psid, MESSAGE_6_1);
     break;
       case "5": // handicap state
         if(payload.localeCompare(QUICK_5_0) == 0 || payload.localeCompare(QUICK_5_1) == 0 || payload.localeCompare(QUICK_5_2) == 0 || payload.localeCompare(QUICK_5_3) == 0){ // mobility, sight, hearing or speech
+        console.log("FROM : "+ state);
+        STATE = "7";
+        console.log("STATE : 7");
+        callPutDB(sender_psid, "7", "state");
+        callPutDB(sender_psid, payload, "handicap");
+        promise = sendQuicks(promise, sender_psid, MESSAGE_7_0, QUICK_7_0, QUICK_7_1, QUICK_7_2, QUICK_7_3, QUICK_7_4);
+      }
+      else if(payload.localeCompare(QUICK_5_4) == 0){ // several
+        console.log("FROM : "+ state);
+        STATE = "6";
+        console.log("STATE : 6");
+        callPutDB(sender_psid, "6", "state");
+        promise = sendMessages(promise, sender_psid, MESSAGE_6_0);
+        
+      } 
+      else if(payload.localeCompare(QUICK_5_5) == 0){ // other
+        console.log("FROM : "+ state);
+        STATE = "6";
+        console.log("STATE : 6");
+        callPutDB(sender_psid, "6", "state");
+        promise = sendMessages(promise, sender_psid, MESSAGE_6_2);
+        
+      } 
+      else{
+        console.log("FROM : "+ state);
+        STATE = "5";
+        console.log("STATE : 5");
+        callPutDB(sender_psid, "5", "state");
+        console.error('The answer didn\'t match a pattern');
+        promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_5_1, QUICK_5_0, QUICK_5_1, QUICK_5_2, QUICK_5_3, QUICK_5_4, QUICK_5_5);
+
+      }
+    break;
+      case "6": // handtyped handicap state
+      console.log("FROM : "+ state);
+      STATE = "7";
+      console.log("STATE : 7");
+      callPutDB(sender_psid, "7", "state");
+      callPutDB(sender_psid, payload, "handicap");
+      promise = sendQuicks(promise, sender_psid, MESSAGE_7_0, QUICK_7_0, QUICK_7_1, QUICK_7_2, QUICK_7_3, QUICK_7_4);
+      
+    break;
+      case "6v": // birthplace state
+      console.log("FROM : "+ state);
+      STATE = "11v";
+      console.log("STATE : 11v");
+      callPutDB(sender_psid, "11v", "state");
+      callPutDB(sender_psid, text, "birthplace");
+      promise = sendMessages(promise, sender_psid, MESSAGE_11_0);
+      promise = sendQuicks(promise, sender_psid, MESSAGE_11_2, QUICK_11_0, QUICK_11_1);
+    break;
+      case "7": // equipment state
+      if(payload.localeCompare(QUICK_7_0) == 0 || payload.localeCompare(QUICK_7_1) == 0 || payload.localeCompare(QUICK_7_2) == 0){ // wheelchair, crutches or hearing aid
         console.log("FROM : "+ state);
         STATE = "7";
         console.log("STATE : 7");
@@ -620,9 +674,6 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
         promise = sendQuicks(promise, sender_psid, MESSAGE_5_1, QUICK_5_0, QUICK_5_1, QUICK_5_2, QUICK_5_3, QUICK_5_4, QUICK_5_5);
 
       }
-      case "6": callPutDB(sender_psid, text, "handicap");
-    break;
-      case "7": 
       case "8": callPutDB(sender_psid, text, "equipment");
     break;
       case "9": 
