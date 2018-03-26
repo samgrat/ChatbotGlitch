@@ -367,21 +367,21 @@ function sendQuicks(promise, sender_psid){
 }
 
 function callbackStateGraph(state, sender_psid, text, payload){
-  //callGetOneDB(sender_psid);
   let promise;
   // we send the data the the right endpoint according to state
   
   switch(state){
-    case null:
-    case "O2": // State corresponding to a returning client
-      promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_3);
+      case null:
+      case "O": // Opening discussion state
+      promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
       promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
       console.log("FROM : "+ state);
       STATE = "A";
       console.log("STATE : A");
       callPutDB(sender_psid,"A","state");
-    case "O": // Opening discussion state
-      promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
+    break;
+      case "O2": // State corresponding to a returning client
+      promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_3);
       promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
       console.log("FROM : "+ state);
       STATE = "A";
@@ -492,33 +492,30 @@ function callbackStateGraph(state, sender_psid, text, payload){
         
       }
     break;
-      case "1": 
+      case "1": // gender state
       if(payload.localeCompare(QUICK_1_0) == 0 || payload.localeCompare(QUICK_1_1) == 0){
-        console.log("FROM : "+ STATE);
+        console.log("FROM : "+ state);
         STATE = "2";
-        console.log("STATE : "+ STATE);
-        writeTextFile("2");
+        console.log("STATE : 2");
         callPutDB(sender_psid, "2", "state");
         callPutDB(sender_psid, payload, "gender");
         promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
       } else{
-        console.log("FROM : "+ STATE);
+        console.log("FROM : "+ state);
         STATE = "1";
-        console.log("STATE : "+ STATE);
-        writeTextFile("1");
-        callPutDB(sender_psid,"1","state");
+        console.log("STATE : 1");
+        callPutDB(sender_psid, "1", "state");
         console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
         promise = sendMessages(promise, sender_psid, MESSAGE_1_0);
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_1, QUICK_1_0, QUICK_1_1);
       }
     break;
-      case "2": 
-
+      case "2": // handicap or volontary state
       if(payload.localeCompare(QUICK_2_0) == 0){
-        console.log("FROM : "+ STATE);
+        console.log("FROM : "+ state);
         STATE = "3";
-        console.log("STATE : "+ STATE);
+        console.log("STATE : 3");
         callPutDB(sender_psid, "3", "state");
         callPutDB(sender_psid, payload, "class");
         promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1);
