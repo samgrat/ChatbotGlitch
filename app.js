@@ -72,6 +72,8 @@ const MESSAGE_10_0 = process.env.MESSAGE_10_0;
 const MESSAGE_11_0 = process.env.MESSAGE_11_0;
 const MESSAGE_11_1 = process.env.MESSAGE_11_1;
 const MESSAGE_11_2 = process.env.MESSAGE_11_2;
+const MESSAGE_11_2_0 = process.env.MESSAGE_11_2_0;
+const MESSAGE_11_2_1 = process.env.MESSAGE_11_2_1;
 const QUICK_11_0 = process.env.QUICK_11_0;
 const QUICK_11_1 = process.env.QUICK_11_1;
 const MESSAGE_12_0 = process.env.MESSAGE_12_0;
@@ -698,7 +700,6 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
         console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
         promise = sendQuicks(promise, sender_psid, MESSAGE_9_0, QUICK_9_0, QUICK_9_1);
-
       }
     break;
       case "10": // handtyped utilitarian state
@@ -715,9 +716,53 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
         console.log("STATE : 12");
         callPutDB(sender_psid, "12", "state");
         callPutDB(sender_psid, text, "birthdate");
-        promise = sendMessages(promise, sender_psid, MESSAGE_12_0 + "\n" + MESSAGE_11_1);
+        promise = sendMessages(promise, sender_psid, MESSAGE_12_0 + "\n" + MESSAGE_12_1 + "\n" + MESSAGE_12_2);
     break;
-      case "12": callPutDB(sender_psid, text, "address");
+      case "11v": // nationality state
+      if(payload.localeCompare(QUICK_11_0) == 0){ // French
+        console.log("FROM : "+ state);
+        STATE = "12v";
+        console.log("STATE : 12v");
+        callPutDB(sender_psid, "12v", "state");
+        callPutDB(sender_psid, text, "nationality");
+        promise = sendMessages(promise, sender_psid, MESSAGE_12_3 + "\n" + MESSAGE_12_4);
+      }
+      else if(payload.localeCompare(QUICK_11_1) == 0){ // Foreign
+        console.log("FROM : "+ state);
+        STATE = "11v2";
+        console.log("STATE : 11v2");
+        callPutDB(sender_psid, "11v2", "state");
+        promise = sendMessages(promise, sender_psid, MESSAGE_11_2_1 + "\n" + MESSAGE_11_2_0);
+        
+      } else{
+        console.log("FROM : "+ state);
+        STATE = "6v";
+        console.log("STATE : 6v");
+        callPutDB(sender_psid, "6v", "state");
+        console.error('The answer didn\'t match a pattern');
+        promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_11_2, QUICK_11_0, QUICK_11_1);
+      }
+    break;
+      case "11v2": // handtyped nationality state
+      console.log("FROM : "+ state);
+      STATE = "12v";
+      console.log("STATE : 12v");
+      callPutDB(sender_psid, "12v", "state");
+      callPutDB(sender_psid, text, "nationality");
+      promise = sendMessages(promise, sender_psid, MESSAGE_12_3 + "\n" + MESSAGE_12_4);
+      
+    break;
+      case "12": // address state
+        console.log("FROM : "+ state);
+        STATE = "13";
+        console.log("STATE : 13");
+        callPutDB(sender_psid, "13", "state");
+        callPutDB(sender_psid, text, "address");
+        promise = sendMessages(promise, sender_psid, MESSAGE_13_0);
+    break;
+      case "12v": // adde
+      callPutDB(sender_psid, text, "address");
     break;
       case "13": callPutDB(sender_psid, text, "telephone");
     break;

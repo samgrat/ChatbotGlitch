@@ -88,7 +88,11 @@ const ContactSchema = new Schema({
     utilitarian: {
         type: String
     },
-
+    
+    nationality: {
+      type: String
+    },
+  
     info: {
         type: String
     },
