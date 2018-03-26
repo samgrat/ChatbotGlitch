@@ -249,7 +249,7 @@ app.get('/webhook', (req, res) => {
 ///////////////////////////////////////////////////////////////////
 
 ///////////////          HANDLERS           ///////////////////////
-// Handles postback events
+// Handles postback events TODELETE
 function handlePostback(sender_psid, received_postback) {
   let response;
   
@@ -266,6 +266,7 @@ function handlePostback(sender_psid, received_postback) {
   callSendAPI(sender_psid, response);
 }
 
+// TODELETE
 function sleep(milliseconds) {
   var start = new Date().getTime();
   for (var i = 0; i < 1e7; i++) {
@@ -275,6 +276,7 @@ function sleep(milliseconds) {
   }
 }
 
+// TODELETE
 function writeTextFile(text){
 var fs = require('fs');
 fs.writeFile(".data/state.txt", text, function(err) {
@@ -370,34 +372,35 @@ function callbackStateGraph(state, sender_psid, text, payload){
   
   switch(state){
     case null:
-    case "O": 
-      promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
-      //sleep(2000);
+    case "O2": // State corresponding to a returning client
+      promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_3);
       promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
-      console.log("FROM : "+ STATE);
+      console.log("FROM : "+ state);
       STATE = "A";
-      console.log("STATE : "+ STATE);
-      writeTextFile("A");
+      console.log("STATE : A");
+      callPutDB(sender_psid,"A","state");
+    case "O": // Opening discussion state
+      promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
+      promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);
+      console.log("FROM : "+ state);
+      STATE = "A";
+      console.log("STATE : A");
       callPutDB(sender_psid,"A","state");
     break;
-      case "A":
-      if(payload.localeCompare(QUICK_0_0) == 0){
-        console.log("FROM : "+ STATE);
+      case "A": // Form or infos
+      if(payload.localeCompare(QUICK_0_0) == 0){ // form
+        console.log("FROM : "+ state);
         STATE = "1";
-        console.log("STATE : "+ STATE);
-        writeTextFile("1");
+        console.log("STATE : 1");
         callPutDB(sender_psid, "1", "state");
         promise = sendMessages(promise, sender_psid, MESSAGE_1_0);
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_1, QUICK_1_0, QUICK_1_1);
-      } else if (payload.localeCompare(QUICK_0_1) == 0){
-        // TODO construct infos part
-        console.log("FROM : "+ STATE);
+      } else if (payload.localeCompare(QUICK_0_1) == 0){ // infos
+        console.log("FROM : "+ state);
         STATE = "A";
-        console.log("STATE : "+ STATE);
-        writeTextFile("A");
+        console.log("STATE : A");
         callPutDB(sender_psid,"A","state");
-        promise = sendMessages(promise, sender_psid, MESSAGE_DEV);
-        promise = sendMessages(promise, sender_psid, MESSAGE_0_0 + "\n" + MESSAGE_0_1);
+        promise = sendMessages(promise, sender_psid, MESSAGE_1_2);
         promise = sendQuicks(promise, sender_psid, MESSAGE_0_2, QUICK_0_0, QUICK_0_1);  
       
       } else{
