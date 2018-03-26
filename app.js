@@ -761,16 +761,78 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
         callPutDB(sender_psid, text, "address");
         promise = sendMessages(promise, sender_psid, MESSAGE_13_0);
     break;
-      case "12v": // adde
-      callPutDB(sender_psid, text, "address");
+      case "12v": // address state
+        console.log("FROM : "+ state);
+        STATE = "13v";
+        console.log("STATE : 13v");
+        callPutDB(sender_psid, "13v", "state");
+        callPutDB(sender_psid, text, "address");
+        promise = sendMessages(promise, sender_psid, MESSAGE_13_1);
     break;
-      case "13": callPutDB(sender_psid, text, "telephone");
+      case "13": // telephone state
+        console.log("FROM : "+ state);
+        STATE = "14";
+        console.log("STATE : 14");
+        callPutDB(sender_psid, "14", "state");
+        callPutDB(sender_psid, text, "telephone");
+        promise = sendMessages(promise, sender_psid, MESSAGE_14_0 + "\n" + MESSAGE_14_1 + "\n" + MESSAGE_14_2);
     break;
-      case "14": callPutDB(sender_psid, text, "studentID");
+      case "13v": // telephone state
+        console.log("FROM : "+ state);
+        STATE = "14v";
+        console.log("STATE : 14v");
+        callPutDB(sender_psid, "14v", "state");
+        callPutDB(sender_psid, text, "telephone");
+        promise = sendMessages(promise, sender_psid, MESSAGE_14_0 + "\n" + MESSAGE_14_3);
     break;
-      case "15": callPutDB(sender_psid, text, "cursus");
+      case "14": // StudentID state
+        console.log("FROM : "+ state);
+        STATE = "15";
+        console.log("STATE : 15");
+        callPutDB(sender_psid, "15", "state");
+        callPutDB(sender_psid, text, "studentID"); 
+        promise = sendMessages(promise, sender_psid, MESSAGE_15_0);
     break;
-      case "16": callPutDB(sender_psid, text, "dreamJob");
+      case "14v": // email state
+        console.log("FROM : "+ state);
+        STATE = "15v";
+        console.log("STATE : 15v");
+        callPutDB(sender_psid, "15v", "state");
+        callPutDB(sender_psid, text, "email"); 
+        promise = sendMessages(promise, sender_psid, MESSAGE_15_1);
+    break;
+      case "15": // cursus state
+        console.log("FROM : "+ state);
+        STATE = "16";
+        console.log("STATE : 16");
+        callPutDB(sender_psid, "16", "state");
+        callPutDB(sender_psid, text, "cursus");
+        promise = sendMessages(promise, sender_psid, MESSAGE_16_0);
+    break;
+      case "15v": // cursus state
+        console.log("FROM : "+ state);
+        STATE = "16v";
+        console.log("STATE : 16v");
+        callPutDB(sender_psid, "16v", "state");
+        callPutDB(sender_psid, text, "cursus");
+        promise = sendMessages(promise, sender_psid, MESSAGE_16_1);
+    break;
+      case "16": // dream job state
+        console.log("FROM : "+ state);
+        STATE = "17";
+        console.log("STATE : 17");
+        callPutDB(sender_psid, "17", "state");
+        callPutDB(sender_psid, text, "dreamJob");
+        promise = sendMessages(promise, sender_psid, MESSAGE_17_0);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_17_1, QUICK_17_0, QUICK_17_1, QUICK_17_2);
+    break;
+      case "16v": // dream job state
+        console.log("FROM : "+ state);
+        STATE = "17v";
+        console.log("STATE : 17v");
+        callPutDB(sender_psid, "17v", "state");
+        callPutDB(sender_psid, text, "dreamJob");
+        promise = sendMessages(promise, sender_psid, MESSAGE_17_0);
     break;
       case "17": callPutDB(sender_psid, text, "location");
     break;
