@@ -112,6 +112,7 @@ const MESSAGE_22_0 = process.env.MESSAGE_22_0;
 const MESSAGE_22_1 = process.env.MESSAGE_22_1;
 const MESSAGE_22_2 = process.env.MESSAGE_22_2;
 const MESSAGE_22_3 = process.env.MESSAGE_22_3;
+let MESSAGE_NAMED;
 let STATE = null;
 let FIRSTNAME = "@prenom";
 let ERROR_ANSWER = false;
@@ -366,7 +367,7 @@ function sendQuicks(promise, sender_psid){
   return promise;
 }
 
-function callbackStateGraph(state, sender_psid, text, payload){
+function callbackStateGraph(state, sender_psid, text, payload, firstname){
   let promise;
   // we send the data the the right endpoint according to state
   
@@ -547,7 +548,6 @@ function callbackStateGraph(state, sender_psid, text, payload){
       console.log("STATE : 4");
       callPutDB(sender_psid, "4", "state");
       callPutDB(sender_psid, text, "firstName");
-      getFirstName(sender_psid);
       promise = sendMessages(promise, sender_psid, MESSAGE_4_0);
     break;
       case "3v": // firstname state
@@ -564,9 +564,9 @@ function callbackStateGraph(state, sender_psid, text, payload){
       console.log("STATE : 5");
       callPutDB(sender_psid, "5", "state");
       callPutDB(sender_psid, text, "lastName");
-      console.log("FirstName: " + FIRSTNAME);
-      let MESSAGE_NAMED = MESSAGE_5_0.replace("@prenom", FIRSTNAME);
+      MESSAGE_NAMED = MESSAGE_5_0.replace("@prenom", firstname);
       promise = sendMessages(promise, sender_psid, MESSAGE_NAMED);
+      promise = sendQuicks(promise, sender_psid, MESSAGE_5_1, QUICK_5_0, QUICK_5_1, QUICK_5_2, QUICK_5_3, QUICK_5_4, QUICK_5_5);
     break;
       case "4v": 
       console.log("FROM : "+ state);
@@ -574,12 +574,13 @@ function callbackStateGraph(state, sender_psid, text, payload){
       console.log("STATE : 5v");
       callPutDB(sender_psid, "5v", "state");
       callPutDB(sender_psid, text, "lastName");
-      console.log("FirstName: " + FIRSTNAME);
-      MESSAGE_NAMED = MESSAGE_5_0.replace("@prenom", FIRSTNAME);
-      promise = sendMessages(promise, sender_psid, MESSAGE_NAMED);
+      MESSAGE_NAMED = MESSAGE_5_0.replace("@prenom", firstname);
+      promise = sendMessages(promise, sender_psid, MESSAGE_NAMED + "\n" + MESSAGE_5_2);
+    break;
+      case "5v":
+      callPutDB(sender_psid, text, "birthdate");
     break;
       case "5":
-    break;
       case "6":
       case "6bis": callPutDB(sender_psid, text, "handicap");
     break;
@@ -910,6 +911,7 @@ function getState(sender_psid, message, payload){
 
   let res;
   let state;
+  let firstname;
   
   // Nested function
   function getStateInDB(err,contact){
@@ -931,14 +933,17 @@ function getState(sender_psid, message, payload){
           console.log("State : 0");
           callPutDB(sender_psid, "A");
         }
+        if(typeof contact.firstname != 'undefined'){
+          firstname = contact.firstname;
+          console.log("Firstname : "+contact.firstname);
+        }
         }else{
           state = "A";        
           console.log("State : -1");
           callPostDB(sender_psid);
         }
     
-    console.log("state in nested: "+state);
-    callbackStateGraph(state, sender_psid, message, payload);
+    callbackStateGraph(state, sender_psid, message, payload, firstname);
     }
   
   Contact.findOne({_id: sender_psid}, getStateInDB);
