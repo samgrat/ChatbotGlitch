@@ -862,15 +862,56 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
         promise = sendMessages(promise, sender_psid, MESSAGE_18_2);
     break;
       case "18": // scholarship state
+      if(payload.localeCompare(QUICK_18_0) == 0 || payload.localeCompare(QUICK_18_1) == 0){ // Yes or no
         console.log("FROM : "+ state);
-        STATE = "18v";
-        console.log("STATE : 18v");
-        callPutDB(sender_psid, "18v", "state");
+        STATE = "19";
+        console.log("STATE : 19");
+        callPutDB(sender_psid, "19", "state");
         callPutDB(sender_psid, text, "scholarship");
-        promise = sendMessages(promise, sender_psid, MESSAGE_18_2);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_19_0, QUICK_19_0, QUICK_19_1);
+      } else{
+        console.log("FROM : "+ state);
+        STATE = "18";
+        console.log("STATE : 18");
+        callPutDB(sender_psid, "18", "state");
+        console.error('The answer didn\'t match a pattern');
+        promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_18_1, QUICK_18_0, QUICK_18_1);
+      }
     break;
-      case "19": callPutDB(sender_psid, text, "internship");
+      case "18v": // spelling state
+        console.log("FROM : "+ state);
+        STATE = "19v";
+        console.log("STATE : 19v");
+        callPutDB(sender_psid, "19v", "state");
+        callPutDB(sender_psid, text, "spelling");
+        promise = sendQuicks(promise, sender_psid, MESSAGE_19_1);
     break;
+      case "19": // internship state
+      if(payload.localeCompare(QUICK_19_0) == 0 || payload.localeCompare(QUICK_19_1) == 0){ // Yes or no
+        console.log("FROM : "+ state);
+        STATE = "20";
+        console.log("STATE : 20");
+        callPutDB(sender_psid, "20", "state");
+        callPutDB(sender_psid, text, "internship");
+        promise = sendQuicks(promise, sender_psid, MESSAGE_20_0, QUICK_20_0, QUICK_20_1);
+      } else{
+        console.log("FROM : "+ state);
+        STATE = "19";
+        console.log("STATE : 19");
+        callPutDB(sender_psid, "19", "state");
+        console.error('The answer didn\'t match a pattern');
+        promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
+        promise = sendQuicks(promise, sender_psid, MESSAGE_19_0, QUICK_19_0, QUICK_19_1);
+      }
+    break;
+      case "19v": // languages states
+        console.log("FROM : "+ state);
+        STATE = "21v";
+        console.log("STATE : 21v");
+        callPutDB(sender_psid, "21v", "state");
+        callPutDB(sender_psid, text, "languages");
+        promise = sendQuicks(promise, sender_psid, MESSAGE_20_0, QUICK_20_0, QUICK_20_1);
       case "20": callPutDB(sender_psid, text, "accompaniment");
     break;
       case "21": callPutDB(sender_psid, text, "info");

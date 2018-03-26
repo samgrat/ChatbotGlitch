@@ -26,11 +26,11 @@ const ContactSchema = new Schema({
     },
 
     class: {
-        type:String
+        type: String
     },
 
     birthdate: {
-        type: Date
+        type: String
     },
   
     birthplace: {
@@ -66,15 +66,15 @@ const ContactSchema = new Schema({
     },
 
     scholarship: {
-        type: Boolean
+        type: String
     },
 
     internship: {
-        type: Boolean
+        type: String
     },
 
     accompaniment: {
-        type: Boolean
+        type: String
     },
 
     handicap: {
@@ -97,17 +97,21 @@ const ContactSchema = new Schema({
       type: String
     },
   
+    spelling: {
+      type: String
+    },
+  
     info: {
+        type: String
+    },
+  
+    formation: {
         type: String
     },
     
     // ADMIN RESTRICTED FIELDS //
 
     etablissement: {
-        type: String
-    },
-
-    formation: {
         type: String
     },
 
