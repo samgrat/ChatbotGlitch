@@ -512,7 +512,7 @@ function callbackStateGraph(state, sender_psid, text, payload){
       }
     break;
       case "2": // handicap or volontary state
-      if(payload.localeCompare(QUICK_2_0) == 0){
+      if(payload.localeCompare(QUICK_2_0) == 0){ // handicap
         console.log("FROM : "+ state);
         STATE = "3";
         console.log("STATE : 3");
@@ -521,46 +521,65 @@ function callbackStateGraph(state, sender_psid, text, payload){
         promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1);
         promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
       }
-      else if(payload.localeCompare(QUICK_2_1) == 0){
-        console.log("FROM : "+ STATE);
-        console.log("STATE : "+ STATE);
-        STATE = "3";
-        callPutDB(sender_psid, "3", "state");
+      else if(payload.localeCompare(QUICK_2_1) == 0){ // volontary
+        console.log("FROM : "+ state);
+        STATE = "3v";
+        console.log("STATE : 3v");
+        callPutDB(sender_psid, "3v", "state");
         callPutDB(sender_psid, payload, "class");
-        promise = sendMessages(promise, sender_psid, MESSAGE_3bis_0 + "\n" + MESSAGE_3_1);
+        promise = sendMessages(promise, sender_psid, MESSAGE_3_4 + "\n" + MESSAGE_3_5);
         promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
+        
       } else{
-        console.log("FROM : "+ STATE);
+        console.log("FROM : "+ state);
         STATE = "2";
-        console.log("STATE : "+ STATE);
+        console.log("STATE : 2");
         callPutDB(sender_psid, "2", "state");
         console.error('The answer didn\'t match a pattern');
         promise = sendMessages(promise, sender_psid, MESSAGE_ERROR);
         promise = sendQuicks(promise, sender_psid, MESSAGE_2_0, QUICK_2_0, QUICK_2_1);
-        ERROR_ANSWER = true;
+
       }
     break;
-      case "3": 
-      console.log("FROM : "+ STATE);
+      case "3": // firstname state
+      console.log("FROM : "+ state);
       STATE = "4";
-      console.log("STATE : "+ STATE);
+      console.log("STATE : 4");
       callPutDB(sender_psid, "4", "state");
       callPutDB(sender_psid, text, "firstName");
       getFirstName(sender_psid);
       promise = sendMessages(promise, sender_psid, MESSAGE_4_0);
     break;
+      case "3v": // firstname state
+      console.log("FROM : "+ state);
+      STATE = "4v";
+      console.log("STATE : 4v");
+      callPutDB(sender_psid, "4v", "state");
+      callPutDB(sender_psid, text, "firstName");
+      promise = sendMessages(promise, sender_psid, MESSAGE_4_0);
+    break;
       case "4": 
-      console.log("FROM : "+ STATE);
-      STATE = "4";
-      console.log("STATE : "+ STATE);
-      callPutDB(sender_psid, "4", "state");
+      console.log("FROM : "+ state);
+      STATE = "5";
+      console.log("STATE : 5");
+      callPutDB(sender_psid, "5", "state");
       callPutDB(sender_psid, text, "lastName");
-      getFirstName(sender_psid);
       console.log("FirstName: " + FIRSTNAME);
       let MESSAGE_NAMED = MESSAGE_5_0.replace("@prenom", FIRSTNAME);
       promise = sendMessages(promise, sender_psid, MESSAGE_NAMED);
     break;
+      case "4v": 
+      console.log("FROM : "+ state);
+      STATE = "5v";
+      console.log("STATE : 5v");
+      callPutDB(sender_psid, "5v", "state");
+      callPutDB(sender_psid, text, "lastName");
+      console.log("FirstName: " + FIRSTNAME);
+      MESSAGE_NAMED = MESSAGE_5_0.replace("@prenom", FIRSTNAME);
+      promise = sendMessages(promise, sender_psid, MESSAGE_NAMED);
+    break;
       case "5":
+    break;
       case "6":
       case "6bis": callPutDB(sender_psid, text, "handicap");
     break;
