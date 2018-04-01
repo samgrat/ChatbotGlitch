@@ -1,19 +1,8 @@
-# Messenger Platform Quick Start
+# Bug Report
 
-Welcome to your first step toward building awesome Messenger apps!
+## RESETING A CLIENT FROM THE DATABASE
 
-This project contains the code for a simple webhook you can use to get started using the Messenger Platform.
-
-The code here mirrors what is in our [webhook set up guide](https://developers.facebook.com/docs/messenger-platform/getting-started/webhook-setup), and may be used as the starting point for doing the [Messenger Platform quick start tutorial](https://developers.facebook.com/docs/messenger-platform/getting-started/quick-start).
-
-## Additional Resources
-
-Interested in learning more about the Messenger Platform? Check out these resources:
-
-- [**Webhook set up guide**](https://developers.facebook.com/docs/messenger-platform/getting-started/webhook-setup): The walkthrough for the code in this project.
-
-- [**App set up guide**](https://developers.facebook.com/docs/messenger-platform/getting-started/app-setup): Instructions for setting up a Facebook app for use with the Messenger Platform, and hooking it up to this webhook.
-
-- [**Quick start tutorial**](https://developers.facebook.com/docs/messenger-platform/getting-started/quick-start): Build your first Messenger app by remixing this project and following our quick start tutorial.
-
-- [**Docs Docs Docs!**](https://developers.facebook.com/docs/messenger-platform/)
+- STATE property is resilient between message receiving,
+- After deleting a client from the database STATE can be used before being updated, (API lag is the reason for it)
+- If it happens Client will get an answer from the last state and not state A which is a wrong answer (here is the bug).
+- Though, the state will succesfully be A for the next Client message.

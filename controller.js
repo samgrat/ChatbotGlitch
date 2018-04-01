@@ -1,7 +1,36 @@
 const 
+  Vue = require('vue'),
   mongoose = require('mongoose'),
   ContactSchema = require('./model').ContactSchema,
   Contact = mongoose.model('Contact', ContactSchema);
+
+// admin login function
+module.exports.adminConnect = (req, res) => {
+  Contact.find({}, (err, contact) => {
+          if(err){
+            res.send(err);
+          }
+          res.json(contact);
+          res.end();
+      });
+  
+//   new Vue({
+//   el: '#editor',
+//   data: {
+//     input: '# hello'
+//   },
+//   computed: {
+//     compiledMarkdown: function () {
+//       return marked(this.input, { sanitize: true })
+//     }
+//   },
+//   methods: {
+//     update: _.debounce(function (e) {
+//       this.input = e.target.value
+//     }, 300)
+//   }
+// })
+};
 
 // Add a new Contact function
 module.exports.addNewContact = (req, res) => {

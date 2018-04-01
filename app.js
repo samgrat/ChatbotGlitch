@@ -120,6 +120,7 @@ let STATE = null;
 let FIRSTNAME = "@prenom";
 let ERROR_ANSWER = false;
 
+
 // Imports dependencies and set up http server
 const 
   request = require('request'),
@@ -129,6 +130,7 @@ const
   body_parser = require('body-parser'),
   routes = require('./routes'),
   controller = require("./controller"),
+  adminConnect = controller.adminConnect,
   addNewContact = controller.addNewContact,
   getContacts = controller.getContacts, 
   getContactByID = controller.getContactByID, 
@@ -152,6 +154,7 @@ mongoose.connect(uri);
 // bodyparser setup
 app.use(body_parser.urlencoded({ extended : true }));
 app.use(body_parser.json());
+app.use(express.static('node_modules/vue/dist')); 
 
 // TODO to fix for a cleaner code
 //routes.routes(app);
@@ -162,6 +165,9 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 ///////////////////////////////////////////////////////////////////
 
 //////////////////          ROUTES           //////////////////////     TODO: add routes for data storage and data retrieving via webapp
+
+// ADMIN Entry hook
+app.route('').get(adminConnect);
 
 // CONTACT route block
     app.route('/contact')
@@ -185,6 +191,7 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
     // DELETE
     .delete(deleteContact); // semi-colon of end of block CONTACT/:contactId
 
+// TODO PUT FUNCTION IN CONTROLLERS
 // Accepts POST requests at /webhook endpoint
 app.post('/webhook', (req, res) => {  
 
@@ -424,7 +431,7 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
         STATE = "I2";
         console.log("STATE : I2");
         callPutDB(sender_psid, "I2", "state");
-        promise = sendMessages(promise, sender_psid, MESSAGE_1_2_0 + "\n" + MESSAGE_1_2_1);
+        promise = sendMessages(promise, sender_psid, MESSAGE_1_2_0 + "\n\n" + MESSAGE_1_2_1);
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_2_6, QUICK_1_2_0, QUICK_1_2_1);
           
       } else if (payload.localeCompare(QUICK_1_3) == 0){ // telephone
@@ -522,8 +529,7 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
         console.log("STATE : 3");
         callPutDB(sender_psid, "3", "state");
         callPutDB(sender_psid, payload, "class");
-        promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1);
-        promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
+        promise = sendMessages(promise, sender_psid, MESSAGE_3_0 + "\n" + MESSAGE_3_1 + "\n\n" + MESSAGE_3_2 + "\n" + MESSAGE_3_3);
       }
       else if(payload.localeCompare(QUICK_2_1) == 0){ // volontary
         console.log("FROM : "+ state);
@@ -531,8 +537,7 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
         console.log("STATE : 3v");
         callPutDB(sender_psid, "3v", "state");
         callPutDB(sender_psid, payload, "class");
-        promise = sendMessages(promise, sender_psid, MESSAGE_3_4 + "\n" + MESSAGE_3_5);
-        promise = sendMessages(promise, sender_psid, MESSAGE_3_2 + "\n" + MESSAGE_3_3);
+        promise = sendMessages(promise, sender_psid, MESSAGE_3_4 + "\n" + MESSAGE_3_5 + "\n\n" + MESSAGE_3_2 + "\n" + MESSAGE_3_3);
         
       } else{
         console.log("FROM : "+ state);
@@ -682,7 +687,7 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
         STATE = "10";
         console.log("STATE : 10");
         callPutDB(sender_psid, "10", "state");
-        promise = sendQuicks(promise, sender_psid, MESSAGE_10_0);
+        promise = sendMessages(promise, sender_psid, MESSAGE_10_0);
       }
       else if(payload.localeCompare(QUICK_9_1) == 0){ // no
         console.log("FROM : "+ state);
@@ -885,7 +890,7 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
         console.log("STATE : 19v");
         callPutDB(sender_psid, "19v", "state");
         callPutDB(sender_psid, text, "spelling");
-        promise = sendQuicks(promise, sender_psid, MESSAGE_19_1);
+        promise = sendMessages(promise, sender_psid, MESSAGE_19_1);
     break;
       case "19": // internship state
       if(payload.localeCompare(QUICK_19_0) == 0 || payload.localeCompare(QUICK_19_1) == 0){ // Yes or no
@@ -911,7 +916,7 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
         console.log("STATE : I2");
         callPutDB(sender_psid, "I2", "state");
         callPutDB(sender_psid, text, "languages");
-        promise = sendQuicks(promise, sender_psid, MESSAGE_22_2 + "\n" + MESSAGE_22_3);
+        promise = sendMessages(promise, sender_psid, MESSAGE_22_2 + "\n" + MESSAGE_22_3);
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_2_6, QUICK_1_2_0, QUICK_1_2_1);
     break;
       case "20": // accompaniment state
