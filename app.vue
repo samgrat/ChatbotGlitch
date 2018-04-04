@@ -1,22 +1,16 @@
 <template>
-  <div class="vh-100 dt center">
-    <div class="dtc v-mid">
-      <h1 class="avenir tracked ttu">{{msg}}</h1>
+    <div>
+        <h1>{{title}}</h1>
+        <p>{{ data }}</p>
     </div>
-  </div>
 </template>
 
 <script>
-
 export default {
-	data () {
-		return {
-			msg: 'Hello from VueJS!'
-		}
-	}
+    data: function () {
+        return {
+            title: ''
+        }
+    }
 }
 </script>
-
-<style>
-  h1 {color: red}
-</style>

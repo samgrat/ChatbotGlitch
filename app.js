@@ -5,7 +5,9 @@
 
 ///////////////          DEPENDENCIES           ///////////////////
 'use strict';
+const PASS_ADMIN = process.env.PAGE_ADMIN;
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
+const PAGE_ACCESS_TOKEN_TEST = process.env.PAGE_ACCESS_TOKEN_TEST;
 const API_URL_SERVER = process.env.API_URL_SERVER;
 const MESSAGE_ERROR = process.env.MESSAGE_ERROR;
 const MESSAGE_DEV = process.env.MESSAGE_DEV;
@@ -120,9 +122,11 @@ let STATE = null;
 let FIRSTNAME = "@prenom";
 let ERROR_ANSWER = false;
 
-
 // Imports dependencies and set up http server
 const 
+  vue = require('vue'),
+  vueRouter = require('vue-router'),
+  expressVue = require('express-vue'),
   request = require('request'),
   express = require('express'),
   mongodb = require('mongodb'),
@@ -140,6 +144,7 @@ const
   ContactSchema = require('./model').ContactSchema,
   Contact = mongoose.model('Contact', ContactSchema),
   XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,
+  expressVueMiddleware = expressVue.init(),
   app = express(); // creates express http server
 ///////////////////////////////////////////////////////////////////
 /////////////////          DATABASE           /////////////////////    
@@ -154,7 +159,36 @@ mongoose.connect(uri);
 // bodyparser setup
 app.use(body_parser.urlencoded({ extended : true }));
 app.use(body_parser.json());
-app.use(express.static('node_modules/vue/dist')); 
+
+// admin app setup
+//app.use(express.static('public'));
+//app.use(express.static('node_modules/vue/dist'));
+
+// Vue setup
+app.use(expressVueMiddleware);
+
+// vue.use(vueRouter);
+// const router = new vueRouter({ mode: 'history' });
+// new Vue(Vue.util.extend({ router })).$mount('#app');
+
+// let vm = new vue({
+//         el: '#app',
+//         data: {
+//           input: 'lol',
+//           passAdmin: PASS_ADMIN,
+//           results: []
+//         },
+//         methods: {
+//         getContacts: function() {
+//           Contact.find({}, (err, contact) => {
+//             if(err){
+//               this.results = err;
+//             }
+//             this.results = contact;
+//             });
+//           }
+//         }
+//       }).$mount('#app');
 
 // TODO to fix for a cleaner code
 //routes.routes(app);
@@ -166,8 +200,8 @@ app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 
 //////////////////          ROUTES           //////////////////////     TODO: add routes for data storage and data retrieving via webapp
 
-// ADMIN Entry hook
-app.route('').get(adminConnect);
+// Basis hook
+app.route('/').get(adminConnect);
 
 // CONTACT route block
     app.route('/contact')
@@ -276,6 +310,8 @@ function handlePostback(sender_psid, received_postback) {
   }
   // Send the message to acknowledge the postback
   callSendAPI(sender_psid, response);
+  // for the page test
+  callSendAPITest(sender_psid, response);
 }
 
 // TODELETE
@@ -343,6 +379,8 @@ function sendMessages(promise, sender_psid){
       promise = callSendAPI(sender_psid, response);}
     */
     promise = callSendAPI(sender_psid, response);
+      
+    callSendAPITest(sender_psid, response);
   }
   return promise;
 }
@@ -368,12 +406,19 @@ function sendQuicks(promise, sender_psid){
   
   // we check for the promise
   if(promise){
-    promise.then(function(){promise = callSendAPI(sender_psid, response);}).catch(
+    promise.then(function()
+                 {
+      promise = callSendAPI(sender_psid, response);
+      callSendAPITest(sender_psid, response);
+                 }).catch(
       // Promesse rejetée
       function() { 
         console.error("promesse rompue");
       });
-    } else {promise = callSendAPI(sender_psid, response);}
+    } else {
+      promise = callSendAPI(sender_psid, response);
+      callSendAPITest(sender_psid, response);
+}
   return promise;
 }
 
@@ -415,7 +460,7 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
         promise = sendQuicks(promise, sender_psid, MESSAGE_1_2, QUICK_1_2, QUICK_1_3, QUICK_1_4, QUICK_1_5, QUICK_1_6);  
       } else{
         console.log("FROM : "+ state);
-        STATE = "A";        
+        STATE = "A";      
         console.log("STATE : A");
         callPutDB(sender_psid,"A","state");
         console.error('The answer didn\'t match a pattern');
@@ -1027,7 +1072,7 @@ function callGetOneDB(sender_psid) {
       
       console.log("body : " + bodystr);
       if(bodystr === null){
-        STATE = "A";
+        STATE = "O";
         console.log("State : 0");
         callPostDB(sender_psid);
       } else {
@@ -1074,7 +1119,7 @@ function getState(sender_psid, message, payload){
           console.log("Firstname : "+contact.firstName);
         }
         }else{
-          state = "A";        
+          state = "O";        
           console.log("State : -1");
           callPostDB(sender_psid);
         }
@@ -1098,8 +1143,9 @@ function callGetDB(sender_psid) {
       let response = {
       "text": body
       }
-      callSendAPI(sender_psid, response)
-      console.log('message sent!')
+      callSendAPI(sender_psid, response);
+      callSendAPITest(sender_psid, response);
+      console.log('message sent!');
     } else {
       console.error("Unable to send message:" + err);
     }
@@ -1201,6 +1247,33 @@ function callSendAPI(sender_psid, response) {
     request({
     "uri": "https://graph.facebook.com/v2.6/me/messages",
     "qs": { "access_token": PAGE_ACCESS_TOKEN },
+    "method": "POST",
+    "json": request_body
+  }, (err, res, body) => {
+    if (!err) {
+      console.log('message sent!')
+      return resolve(response);
+    } else {
+      console.error("Unable to send message:" + err);
+    }
+  });
+  });
+}
+
+function callSendAPITest(sender_psid, response) {
+  // Construct the message body
+  let request_body = {
+    "recipient": {
+      "id": sender_psid
+    },
+    "message": response
+  }
+
+   // Send the HTTP request to the Messenger Platform
+  return new Promise((resolve, reject) => { 
+    request({
+    "uri": "https://graph.facebook.com/v2.6/me/messages",
+    "qs": { "access_token": PAGE_ACCESS_TOKEN_TEST },
     "method": "POST",
     "json": request_body
   }, (err, res, body) => {

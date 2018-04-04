@@ -4,7 +4,7 @@
   "description": "Chatbot for the SAH Grenoble.",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js pushstate-server . 3000"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -20,8 +20,12 @@
     "mongodb": "^3.0.5",
     "mongoose": "^5.0.12",
     "nodemon": "^1.17.3",
+    "vue-router": "^3.0.1",
     "vue": "^2.5.16",
-    "pushstate-server": "^3.0.1"
+    "express-vue": "^5.0.5",
+    "vue-pronto": "^1.0.3",
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
   },
   "engines": {
     "node": "6.12.3"
