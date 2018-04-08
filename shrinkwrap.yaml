@@ -4,8 +4,9 @@ dependencies:
   body-parser: 1.18.2
   express: 4.16.3
   express-vue: 5.6.2
+  jquery: 3.3.1
   mongodb: 3.0.5
-  mongoose: 5.0.12
+  mongoose: 5.0.13
   nodemon: 1.17.3
   request: 2.85.0
   vue: 2.5.16
@@ -2727,6 +2728,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-R+Y/evVa+m+S4VAOaQ64uFKcCZo=
+  /jquery/3.3.1:
+    dev: false
+    resolution:
+      integrity: sha512-Ubldcmxp5np52/ENotGxlLe6aGMvmF4R8S6tZjsP6Knsaxd/xp3Zrh50cG93lR6nPXyUFwzN3ZSOQI0wRJNdGg==
   /js-base64/2.4.3:
     dev: false
     resolution:
@@ -3133,7 +3138,7 @@ packages:
       mongoose: '*'
     resolution:
       integrity: sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
-  /mongoose/5.0.12:
+  /mongoose/5.0.13:
     dependencies:
       async: 2.1.4
       bson: 1.0.6
@@ -3150,7 +3155,7 @@ packages:
     engines:
       node: '>=4.0.0'
     resolution:
-      integrity: sha512-V0B9vXdT/hYw24OrlgoQ9pilL+oeIwh9tOPSh58m+fhcMd4Wkgc+ySxaU6QRC8WuQb9E/N4nyNnTqyOw0OQR8w==
+      integrity: sha512-VCiutgdxwhTuNHIuUgMRWVYvv0GFw6FUi4j14B7um/Wcy1uhuwF552a6XVKUCth/AY8C+PjVU9fVGJ5K0JmrmQ==
   /mpath/0.3.0:
     dev: false
     resolution:
@@ -4965,8 +4970,9 @@ specifiers:
   body-parser: ^1.18.2
   express: ^4.16.3
   express-vue: ^5.0.5
+  jquery: ^3.3.1
   mongodb: ^3.0.5
-  mongoose: ^5.0.12
+  mongoose: ^5.0.13
   nodemon: ^1.17.3
   request: ^2.85.0
   vue: ^2.5.16

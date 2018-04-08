@@ -1,3 +1,5 @@
+//////// MODEL FOR CONTACT IN DB ////////
+
 const 
   mongoose = require('mongoose'),
   Schema = mongoose.Schema;

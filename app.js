@@ -1,11 +1,11 @@
 /*
  * based upon https://developers.facebook.com/docs/messenger-platform/getting-started/quick-start/
- *
+ * Authors: Samuel BAMBA - Julien CORDAT-AUCLAIR 
  */
 
 ///////////////          DEPENDENCIES           ///////////////////
 'use strict';
-const PASS_ADMIN = process.env.PAGE_ADMIN;
+const PASS_ADMIN = process.env.PASS_ADMIN;
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const PAGE_ACCESS_TOKEN_TEST = process.env.PAGE_ACCESS_TOKEN_TEST;
 const API_URL_SERVER = process.env.API_URL_SERVER;
@@ -146,7 +146,17 @@ const
   XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest,
   expressVueMiddleware = expressVue.init(),
   app = express(); // creates express http server
+
+// Vue setup
+// Development mode
+// vue.config.devtools = true
+app.use(expressVueMiddleware);
+
+// Sets server port and logs message on success
+app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
+
 ///////////////////////////////////////////////////////////////////
+
 /////////////////          DATABASE           /////////////////////    
 
 // Standard URI format: mongodb://[dbuser:dbpassword@]host:port/dbname, details set in .env
@@ -160,47 +170,11 @@ mongoose.connect(uri);
 app.use(body_parser.urlencoded({ extended : true }));
 app.use(body_parser.json());
 
-// admin app setup
-//app.use(express.static('public'));
-//app.use(express.static('node_modules/vue/dist'));
-
-// Vue setup
-app.use(expressVueMiddleware);
-
-// vue.use(vueRouter);
-// const router = new vueRouter({ mode: 'history' });
-// new Vue(Vue.util.extend({ router })).$mount('#app');
-
-// let vm = new vue({
-//         el: '#app',
-//         data: {
-//           input: 'lol',
-//           passAdmin: PASS_ADMIN,
-//           results: []
-//         },
-//         methods: {
-//         getContacts: function() {
-//           Contact.find({}, (err, contact) => {
-//             if(err){
-//               this.results = err;
-//             }
-//             this.results = contact;
-//             });
-//           }
-//         }
-//       }).$mount('#app');
-
-// TODO to fix for a cleaner code
-//routes.routes(app);
-
-// Sets server port and logs message on success
-app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
-
 ///////////////////////////////////////////////////////////////////
 
-//////////////////          ROUTES           //////////////////////     TODO: add routes for data storage and data retrieving via webapp
+//////////////////          ROUTES          //////////////////////  
 
-// Basis hook
+// Root hook
 app.route('/').get(adminConnect);
 
 // CONTACT route block
@@ -250,12 +224,11 @@ body.entry.forEach(function(entry) {
   // pass the event to the appropriate handler function
   if (webhook_event.message) {
     handleMessage(sender_psid, webhook_event.message);        
-  } else if (webhook_event.postback) {
-    handlePostback(sender_psid, webhook_event.postback);
-  }
-  
+  } else {
+    console.log('Received a non-text message');
+  }  
 });
-
+    
     // Return a '200 OK' response to all events
     res.status(200).send('EVENT_RECEIVED');
 
@@ -265,6 +238,7 @@ body.entry.forEach(function(entry) {
   }
 
 });
+
 // Accepts GET requests at the /webhook endpoint
 app.get('/webhook', (req, res) => {
   
@@ -294,66 +268,35 @@ app.get('/webhook', (req, res) => {
 });
 ///////////////////////////////////////////////////////////////////
 
-///////////////          HANDLERS           ///////////////////////
-// Handles postback events TODELETE
-function handlePostback(sender_psid, received_postback) {
+///////////////          FUNCTIONS           //////////////////////
+
+// Handles messages events
+function handleMessage (sender_psid, received_message) {
   let response;
+  let state;
+  let payload;
   
-  // Get the payload for the postback
-  let payload = received_postback.payload;
-
-  // Set the response based on the postback payload
-  if (payload === 'yes') {
-    response = { "text": "Thanks!" }
-  } else if (payload === 'no') {
-    response = { "text": "Oops, try sending another image." }
-  }
-  // Send the message to acknowledge the postback
-  callSendAPI(sender_psid, response);
-  // for the page test
-  callSendAPITest(sender_psid, response);
-}
-
-// TODELETE
-function sleep(milliseconds) {
-  var start = new Date().getTime();
-  for (var i = 0; i < 1e7; i++) {
-    if ((new Date().getTime() - start) > milliseconds){
-      break;
-    }
+  // Checks if the message contains text
+  if (received_message.text) {  
+  console.log(received_message);
+  
+  
+    // Create the payload for a basic text message, which
+    // will be added to the body of our request to the Send API
+    
+    // TODO: test received_message.text before insering into db
+    if(received_message.quick_reply){
+      payload = received_message.quick_reply.payload;
+    }else{
+      payload = received_message.text;}
+    
+    let s = getState(sender_psid, received_message.text, payload);
+                 
+  } else {
+    console.log('Error no text received');
   }
 }
 
-// TODELETE
-function writeTextFile(text){
-var fs = require('fs');
-fs.writeFile(".data/state.txt", text, function(err) {
-    if(err) {
-        return console.log(err);
-    }
-
-    console.log("The file was saved!");
-}); 
-}
-function readTextFile(file)
-{
-    var rawFile = new XMLHttpRequest();
-    rawFile.open("GET", file, false);
-    rawFile.onreadystatechange = function ()
-    {
-        if(rawFile.readyState === 4)
-        {
-            if(rawFile.status === 200 || rawFile.status == 0)
-            {
-                var allText = rawFile.responseText;
-                console.log("State in file :" + allText);
-            }
-        }
-    }
-    rawFile.send(null);
-}
-
-// TODO FIX MESSAGE ORDER
 // Send every message passed in argument
 function sendMessages(promise, sender_psid){
   var i;
@@ -364,23 +307,10 @@ function sendMessages(promise, sender_psid){
       "text": arguments[i],
     }
     console.log(response);
-    /*
-    console.log(promise);
-    if(promise){
-    promise.then(
-      function() {
-      promise = callSendAPI(sender_psid, response);}
-    ).catch(
-      // Promesse rejetée
-      function() { 
-        console.error("promesse rompue");
-      });
-    } else {
-      promise = callSendAPI(sender_psid, response);}
-    */
+ 
     promise = callSendAPI(sender_psid, response);
-      
-    callSendAPITest(sender_psid, response);
+    // Message to the Test page
+    //callSendAPITest(sender_psid, response);
   }
   return promise;
 }
@@ -409,7 +339,8 @@ function sendQuicks(promise, sender_psid){
     promise.then(function()
                  {
       promise = callSendAPI(sender_psid, response);
-      callSendAPITest(sender_psid, response);
+      // Message to the Test page
+      //callSendAPITest(sender_psid, response);
                  }).catch(
       // Promesse rejetée
       function() { 
@@ -417,14 +348,15 @@ function sendQuicks(promise, sender_psid){
       });
     } else {
       promise = callSendAPI(sender_psid, response);
-      callSendAPITest(sender_psid, response);
+      // Message to the Test page
+      //callSendAPITest(sender_psid, response);
 }
   return promise;
 }
 
+// Send the data the the right endpoint according to state
 function callbackStateGraph(state, sender_psid, text, payload, firstname){
   let promise;
-  // we send the data the the right endpoint according to state
   
   switch(state){
       case null:
@@ -997,65 +929,6 @@ function callbackStateGraph(state, sender_psid, text, payload, firstname){
 
 }
 
-// Handles messages events
-function handleMessage(sender_psid, received_message) {
-  let response;
-  let state;
-  let payload;
-  
-  // Checks if the message contains text
-  if (received_message.text) {  
-  console.log(received_message);
-  //getState(sender_psid);
-  //callPostDB(sender_psid);
-  
-  
-    // Create the payload for a basic text message, which
-    // will be added to the body of our request to the Send API
-    
-    // TODO: test received_message.text before insering into db
-    if(received_message.quick_reply){
-      payload = received_message.quick_reply.payload;
-    }else{
-      payload = received_message.text;}
-    
-    let s = getState(sender_psid, received_message.text, payload);
-    //insertInfoDB(state, sender_psid, received_message.text, payload);
-    //getState(sender_psid);
-    //callGetOneDB(sender_psid);
-    //moveUserState(state, sender_psid, received_message.text);
-                 
-  } else if (received_message.attachments) {
-    // Get the URL of the message attachment
-    let attachment_url = received_message.attachments[0].payload.url;
-    response = {
-      "attachment": {
-        "type": "template",
-        "payload": {
-          "template_type": "generic",
-          "elements": [{
-            "title": "Is this the right picture?",
-            "subtitle": "Tap a button to answer.",
-            "image_url": attachment_url,
-            "buttons": [
-              {
-                "type": "postback",
-                "title": "Yes!",
-                "payload": "yes",
-              },
-              {
-                "type": "postback",
-                "title": "No!",
-                "payload": "no",
-              }
-            ],
-          }]
-        }
-      }
-    }
-  }
-}
-
 // Get the contact with corresponding to sender's id
 function callGetOneDB(sender_psid) {
   
@@ -1088,6 +961,7 @@ function callGetOneDB(sender_psid) {
   
 }
 
+// get the state of the sender and call callbackStateGraph
 function getState(sender_psid, message, payload){
 
   let res;
@@ -1144,7 +1018,8 @@ function callGetDB(sender_psid) {
       "text": body
       }
       callSendAPI(sender_psid, response);
-      callSendAPITest(sender_psid, response);
+      // Message to the Test page
+      //callSendAPITest(sender_psid, response);
       console.log('message sent!');
     } else {
       console.error("Unable to send message:" + err);
@@ -1153,6 +1028,7 @@ function callGetDB(sender_psid) {
   
 }
 
+// Create a new contact in the database by direct DB manipulation
 function callPostDB(sender_psid) {
   let body = {
     "_id": sender_psid
@@ -1190,7 +1066,7 @@ function callPostDB2(sender_psid) {
   
 }
 
-// Modify contact in the database
+// Modify a given contact's field in the database by direct DB manipulation
 function callPutDB(sender_psid, data, field) {
   let res;
   
@@ -1208,7 +1084,7 @@ function callPutDB(sender_psid, data, field) {
     });
 }
   
-// Modify contact in the database by API use
+// Modify a given contact's field in the database by API use
 function callPutDB2(sender_psid, data, field) {
   
     // Construct the message body
@@ -1231,7 +1107,6 @@ function callPutDB2(sender_psid, data, field) {
   
 }
 
-// TODO pending messages queue
 // Sends response messages via the Send API
 function callSendAPI(sender_psid, response) {
   // Construct the message body
@@ -1260,6 +1135,7 @@ function callSendAPI(sender_psid, response) {
   });
 }
 
+// Sends response messages via the Send API to the Test page
 function callSendAPITest(sender_psid, response) {
   // Construct the message body
   let request_body = {

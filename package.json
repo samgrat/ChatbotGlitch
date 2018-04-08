@@ -18,14 +18,15 @@
     "request": "^2.85.0",
     "xmlhttprequest": "^1.8.0",
     "mongodb": "^3.0.5",
-    "mongoose": "^5.0.12",
+    "mongoose": "^5.0.13",
     "nodemon": "^1.17.3",
     "vue-router": "^3.0.1",
     "vue": "^2.5.16",
     "express-vue": "^5.0.5",
     "vue-pronto": "^1.0.3",
     "babel-core": "^6.26.0",
-    "babel-preset-env": "^1.6.1"
+    "babel-preset-env": "^1.6.1",
+    "jquery": "^3.3.1"
   },
   "engines": {
     "node": "6.12.3"

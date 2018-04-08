@@ -1,3 +1,5 @@
+//////// CONTROLLER FUNCTIONS FOR ACCESSING DB ////////
+
 const 
   mongoose = require('mongoose'),
   ContactSchema = require('./model').ContactSchema,
@@ -10,18 +12,16 @@ module.exports.adminConnect = (req, res, next) => {
     req.vueOptions = {
         head: {
             title: 'Page Title'
-        }    
+        },
+        vueVersion: "^2.5.16"
     }  
     
     Contact.find({}, (err, contact) => {
           if(err){
             res.send(err);
           }
-      
-      
-          //res.send(contact);
+ 
           res.renderVue('../../../../../../../../../../app/app.vue', contact, req.vueOptions);
-          //res.end();
       });
 };
 
@@ -90,6 +90,7 @@ module.exports.updateContact = (req, res) => {
     });
 };
 
+// Delete a contact according to the id
 module.exports.deleteContact = (req, res) => {
     Contact.remove({_id: req.params.contactId }, (err, contact) => {
         if(err){
